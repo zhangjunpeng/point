@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Location(
-        @PrimaryKey val id: Int,
-        @ColumnInfo(name = "t_id") val tId:Int,
+        @PrimaryKey val lid: Long,
+        @ColumnInfo(name = "t_id") val tId:Long,
         @ColumnInfo(name = "lat") val lat:Double,
         @ColumnInfo(name = "lng") val lng:Double,
         @ColumnInfo(name = "speed") val speed:Double,//速度

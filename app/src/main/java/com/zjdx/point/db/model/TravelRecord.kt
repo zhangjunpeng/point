@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class TravelRecord(
-        @PrimaryKey val id: Int,
-        @ColumnInfo(name = "uid") val uid: Int,
+        @PrimaryKey(autoGenerate = true) val id: Long,
+        @ColumnInfo(name = "create_time") var createTime:Long
 )

@@ -7,7 +7,7 @@ plugins {
 android {
     signingConfigs {
         debug {
-            storeFile file('C:\\work\\Point\\app\\zjdx_point.jks')
+            storeFile file('zjdx_point.jks')
             storePassword '123456'
             keyAlias 'zyyjy'
             keyPassword '123456'

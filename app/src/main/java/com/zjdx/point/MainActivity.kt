@@ -9,6 +9,8 @@ import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.zjdx.point.databinding.ActivityMainBinding
+import com.zjdx.point.db.model.Location
+import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.ui.base.BaseActivity
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,6 +43,11 @@ class MainActivity : BaseActivity() {
         if (amapLocation != null) {
             Log.i(TAG, "errorCode=" + amapLocation.errorCode)
             if (amapLocation.errorCode == 0) {
+
+                val loca=Location(
+                    amapLocation.latitude
+
+                )
                 //解析定位结果
                 Log.i(TAG, "latitude" + amapLocation.latitude.toString())//获取纬度
                 Log.i(TAG, "longitude" + amapLocation.longitude.toString())//获取经度
@@ -131,6 +138,7 @@ class MainActivity : BaseActivity() {
 
     fun startLoactionService() {
 
+        val travelRecord=TravelRecord(createTime = Date().time)
         mLocationClient.startLocation()
 
 //        mLocationClient.stopLocation()
