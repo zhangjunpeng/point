@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.zjdx.point.db.model.Location
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LocationDao {
@@ -13,8 +14,8 @@ interface LocationDao {
     fun getAll(): List<Location>
 
     @Query("Select * from Location where t_id = :tId")
-    fun queryByTid(tId: String): LiveData<List<Location>>
+    fun queryByTid(tId: String): Flow<List<Location>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertUsers(vararg location: Location)
+    fun insertLocation(vararg location: Location)
 }

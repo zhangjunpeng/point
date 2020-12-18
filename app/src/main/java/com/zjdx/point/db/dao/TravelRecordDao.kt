@@ -7,6 +7,6 @@ import com.zjdx.point.db.model.TravelRecord
 
 @Dao
 interface TravelRecordDao {
-    @Query("Select * from travelrecord")
+    @Query("Select * from TravelRecord")
     fun getAll(): LiveData<List<TravelRecord>>
 }

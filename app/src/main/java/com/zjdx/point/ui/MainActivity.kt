@@ -1,4 +1,4 @@
-package com.zjdx.point
+package com.zjdx.point.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
