@@ -32,54 +32,11 @@ class MainActivity : BaseActivity() {
 
     override fun initView() {
         binding.startMainAc.setOnClickListener {
-            startLoactionService()
         }
     }
 
 
-    //声明AMapLocationClient类对象
 
-    val mAMapLocationListener = AMapLocationListener { amapLocation ->
-        if (amapLocation != null) {
-            Log.i(TAG, "errorCode=" + amapLocation.errorCode)
-            if (amapLocation.errorCode == 0) {
-
-                val loca=Location(
-                    amapLocation.latitude
-
-                )
-                //解析定位结果
-                Log.i(TAG, "latitude" + amapLocation.latitude.toString())//获取纬度
-                Log.i(TAG, "longitude" + amapLocation.longitude.toString())//获取经度
-                Log.i(TAG, "locationType" + amapLocation.locationType.toString()) //获取当前定位结果来源，如网络定位结果，详见定位类型表
-                Log.i(TAG, "locationDetail" + amapLocation.locationDetail.toString()) //定位信息描述
-
-                Log.i(TAG, "accuracy=" + amapLocation.accuracy.toString())//获取精度信息
-                Log.i(TAG, "address=" + amapLocation.address.toString())//地址，如果option中设置isNeedAddress为false，则没有此结果，网络定位结果中会有地址信息，GPS定位不返回地址信息。
-                Log.i(TAG, "country=" + amapLocation.country.toString())//国家信息
-                Log.i(TAG, "province=" + amapLocation.province.toString()) //省信息
-                Log.i(TAG, "city=" + amapLocation.city.toString())//城市信息
-
-                Log.i(TAG, "district=" + amapLocation.district.toString())//城区信息
-                Log.i(TAG, "street=" + amapLocation.street.toString())//街道信息
-                Log.i(TAG, "streetNum=" + amapLocation.streetNum.toString())//街道门牌号信息
-                Log.i(TAG, "cityCode=" + amapLocation.cityCode.toString())//城市编码
-
-
-                Log.i(TAG, "altitude=" + amapLocation.altitude.toString())//海拔
-                Log.i(TAG, "speed=" + amapLocation.speed.toString())//速度
-
-                Log.i(TAG, "gpsAccuracyStatus=" + amapLocation.gpsAccuracyStatus.toString())//获取GPS的当前状态
-
-                //获取定位时间
-                val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                val date = Date(amapLocation.time)
-                df.format(date)
-            }
-        } else {
-            Log.i("LocationService", "amapLocation null")
-        }
-    }
 
 
     fun initLocationService() {
@@ -107,43 +64,12 @@ class MainActivity : BaseActivity() {
         }
 
 
-        mLocationClient = AMapLocationClient(applicationContext)
 
-        val mLocationOption = AMapLocationClientOption()
-        /**
-         * 设置定位场景，目前支持三种场景（签到、出行、运动，默认无场景）
-         */
-        mLocationOption.locationPurpose = AMapLocationClientOption.AMapLocationPurpose.Transport
-
-        //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
-        mLocationOption.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
-        //设置定位间隔,单位毫秒,默认为2000ms，最低1000ms
-        mLocationOption.interval = 10 * 1000
-
-        //设置是否返回地址信息（默认返回地址信息）
-        mLocationOption.isNeedAddress = true
-
-
-        mLocationClient.setLocationOption(mLocationOption)
-
-
-        //设置场景模式后最好调用一次stop，再调用start以保证场景模式生效
-        mLocationClient.stopLocation()
-
-
-        mLocationClient.setLocationListener(mAMapLocationListener)
 
 
     }
 
-    fun startLoactionService() {
 
-        val travelRecord=TravelRecord(createTime = Date().time)
-        mLocationClient.startLocation()
-
-//        mLocationClient.stopLocation()
-
-    }
 
 
 }

@@ -8,4 +8,5 @@ import androidx.room.PrimaryKey
 data class TravelRecord(
         @PrimaryKey(autoGenerate = true) val id: Long,
         @ColumnInfo(name = "create_time") var createTime:Long
+
 )
