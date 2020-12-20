@@ -1,18 +1,23 @@
 package com.zjdx.point
 
 import android.app.Application
-import androidx.room.Room
-import com.zjdx.point.db.MyDataBese
+import com.zjdx.point.db.MyDataBase
+import com.zjdx.point.repository.LocationRepository
+import com.zjdx.point.repository.TravelRepository
 
 class PointApplication : Application() {
 
 
-    lateinit var db: MyDataBese
+    val database by lazy { MyDataBase.getDatabase(this) }
+    val locationRepository by lazy { LocationRepository(database.locationDao()) }
+    val travelRepository by lazy {
+        TravelRepository(
+            database.travelRecordDao(),
+            database.locationDao()
+        )
+    }
+
     override fun onCreate() {
         super.onCreate()
-        db = Room.databaseBuilder(
-            applicationContext,
-            MyDataBese::class.java, "point"
-        ).build()
     }
 }

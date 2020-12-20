@@ -1,25 +1,47 @@
 package com.zjdx.point.ui.map
 
+import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.zjdx.point.databinding.ItemRecylerTravelAcBinding
+import com.zjdx.point.db.model.Location
+import java.text.SimpleDateFormat
 
-class TravelRecylerAdapter : RecyclerView.Adapter<TravelRecylerAdapter.ViewHolder>() {
+class TravelRecylerAdapter(val context: Context) :
+    ListAdapter<Location, TravelRecylerAdapter.ViewHolder>(LocationComparator()) {
 
 
+    lateinit var binding: ItemRecylerTravelAcBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        TODO("Not yet implemented")
+        binding = ItemRecylerTravelAcBinding.inflate(LayoutInflater.from(context), parent, false)
+        return ViewHolder(binding.root)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val current = getItem(position)
+        binding.addressItemRecylerTravelAc.text = "位置信息:" + current.address
+        binding.latItemRecylerTravelAc.text = "经度:" + current.lat.toString()
+        binding.lngItemRecylerTravelAc.text = "纬度:" + current.lng.toString()
+        binding.timeItemRecylerTravelAc.text =
+            SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(current.creatTime)
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class LocationComparator : DiffUtil.ItemCallback<Location>() {
+        override fun areItemsTheSame(oldItem: Location, newItem: Location): Boolean {
+            return oldItem === newItem
+        }
 
+        override fun areContentsTheSame(oldItem: Location, newItem: Location): Boolean {
+            return oldItem == newItem
+        }
     }
 }

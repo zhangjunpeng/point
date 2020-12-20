@@ -1,6 +1,7 @@
 package com.zjdx.point.ui
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
@@ -12,13 +13,14 @@ import com.zjdx.point.databinding.ActivityMainBinding
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.ui.base.BaseActivity
+import com.zjdx.point.ui.map.TravlelActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 class MainActivity : BaseActivity() {
 
-    val TAG="LocationService"
+    val TAG = "LocationService"
     private val CODE: Int = 3000
     lateinit var binding: ActivityMainBinding
 
@@ -32,11 +34,9 @@ class MainActivity : BaseActivity() {
 
     override fun initView() {
         binding.startMainAc.setOnClickListener {
+            startActivity(Intent(this, TravlelActivity::class.java))
         }
     }
-
-
-
 
 
     fun initLocationService() {
@@ -64,12 +64,7 @@ class MainActivity : BaseActivity() {
         }
 
 
-
-
-
     }
-
-
 
 
 }

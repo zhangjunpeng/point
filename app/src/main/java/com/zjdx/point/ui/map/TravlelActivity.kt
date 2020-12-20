@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.widget.LinearLayout
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
@@ -14,8 +16,10 @@ import com.amap.api.maps2d.CameraUpdate
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.CameraPosition
 import com.amap.api.maps2d.model.MyLocationStyle
+import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityTravlelBinding
 import com.zjdx.point.db.model.Location
+import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.ui.base.BaseActivity
 import java.text.SimpleDateFormat
 import java.util.*
@@ -23,6 +27,7 @@ import java.util.*
 
 class TravlelActivity : BaseActivity() {
 
+    private lateinit var adapter: TravelRecylerAdapter
     lateinit var binding: ActivityTravlelBinding
 
     lateinit var map: AMap
@@ -30,6 +35,12 @@ class TravlelActivity : BaseActivity() {
     lateinit var mLocationClient: AMapLocationClient
 
     val TAG = "TravlelActivity"
+    val travelRecord = TravelRecord(createTime = Date().time)
+
+
+    private val travelViewModel: TravelViewModel by viewModels<TravelViewModel> {
+        TravelViewModelFactory((application as PointApplication).travelRepository, travelRecord.id)
+    }
 
     //声明AMapLocationClient类对象
 
@@ -39,6 +50,7 @@ class TravlelActivity : BaseActivity() {
             if (amapLocation.errorCode == 0) {
 
                 val loca = Location(
+                    tId = travelRecord.id,
                     lat = amapLocation.latitude,
                     lng = amapLocation.longitude,
                     speed = amapLocation.speed,
@@ -46,8 +58,15 @@ class TravlelActivity : BaseActivity() {
                     altitude = amapLocation.altitude,
                     accuracy = amapLocation.accuracy,
                     source = amapLocation.locationType,
-                    creatTime = amapLocation.time
+                    creatTime = amapLocation.time,
+                    address = amapLocation.address
                 )
+                try {
+                    travelViewModel.repository.insertLocation(loca)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
                 //解析定位结果
                 Log.i(TAG, "latitude" + amapLocation.latitude.toString())//获取纬度
                 Log.i(TAG, "longitude" + amapLocation.longitude.toString())//获取经度
@@ -78,16 +97,23 @@ class TravlelActivity : BaseActivity() {
         }
     }
 
+    override fun initViewMoedl() {
+//        travelViewModel.setQueryId(travelRecord.id)
+        travelViewModel.allLication.observe(this, { locations ->
+            locations.let {
+                adapter.submitList(it)
+            }
+
+        })
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.mapviewTarvelAc.onCreate(savedInstanceState)
-
         initMap()
         initLocationService()
-
         startLoactionService()
-
 
     }
 
@@ -157,6 +183,11 @@ class TravlelActivity : BaseActivity() {
         binding.titleBarTravelAc.rightIvTitleBar.setOnClickListener {
             binding.root.openDrawer(Gravity.RIGHT, true)
         }
+
+        binding.recylerTravelAc.layoutManager = LinearLayoutManager(this)
+        adapter = TravelRecylerAdapter(this)
+
+        binding.recylerTravelAc.adapter = adapter
     }
 
     override fun onPause() {

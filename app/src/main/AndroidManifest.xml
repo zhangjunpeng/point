@@ -23,20 +23,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Point">
         <activity android:name=".ui.map.TravlelActivity"
-
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            />
         <activity
             android:name=".ui.base.BaseActivity"
             android:label="@string/title_activity_base"
             android:theme="@style/Theme.Point.NoActionBar" />
         <activity android:name=".ui.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <service android:name="com.amap.api.location.APSService" />

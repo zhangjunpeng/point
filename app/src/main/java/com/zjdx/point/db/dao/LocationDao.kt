@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LocationDao {
     @Query("Select * from Location")
-    fun getAll(): List<Location>
+    fun getAll(): Flow<List<Location>>
 
     @Query("Select * from Location where t_id = :tId")
     fun queryByTid(tId: String): Flow<List<Location>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertLocation(vararg location: Location)
+    fun insertLocation(location: Location)
 }

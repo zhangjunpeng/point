@@ -7,28 +7,44 @@
     android:orientation="vertical"
     tools:context=".ui.map.TravlelActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-    <include
-        android:id="@+id/title_bar_travel_ac"
-        layout="@layout/title_bar"
-        />
+
+        <include
+            android:id="@+id/title_bar_travel_ac"
+            layout="@layout/title_bar" />
+
         <com.amap.api.maps2d.MapView
             android:id="@+id/mapview_tarvel_ac"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_below="@+id/title_bar_travel_ac" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/end_travel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_border"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:text="结束出行"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/white"
+            />
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyler_travel_ac"
         android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:fitsSystemWindows="true"
         android:background="@color/white"
-        />
+        android:fitsSystemWindows="true" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
