@@ -19,7 +19,7 @@ data class Location(
     @ColumnInfo(name = "accuracy") val accuracy: Float,//精度
     @ColumnInfo(name = "source") val source: Int,//来源
     @ColumnInfo(name = "address") val address: String,
-    @ColumnInfo(name = "creat_time") val creatTime: Long,//采集时间
+    @ColumnInfo(name = "creat_time") val creatTime: String,//采集时间
 ){
 
 }

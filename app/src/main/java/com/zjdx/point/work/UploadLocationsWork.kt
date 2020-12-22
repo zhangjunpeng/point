@@ -62,7 +62,7 @@ class UploadLocationsWork(
             travelObj.put("traveluser", travelRecord.travelTypes)
             travelObj.put(
                 "traveltime",
-                SimpleDateFormat("yyyy-mm-dd  HH:mm:ss").format(travelRecord.createTime)
+                travelRecord.createTime
             )
 
             jsonObject.put("param", paramArray)

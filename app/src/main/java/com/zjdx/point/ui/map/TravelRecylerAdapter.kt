@@ -26,8 +26,8 @@ class TravelRecylerAdapter(val context: Context) :
         binding.addressItemRecylerTravelAc.text = "位置信息:" + current.address
         binding.latItemRecylerTravelAc.text = "经度:" + current.lat.toString()
         binding.lngItemRecylerTravelAc.text = "纬度:" + current.lng.toString()
-        binding.timeItemRecylerTravelAc.text =
-            SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(current.creatTime)
+        binding.timeItemRecylerTravelAc.text = "时间：" + current.creatTime
+
     }
 
 

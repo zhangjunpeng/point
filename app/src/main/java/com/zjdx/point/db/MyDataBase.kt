@@ -9,7 +9,7 @@ import com.zjdx.point.db.model.TravelRecord
 
 @Database(
     entities = [Location::class, TravelRecord::class],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 abstract class MyDataBase : RoomDatabase() {

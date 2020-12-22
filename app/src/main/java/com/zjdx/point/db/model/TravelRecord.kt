@@ -11,7 +11,7 @@ data class TravelRecord(
     var id: String = UUID.randomUUID().toString(),
 
     @ColumnInfo(name = "create_time")
-    val createTime: Long,
+    val createTime: String,
 
     @ColumnInfo(name = "travel_type")
     val travelTypes:String="骑行",

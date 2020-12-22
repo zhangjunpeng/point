@@ -57,7 +57,10 @@ class TravelViewModel(val repository: TravelRepository, id: String) : ViewModel(
                         locationObj.put("accuracy", loca.accuracy)
                         locationObj.put("source", loca.source)
                         locationObj.put("travelposition", loca.address)
-                        locationObj.put("collecttime", loca.creatTime)
+                        locationObj.put(
+                            "collecttime",
+                            loca.creatTime
+                        )
                         paramArray.put(locationObj)
                     }
                 }
@@ -66,7 +69,7 @@ class TravelViewModel(val repository: TravelRepository, id: String) : ViewModel(
                 travelObj.put("traveluser", travelRecord.travelUser)
                 travelObj.put(
                     "traveltime",
-                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(travelRecord.createTime)
+                    travelRecord.createTime
                 )
 
                 jsonObject.put("param", paramArray)
@@ -89,6 +92,7 @@ class TravelViewModel(val repository: TravelRepository, id: String) : ViewModel(
     fun postTravel(travelInfo: String): Back<SubmitBackBean> {
         try {
 
+            Log.i("data", travelInfo)
             val mediaType = "application/json; charset=utf-8".toMediaType()
 
             val client = OkHttpClient()
@@ -125,7 +129,14 @@ class TravelViewModel(val repository: TravelRepository, id: String) : ViewModel(
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
-            return Back.Error(SubmitBackBean(code = 600, data = "", msg = "服务器异常", time =  Date().time))
+            return Back.Error(
+                SubmitBackBean(
+                    code = 600,
+                    data = "",
+                    msg = "服务器异常",
+                    time = Date().time
+                )
+            )
         }
     }
 

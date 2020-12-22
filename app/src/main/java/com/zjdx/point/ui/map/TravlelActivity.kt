@@ -18,6 +18,7 @@ import com.zjdx.point.databinding.ActivityTravlelBinding
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.ui.base.BaseActivity
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -31,7 +32,8 @@ class TravlelActivity : BaseActivity() {
     lateinit var mLocationClient: AMapLocationClient
 
     val TAG = "TravlelActivity"
-    val travelRecord = TravelRecord(createTime = Date().time)
+    val travelRecord =
+        TravelRecord(createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date().time))
 
 
     private val travelViewModel: TravelViewModel by viewModels<TravelViewModel> {
@@ -54,7 +56,7 @@ class TravlelActivity : BaseActivity() {
                     altitude = amapLocation.altitude,
                     accuracy = amapLocation.accuracy,
                     source = amapLocation.locationType,
-                    creatTime = amapLocation.time,
+                    creatTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(amapLocation.time),
                     address = amapLocation.address
                 )
                 map.animateCamera(
