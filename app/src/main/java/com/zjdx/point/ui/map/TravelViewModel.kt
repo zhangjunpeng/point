@@ -51,19 +51,19 @@ class TravelViewModel(val repository: TravelRepository, id: String) : ViewModel(
                     locations.forEach { loca ->
                         val locationObj = JSONObject()
                         locationObj.put("longitude", loca.lng)
-                        locationObj.put("latitude", loca.lng)
-                        locationObj.put("speed", loca.lng)
-                        locationObj.put("height", loca.lng)
-                        locationObj.put("accuracy", loca.lng)
-                        locationObj.put("source", loca.lng)
-                        locationObj.put("travelposition", loca.lng)
-                        locationObj.put("collecttime", loca.lng)
+                        locationObj.put("latitude", loca.lat)
+                        locationObj.put("speed", loca.speed)
+                        locationObj.put("height", loca.altitude)
+                        locationObj.put("accuracy", loca.accuracy)
+                        locationObj.put("source", loca.source)
+                        locationObj.put("travelposition", loca.address)
+                        locationObj.put("collecttime", loca.creatTime)
                         paramArray.put(locationObj)
                     }
                 }
                 val travelObj = JSONObject()
                 travelObj.put("traveltypes", travelRecord.travelTypes)
-                travelObj.put("traveluser", travelRecord.travelTypes)
+                travelObj.put("traveluser", travelRecord.travelUser)
                 travelObj.put(
                     "traveltime",
                     SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(travelRecord.createTime)
