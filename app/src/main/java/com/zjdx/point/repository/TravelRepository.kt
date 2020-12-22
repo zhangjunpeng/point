@@ -23,6 +23,11 @@ class TravelRepository(
     }
 
     @WorkerThread
+    fun getLocationListById(tid: String): List<Location> {
+        return locationDao.queryListByTid(tid)
+    }
+
+    @WorkerThread
     fun insertTravelRecord(travelRecord: TravelRecord) {
         travelRecordDao.insertTravelRecord(travelRecord)
     }
@@ -30,6 +35,11 @@ class TravelRepository(
     @WorkerThread
     fun insertLocation(location: Location) {
         locationDao.insertLocation(location)
+    }
+
+    @WorkerThread
+    fun findHasNotUpload():TravelRecord{
+        return travelRecordDao.findHasNotUpload()
     }
 
 }

@@ -3,7 +3,9 @@ package com.zjdx.point.db.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.beust.klaxon.Klaxon
 import java.util.*
+
 
 @Entity
 data class Location(
@@ -19,4 +21,6 @@ data class Location(
     @ColumnInfo(name = "source") val source: Int,//来源
     @ColumnInfo(name = "address") val address: String,
     @ColumnInfo(name = "creat_time") val creatTime: Long,//采集时间
-)
+){
+
+}

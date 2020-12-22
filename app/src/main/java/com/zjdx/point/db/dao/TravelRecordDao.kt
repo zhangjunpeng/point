@@ -16,4 +16,7 @@ interface TravelRecordDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTravelRecord(vararg travelRecord: TravelRecord)
+
+    @Query("Select * from TravelRecord where is_upload= 0 limit 1")
+    fun findHasNotUpload(): TravelRecord
 }

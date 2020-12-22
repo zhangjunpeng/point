@@ -16,6 +16,9 @@ interface LocationDao {
     @Query("Select * from Location where t_id = :tId")
     fun queryByTid(tId: String): Flow<List<Location>>
 
+    @Query("Select * from Location where t_id = :tId")
+    fun queryListByTid(tId: String): List<Location>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertLocation(location: Location)
 }

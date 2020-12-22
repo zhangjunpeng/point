@@ -3,25 +3,21 @@ package com.zjdx.point.ui.map
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
-import android.widget.LinearLayout
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.amap.api.maps2d.AMap
-import com.amap.api.maps2d.AMapOptions
-import com.amap.api.maps2d.CameraUpdate
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.CameraPosition
+import com.amap.api.maps2d.model.LatLng
 import com.amap.api.maps2d.model.MyLocationStyle
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityTravlelBinding
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.ui.base.BaseActivity
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -61,6 +57,16 @@ class TravlelActivity : BaseActivity() {
                     creatTime = amapLocation.time,
                     address = amapLocation.address
                 )
+                map.animateCamera(
+                    CameraUpdateFactory.newCameraPosition(
+                        CameraPosition(
+                            LatLng(
+                                amapLocation.latitude,
+                                amapLocation.longitude
+                            ), 18f, 30f, 0f
+                        )
+                    )
+                )
                 try {
                     travelViewModel.repository.insertLocation(loca)
                 } catch (e: Exception) {
@@ -97,16 +103,6 @@ class TravlelActivity : BaseActivity() {
         }
     }
 
-    override fun initViewMoedl() {
-//        travelViewModel.setQueryId(travelRecord.id)
-        travelViewModel.allLication.observe(this, { locations ->
-            locations.let {
-                adapter.submitList(it)
-            }
-
-        })
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,6 +111,22 @@ class TravlelActivity : BaseActivity() {
         initLocationService()
         startLoactionService()
 
+    }
+
+    override fun initViewMoedl() {
+//        travelViewModel.setQueryId(travelRecord.id)
+        travelViewModel.allLication.observe(this, { locations ->
+            locations.let {
+                adapter.submitList(it)
+            }
+        })
+
+        travelViewModel.submitBackBeanLiveData.observe(this, {
+            dismissProgressDialog()
+            if (it.msg.isNotEmpty()) {
+                showAlerDialog(it)
+            }
+        })
     }
 
     private fun initMap() {
@@ -188,6 +200,13 @@ class TravlelActivity : BaseActivity() {
         adapter = TravelRecylerAdapter(this)
 
         binding.recylerTravelAc.adapter = adapter
+
+
+        binding.endTravel.setOnClickListener {
+            showProgressDialog()
+            travelViewModel.repository.insertTravelRecord(travelRecord)
+            travelViewModel.uploadLocation()
+        }
     }
 
     override fun onPause() {
