@@ -1,4 +1,4 @@
-package com.zjdx.point.ui.map
+package com.zjdx.point.ui.travel
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zjdx.point.databinding.ItemRecylerTravelAcBinding
 import com.zjdx.point.db.model.Location
-import java.text.SimpleDateFormat
 
 class TravelRecylerAdapter(val context: Context) :
     ListAdapter<Location, TravelRecylerAdapter.ViewHolder>(LocationComparator()) {

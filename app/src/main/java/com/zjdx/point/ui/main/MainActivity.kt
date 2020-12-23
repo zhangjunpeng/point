@@ -1,21 +1,14 @@
-package com.zjdx.point.ui
+package com.zjdx.point.ui.main
 
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.amap.api.location.AMapLocationClient
-import com.amap.api.location.AMapLocationClientOption
-import com.amap.api.location.AMapLocationListener
 import com.zjdx.point.databinding.ActivityMainBinding
-import com.zjdx.point.db.model.Location
-import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.ui.base.BaseActivity
-import com.zjdx.point.ui.map.TravlelActivity
-import java.text.SimpleDateFormat
-import java.util.*
+import com.zjdx.point.ui.travel.TravlelActivity
 
 
 class MainActivity : BaseActivity() {
@@ -33,7 +26,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initView() {
-        binding.startMainAc.setOnClickListener {
+        binding.travelMainAc.setOnClickListener {
             startActivity(Intent(this, TravlelActivity::class.java))
         }
     }

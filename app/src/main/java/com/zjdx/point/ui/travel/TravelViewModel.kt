@@ -1,15 +1,13 @@
-package com.zjdx.point.ui.map
+package com.zjdx.point.ui.travel
 
 import android.util.Log
 import androidx.lifecycle.*
-import androidx.work.ListenableWorker
 import com.zjdx.point.bean.Back
 import com.zjdx.point.bean.SubmitBackBean
 import com.zjdx.point.config.REST
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.repository.TravelRepository
-import kotlinx.coroutines.flow.Flow
 import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -17,7 +15,6 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
-import java.text.SimpleDateFormat
 import java.util.*
 
 class TravelViewModel(val repository: TravelRepository, id: String) : ViewModel() {
@@ -67,6 +64,7 @@ class TravelViewModel(val repository: TravelRepository, id: String) : ViewModel(
                 val travelObj = JSONObject()
                 travelObj.put("traveltypes", travelRecord.travelTypes)
                 travelObj.put("traveluser", travelRecord.travelUser)
+                travelObj.put("travelid", travelRecord.id)
                 travelObj.put(
                     "traveltime",
                     travelRecord.createTime

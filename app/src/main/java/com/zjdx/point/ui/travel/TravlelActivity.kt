@@ -1,4 +1,4 @@
-package com.zjdx.point.ui.map
+package com.zjdx.point.ui.travel
 
 import android.os.Bundle
 import android.util.Log
@@ -109,7 +109,7 @@ class TravlelActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.mapviewTarvelAc.onCreate(savedInstanceState)
-        initMap()
+//        initMap()
         initLocationService()
         startLoactionService()
 
@@ -131,27 +131,7 @@ class TravlelActivity : BaseActivity() {
         })
     }
 
-    private fun initMap() {
 
-        map = binding.mapviewTarvelAc.map
-        val myLocationStyle: MyLocationStyle =
-            MyLocationStyle() //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-        myLocationStyle.interval(2000) //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
-
-        map.setMyLocationStyle(myLocationStyle) //设置定位蓝点的Style
-
-        //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
-        map.isMyLocationEnabled = true // 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-
-
-        map.setOnMapLoadedListener {
-
-            map.animateCamera(CameraUpdateFactory.zoomTo(map.maxZoomLevel - 1))
-
-        }
-
-
-    }
 
     private fun initLocationService() {
 
@@ -166,7 +146,7 @@ class TravlelActivity : BaseActivity() {
         //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
         mLocationOption.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
         //设置定位间隔,单位毫秒,默认为2000ms，最低1000ms
-        mLocationOption.interval = 10 * 1000
+        mLocationOption.interval = 2 * 1000
 
         //设置是否返回地址信息（默认返回地址信息）
         mLocationOption.isNeedAddress = true

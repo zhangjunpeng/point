@@ -23,13 +23,13 @@
         android:supportsRtl="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/Theme.Point">
-        <activity android:name=".ui.map.TravlelActivity"
+        <activity android:name=".ui.travel.TravlelActivity"
             />
         <activity
             android:name=".ui.base.BaseActivity"
             android:label="@string/title_activity_base"
             android:theme="@style/Theme.Point.NoActionBar" />
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
