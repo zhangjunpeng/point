@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.zjdx.point.databinding.ItemRecylerTravelAcBinding
 import com.zjdx.point.db.model.Location
 
-class TravelRecylerAdapter(val context: Context) :
-    ListAdapter<Location, TravelRecylerAdapter.ViewHolder>(LocationComparator()) {
+class TravelRecylerAdapter(val context: Context,val locations: List<Location>) :
+    RecyclerView.Adapter<TravelRecylerAdapter.ViewHolder>() {
 
 
     lateinit var binding: ItemRecylerTravelAcBinding
@@ -21,7 +21,7 @@ class TravelRecylerAdapter(val context: Context) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val current = getItem(position)
+        val current = locations[position]
         binding.addressItemRecylerTravelAc.text = "位置信息:" + current.address
         binding.latItemRecylerTravelAc.text = "经度:" + current.lat.toString()
         binding.lngItemRecylerTravelAc.text = "纬度:" + current.lng.toString()
@@ -34,13 +34,9 @@ class TravelRecylerAdapter(val context: Context) :
 
     }
 
-    class LocationComparator : DiffUtil.ItemCallback<Location>() {
-        override fun areItemsTheSame(oldItem: Location, newItem: Location): Boolean {
-            return oldItem === newItem
-        }
-
-        override fun areContentsTheSame(oldItem: Location, newItem: Location): Boolean {
-            return oldItem == newItem
-        }
+    override fun getItemCount(): Int {
+        return locations.size
     }
+
+
 }

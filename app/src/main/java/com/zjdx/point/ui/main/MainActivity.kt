@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import com.amap.api.location.AMapLocationClient
 import com.zjdx.point.databinding.ActivityMainBinding
 import com.zjdx.point.ui.base.BaseActivity
-import com.zjdx.point.ui.travel.TravlelActivity
+import com.zjdx.point.ui.travel.TravelActivity
 
 
 class MainActivity : BaseActivity() {
@@ -27,7 +27,7 @@ class MainActivity : BaseActivity() {
 
     override fun initView() {
         binding.travelMainAc.setOnClickListener {
-            startActivity(Intent(this, TravlelActivity::class.java))
+            startActivity(Intent(this, TravelActivity::class.java))
         }
     }
 
