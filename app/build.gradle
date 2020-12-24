@@ -73,6 +73,7 @@ dependencies {
 
 
 
+
     implementation "androidx.activity:activity-ktx:$activityVersion"
 
     // Dependencies for working with Architecture components

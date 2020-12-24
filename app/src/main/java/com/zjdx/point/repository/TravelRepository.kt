@@ -13,18 +13,14 @@ class TravelRepository(
 ) {
 
     @WorkerThread
-    fun getAll(): Flow<List<TravelRecord>> {
+    fun getAll(): List<TravelRecord> {
         return travelRecordDao.getAll()
     }
 
-    @WorkerThread
-    fun getLocationById(tid: String): Flow<List<Location>> {
-        return locationDao.queryByTid(tid)
-    }
 
     @WorkerThread
-    fun getLocationListById(tid: String): List<Location> {
-        return locationDao.queryListByTid(tid)
+    fun getLocationListById(tid: String): MutableList<Location> {
+        return locationDao.queryListByTid(tid).toMutableList()
     }
 
     @WorkerThread
@@ -38,7 +34,7 @@ class TravelRepository(
     }
 
     @WorkerThread
-    fun findHasNotUpload():TravelRecord{
+    fun findHasNotUpload(): TravelRecord {
         return travelRecordDao.findHasNotUpload()
     }
 

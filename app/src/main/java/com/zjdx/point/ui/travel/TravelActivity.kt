@@ -1,5 +1,6 @@
 package com.zjdx.point.ui.travel
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -10,9 +11,7 @@ import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.amap.api.maps2d.AMap
 import com.amap.api.maps2d.CameraUpdateFactory
-import com.amap.api.maps2d.model.CameraPosition
-import com.amap.api.maps2d.model.LatLng
-import com.amap.api.maps2d.model.MyLocationStyle
+import com.amap.api.maps2d.model.*
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityTravelBinding
 import com.zjdx.point.db.model.Location
@@ -20,6 +19,7 @@ import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.ui.base.BaseActivity
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class TravelActivity : BaseActivity() {
@@ -34,6 +34,11 @@ class TravelActivity : BaseActivity() {
     val TAG = "TravlelActivity"
     val travelRecord =
         TravelRecord(createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date().time))
+
+    private var polyline: Polyline? = null
+    private lateinit var options: PolylineOptions
+
+    val locationList = ArrayList<Location>()
 
 
     private val travelViewModel: TravelViewModel by viewModels<TravelViewModel> {
@@ -62,8 +67,11 @@ class TravelActivity : BaseActivity() {
                         address = amapLocation.address
                     )
 
-                    travelViewModel.repository.insertLocation(loca)
 
+                    travelViewModel.repository.insertLocation(loca)
+                    locationList.add(loca)
+                    travelViewModel.allLication.value = locationList
+                    addPointOnMap(loca)
                     map.animateCamera(
                         CameraUpdateFactory.newCameraPosition(
                             CameraPosition(
@@ -108,6 +116,24 @@ class TravelActivity : BaseActivity() {
             Log.i("LocationService", "amapLocation null")
         }
     }
+
+
+    private fun addPointOnMap(loca: Location) {
+//        latLngs.add(LatLng(loca.lat, loca.lng))
+
+        if (!this::options.isInitialized) {
+            options = PolylineOptions()
+            polyline = map.addPolyline(
+                options.add(LatLng(loca.lat, loca.lng)).width(10f).color(Color.BLUE)
+            )
+        } else {
+            polyline!!.remove()
+            options.add(LatLng(loca.lat, loca.lng))
+            polyline = map.addPolyline(options)
+        }
+
+    }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -193,7 +219,7 @@ class TravelActivity : BaseActivity() {
         }
 
         binding.recylerTravelAc.layoutManager = LinearLayoutManager(this)
-        adapter = TravelRecylerAdapter(this, travelViewModel.allLication.value!!)
+        adapter = TravelRecylerAdapter(this, travelViewModel.allLication)
 
         binding.recylerTravelAc.adapter = adapter
 

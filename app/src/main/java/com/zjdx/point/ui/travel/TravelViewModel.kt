@@ -16,11 +16,14 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
+import kotlin.collections.ArrayList
 
-class TravelViewModel(val repository: TravelRepository, id: String) : ViewModel() {
+class TravelViewModel(val repository: TravelRepository, val id: String) : ViewModel() {
 
 
-    val allLication = repository.getLocationById(id).asLiveData()
+    val allLication = MutableLiveData<MutableList<Location>>().apply {
+        this.value = repository.getLocationListById(id)
+    }
 
 
     fun insertLocation(location: Location) {

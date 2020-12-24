@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TravelRecordDao {
     @Query("Select * from TravelRecord")
-    fun getAll(): Flow<List<TravelRecord>>
+    fun getAll(): List<TravelRecord>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTravelRecord(vararg travelRecord: TravelRecord)

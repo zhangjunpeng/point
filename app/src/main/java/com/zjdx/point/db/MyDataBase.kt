@@ -2,6 +2,8 @@ package com.zjdx.point.db
 
 import android.content.Context
 import androidx.room.*
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.zjdx.point.db.dao.LocationDao
 import com.zjdx.point.db.dao.TravelRecordDao
 import com.zjdx.point.db.model.Location
@@ -30,11 +32,26 @@ abstract class MyDataBase : RoomDatabase() {
                     context.applicationContext,
                     MyDataBase::class.java,
                     "Point"
-                ).allowMainThreadQueries().build()
+                ).allowMainThreadQueries()
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .build()
                 INSTANCE = instance
                 // return instance
                 instance
             }
         }
+
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+
+            }
+        }
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+            }
+        }
     }
+
+
 }

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class LocationRepository(private val mLocationDao: LocationDao) :Repository(){
 
     @WorkerThread
-    fun getlocations(): Flow<List<Location>> {
+    fun getlocations(): List<Location> {
         return mLocationDao.queryByTid("")
     }
 

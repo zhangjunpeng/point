@@ -14,10 +14,10 @@ interface LocationDao {
     fun getAll(): Flow<List<Location>>
 
     @Query("Select * from Location where t_id = :tId")
-    fun queryByTid(tId: String): Flow<List<Location>>
+    fun queryByTid(tId: String): List<Location>
 
-    @Query("Select * from Location where t_id = :tId")
-    fun queryListByTid(tId: String): List<Location>
+    @Query("Select * from Location where t_id = :tId order by creat_time desc")
+    fun queryListByTid(tId: String): Array<Location>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertLocation(location: Location)

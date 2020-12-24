@@ -3,6 +3,7 @@ package com.zjdx.point.ui.main
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.view.Gravity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.amap.api.location.AMapLocationClient
@@ -28,6 +29,9 @@ class MainActivity : BaseActivity() {
     override fun initView() {
         binding.travelMainAc.setOnClickListener {
             startActivity(Intent(this, TravelActivity::class.java))
+        }
+        binding.leftIvMainAc.setOnClickListener {
+            binding.root.openDrawer(Gravity.LEFT)
         }
     }
 

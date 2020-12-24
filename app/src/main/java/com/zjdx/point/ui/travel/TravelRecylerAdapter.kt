@@ -4,13 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.zjdx.point.databinding.ItemRecylerTravelAcBinding
 import com.zjdx.point.db.model.Location
 
-class TravelRecylerAdapter(val context: Context,val locations: List<Location>) :
+class TravelRecylerAdapter(val context: Context, val locations: MutableLiveData<MutableList<Location>>) :
     RecyclerView.Adapter<TravelRecylerAdapter.ViewHolder>() {
 
 
@@ -21,7 +20,7 @@ class TravelRecylerAdapter(val context: Context,val locations: List<Location>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val current = locations[position]
+        val current = locations.value!![position]
         binding.addressItemRecylerTravelAc.text = "位置信息:" + current.address
         binding.latItemRecylerTravelAc.text = "经度:" + current.lat.toString()
         binding.lngItemRecylerTravelAc.text = "纬度:" + current.lng.toString()
@@ -35,7 +34,7 @@ class TravelRecylerAdapter(val context: Context,val locations: List<Location>) :
     }
 
     override fun getItemCount(): Int {
-        return locations.size
+        return locations.value!!.size
     }
 
 
