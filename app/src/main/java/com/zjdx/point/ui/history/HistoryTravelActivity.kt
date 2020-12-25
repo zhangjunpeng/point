@@ -3,6 +3,7 @@ package com.zjdx.point.ui.history
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityHistoryTravelBinding
 import com.zjdx.point.ui.base.BaseActivity
@@ -21,7 +22,8 @@ class HistoryTravelActivity : BaseActivity() {
     }
 
     override fun initView() {
-        super.initView()
+        binding.recyclerHistoryAc.layoutManager=LinearLayoutManager(this)
+        binding.recyclerHistoryAc.adapter=
     }
 
 
