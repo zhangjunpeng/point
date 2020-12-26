@@ -26,8 +26,11 @@ class TravelActivity : BaseActivity() {
 
     private lateinit var adapter: TravelRecylerAdapter
     lateinit var binding: ActivityTravelBinding
-
     lateinit var map: AMap
+    private var polyline: Polyline? = null
+    private lateinit var options: PolylineOptions
+    val locationList = ArrayList<Location>()
+
 
     lateinit var mLocationClient: AMapLocationClient
 
@@ -35,17 +38,14 @@ class TravelActivity : BaseActivity() {
     val travelRecord =
         TravelRecord(createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date().time))
 
-    private var polyline: Polyline? = null
-    private lateinit var options: PolylineOptions
 
-    val locationList = ArrayList<Location>()
+    val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
 
     private val travelViewModel: TravelViewModel by viewModels<TravelViewModel> {
         TravelViewModelFactory((application as PointApplication).travelRepository, travelRecord.id)
     }
 
-    val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     //声明AMapLocationClient类对象
 
     val mAMapLocationListener = AMapLocationListener { amapLocation ->

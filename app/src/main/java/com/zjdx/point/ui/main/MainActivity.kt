@@ -3,13 +3,21 @@ package com.zjdx.point.ui.main
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.text.Html
 import android.view.Gravity
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.work.*
 import com.amap.api.location.AMapLocationClient
+import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityMainBinding
 import com.zjdx.point.ui.base.BaseActivity
+import com.zjdx.point.ui.history.HistoryTravelActivity
 import com.zjdx.point.ui.travel.TravelActivity
+import com.zjdx.point.ui.viewmodel.ViewModelFactory
+import com.zjdx.point.work.UploadLocationsWork
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : BaseActivity() {
@@ -18,7 +26,10 @@ class MainActivity : BaseActivity() {
     private val CODE: Int = 3000
     lateinit var binding: ActivityMainBinding
 
-    lateinit var mLocationClient: AMapLocationClient
+
+    val mainViewModel: MainViewModel by viewModels<MainViewModel> {
+        ViewModelFactory((application as PointApplication).travelRepository)
+    }
 
     override fun initRootView() {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -26,15 +37,55 @@ class MainActivity : BaseActivity() {
         initLocationService()
     }
 
+    override fun initViewMoedl() {
+        mainViewModel.travelCountNum.observe(this, {
+            binding.countnumMainAc.text =
+                Html.fromHtml("当前出行数据共 <font color='blue'>${it}</font> 条")
+        })
+        mainViewModel.travelNotUploadNum.observe(this, {
+            binding.countNotUploadNumMainAc.text =
+                Html.fromHtml("未上传 <font color='red'>${it}</font> 条")
+        })
+    }
+
+    override fun initData() {
+        mainViewModel.findTravelNum()
+        addUploadWork()
+    }
+
     override fun initView() {
         binding.travelMainAc.setOnClickListener {
             startActivity(Intent(this, TravelActivity::class.java))
+        }
+        binding.historyMainAc.setOnClickListener {
+            startActivity(Intent(this, HistoryTravelActivity::class.java))
+
         }
         binding.leftIvMainAc.setOnClickListener {
             binding.root.openDrawer(Gravity.LEFT)
         }
     }
 
+    fun addUploadWork() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiresCharging(true)
+            .build()
+
+        val uploadWorkRequest: WorkRequest =
+            PeriodicWorkRequestBuilder<UploadLocationsWork>(5, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build()
+        WorkManager.getInstance(this).enqueue(uploadWorkRequest)
+
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(uploadWorkRequest.id)
+            .observe(this) { workInfo ->
+                if(workInfo?.state == WorkInfo.State.SUCCEEDED) {
+
+                }
+            }
+
+    }
 
     fun initLocationService() {
         //这里以ACCESS_COARSE_LOCATION为例

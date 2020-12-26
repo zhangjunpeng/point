@@ -38,4 +38,14 @@ class TravelRepository(
         return travelRecordDao.findHasNotUpload()
     }
 
+    @WorkerThread
+    fun getCount():Int{
+        return travelRecordDao.getCount()
+    }
+
+    @WorkerThread
+    fun getCountNotUpload():Int{
+        return travelRecordDao.getCountNotUpload()
+    }
+
 }

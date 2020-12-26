@@ -107,6 +107,8 @@ dependencies {
     implementation 'com.amap.api:location:5.2.0'
     implementation 'com.amap.api:map2d:6.0.0'
 
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
 
 }
 

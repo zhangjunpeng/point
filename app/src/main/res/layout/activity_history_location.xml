@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.history.HistoryLocationActivity">
+
+    <include
+        android:id="@+id/title_bar_hisloca_ac"
+        layout="@layout/title_bar" />
+
+    <com.amap.api.maps2d.MapView
+        android:id="@+id/map_hisloca_ac"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

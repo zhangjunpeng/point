@@ -17,10 +17,19 @@
         android:id="@+id/traveltype_item_recyler_history_ac"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:layout_weight="1"
         android:layout_marginLeft="14dp" />
     <TextView
-        android:layout_width="100dp"
+        android:id="@+id/isupload_item_recyler_history_ac"
+        android:layout_width="90dp"
+        android:layout_height="match_parent"
+        android:text="否"
+        android:gravity="center"
+        />
+    <TextView
+        android:id="@+id/check_locations_item_recyler_history_ac"
+        android:layout_width="70dp"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
         android:background="@drawable/blue_button_border"

@@ -59,7 +59,8 @@ class UploadLocationsWork(
             }
             val travelObj = JSONObject()
             travelObj.put("traveltypes", travelRecord.travelTypes)
-            travelObj.put("traveluser", travelRecord.travelTypes)
+            travelObj.put("traveluser", travelRecord.travelUser)
+            travelObj.put("travelid", travelRecord.id)
             travelObj.put(
                 "traveltime",
                 travelRecord.createTime
@@ -119,7 +120,14 @@ class UploadLocationsWork(
                 return Back.Error(submitBackBean)
             }
         } catch (e: java.lang.Exception) {
-            return Back.Error(SubmitBackBean(code = 600, data = "", msg = "服务器异常", time =Date().time))
+            return Back.Error(
+                SubmitBackBean(
+                    code = 600,
+                    data = "",
+                    msg = "服务器异常",
+                    time = Date().time
+                )
+            )
         }
     }
 }

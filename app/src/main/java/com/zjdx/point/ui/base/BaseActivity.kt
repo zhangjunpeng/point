@@ -15,10 +15,11 @@ open class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         initRootView()
-        initViewMoedl()
         initView()
-
+        initViewMoedl()
+        initData()
     }
+
 
     open fun initRootView() {
 
@@ -32,6 +33,8 @@ open class BaseActivity : AppCompatActivity() {
 
     }
 
+    open fun initData() {
+    }
 
     lateinit var progressDialog: Dialog
     fun showProgressDialog() {

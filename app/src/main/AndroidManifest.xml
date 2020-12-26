@@ -23,7 +23,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Point">
-        <activity android:name=".ui.history.HistoryTravelActivity"></activity>
+        <activity android:name=".ui.history.HistoryLocationActivity"></activity>
+        <activity android:name=".ui.history.HistoryTravelActivity" />
         <activity android:name=".ui.travel.TravelActivity" />
         <activity
             android:name=".ui.base.BaseActivity"
