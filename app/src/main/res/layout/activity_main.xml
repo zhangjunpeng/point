@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:text="自动上传任务已开启" />
+                android:text="点位数据已全部上传完成" />
 
 
             <ProgressBar
@@ -88,6 +88,14 @@
                 android:layout_marginTop="20dp"
 
                 />
+
+            <Button
+                android:id="@+id/begin_upload_main_ac"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="立即上传" />
 
         </LinearLayout>
 

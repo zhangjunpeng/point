@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.text.Html
+import android.util.Log
 import android.view.Gravity
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
@@ -64,6 +65,14 @@ class MainActivity : BaseActivity() {
         binding.leftIvMainAc.setOnClickListener {
             binding.root.openDrawer(Gravity.LEFT)
         }
+        binding.beginUploadMainAc.setOnClickListener {
+            addUploadWork()
+        }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        mainViewModel.findTravelNum()
     }
 
     fun addUploadWork() {
@@ -72,16 +81,16 @@ class MainActivity : BaseActivity() {
             .setRequiresCharging(true)
             .build()
 
-        val uploadWorkRequest: WorkRequest =
-            PeriodicWorkRequestBuilder<UploadLocationsWork>(5, TimeUnit.MINUTES)
+        val uploadWorkRequest = OneTimeWorkRequestBuilder<UploadLocationsWork>()
                 .setConstraints(constraints)
                 .build()
         WorkManager.getInstance(this).enqueue(uploadWorkRequest)
 
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(uploadWorkRequest.id)
             .observe(this) { workInfo ->
-                if(workInfo?.state == WorkInfo.State.SUCCEEDED) {
-
+                Log.i("workInfo", workInfo!!.state.toString())
+                if (workInfo?.state == WorkInfo.State.SUCCEEDED) {
+                    mainViewModel.findTravelNum()
                 }
             }
 

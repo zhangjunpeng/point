@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TravelRecordDao {
-    @Query("Select * from TravelRecord")
+    @Query("Select * from TravelRecord order by create_time")
     fun getAll(): List<TravelRecord>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

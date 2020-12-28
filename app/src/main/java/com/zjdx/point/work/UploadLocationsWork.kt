@@ -5,9 +5,12 @@ import android.util.Log
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
+import com.zjdx.point.PointApplication
 import com.zjdx.point.bean.Back
 import com.zjdx.point.bean.SubmitBackBean
 import com.zjdx.point.config.REST
+import com.zjdx.point.db.MyDataBase
 import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.repository.TravelRepository
 import okhttp3.*
@@ -20,10 +23,11 @@ import java.util.*
 
 class UploadLocationsWork(
     val context: Context,
-    val repository: TravelRepository,
     workerParams: WorkerParameters
 ) :
     Worker(context, workerParams) {
+
+    val database by lazy { MyDataBase.getDatabase(context) }
 
 
     override fun doWork(): Result {
@@ -36,8 +40,10 @@ class UploadLocationsWork(
 
 
     private fun UploadLocation(): Result {
+        val repository = TravelRepository(database.travelRecordDao(), database.locationDao())
+
         var travelRecord: TravelRecord? = repository.findHasNotUpload()
-        if (travelRecord != null) {
+        while (travelRecord != null) {
 
             val jsonObject = JSONObject()
             val locations = repository.getLocationListById(travelRecord.id)
@@ -73,13 +79,17 @@ class UploadLocationsWork(
             if (back is Back.Success) {
                 travelRecord.isUpload = 1
                 repository.insertTravelRecord(travelRecord)
-                return Result.success()
+//                val outputData =
+//                    workDataOf(Pair("msg", back.data.msg), (Pair("code", back.data.code)))
+//                return Result.success(outputData)
             } else {
-
-                return Result.retry()
+//                return Result.failure()
             }
+
+            travelRecord = repository.findHasNotUpload()
         }
-        return Result.retry()
+
+        return Result.success()
     }
 
 

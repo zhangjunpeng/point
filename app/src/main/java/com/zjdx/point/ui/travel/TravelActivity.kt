@@ -54,6 +54,31 @@ class TravelActivity : BaseActivity() {
             if (amapLocation.errorCode == 0) {
                 try {
 
+
+                    var source=""
+                    when(amapLocation.locationType){
+                        1->{
+                            source="GPS定位"
+                        }
+                        2->{
+                            source="前次定位"
+                        }
+                        4->{
+                            source="缓存定位"
+                        }
+                        5->{
+                            source="Wifi定位"
+                        }
+                        6->{
+                            source="基站定位"
+                        }
+                        8->{
+                            source="离线定位"
+                        }
+                        9->{
+                            source="最后位置"
+                        }
+                    }
                     val loca = Location(
                         tId = travelRecord.id,
                         lat = amapLocation.latitude,
@@ -90,25 +115,25 @@ class TravelActivity : BaseActivity() {
                 //解析定位结果
                 Log.i(TAG, "latitude" + amapLocation.latitude.toString())//获取纬度
                 Log.i(TAG, "longitude" + amapLocation.longitude.toString())//获取经度
-                Log.i(
-                    TAG,
-                    "locationType" + amapLocation.locationType.toString()
-                ) //获取当前定位结果来源，如网络定位结果，详见定位类型表
-                Log.i(TAG, "locationDetail" + amapLocation.locationDetail.toString()) //定位信息描述
-
-                Log.i(TAG, "accuracy=" + amapLocation.accuracy.toString())//获取精度信息
-                Log.i(
-                    TAG,
-                    "address=" + amapLocation.address.toString()
-                )
-
-                Log.i(TAG, "altitude=" + amapLocation.altitude.toString())//海拔
-                Log.i(TAG, "speed=" + amapLocation.speed.toString())//速度
-
-                Log.i(
-                    TAG,
-                    "gpsAccuracyStatus=" + amapLocation.gpsAccuracyStatus.toString()
-                )//获取GPS的当前状态
+//                Log.i(
+//                    TAG,
+//                    "locationType" + amapLocation.locationType.toString()
+//                ) //获取当前定位结果来源，如网络定位结果，详见定位类型表
+//                Log.i(TAG, "locationDetail" + amapLocation.locationDetail.toString()) //定位信息描述
+//
+//                Log.i(TAG, "accuracy=" + amapLocation.accuracy.toString())//获取精度信息
+//                Log.i(
+//                    TAG,
+//                    "address=" + amapLocation.address.toString()
+//                )
+//
+//                Log.i(TAG, "altitude=" + amapLocation.altitude.toString())//海拔
+//                Log.i(TAG, "speed=" + amapLocation.speed.toString())//速度
+//
+//                Log.i(
+//                    TAG,
+//                    "gpsAccuracyStatus=" + amapLocation.gpsAccuracyStatus.toString()
+//                )//获取GPS的当前状态
 
 
             }
@@ -126,14 +151,9 @@ class TravelActivity : BaseActivity() {
             polyline = map.addPolyline(
                 options.add(LatLng(loca.lat, loca.lng)).width(10f).color(Color.BLUE)
             )
-        } else {
-            polyline!!.remove()
-            options.add(LatLng(loca.lat, loca.lng))
-            polyline = map.addPolyline(options)
         }
-
+        options.add(LatLng(loca.lat, loca.lng))
     }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -213,21 +233,22 @@ class TravelActivity : BaseActivity() {
     }
 
     override fun initView() {
-        binding.recylerTravelAc.layoutManager = LinearLayoutManager(this)
-        binding.titleBarTravelAc.rightIvTitleBar.setOnClickListener {
-            binding.root.openDrawer(Gravity.RIGHT, false)
-        }
-
-        binding.recylerTravelAc.layoutManager = LinearLayoutManager(this)
-        adapter = TravelRecylerAdapter(this, travelViewModel.allLication)
-
-        binding.recylerTravelAc.adapter = adapter
+//        binding.recylerTravelAc.layoutManager = LinearLayoutManager(this)
+//        binding.titleBarTravelAc.rightIvTitleBar.setOnClickListener {
+//            binding.root.openDrawer(Gravity.RIGHT, false)
+//        }
+//
+//        binding.recylerTravelAc.layoutManager = LinearLayoutManager(this)
+//        adapter = TravelRecylerAdapter(this, travelViewModel.allLication)
+//
+//        binding.recylerTravelAc.adapter = adapter
 
 
         binding.endTravel.setOnClickListener {
-            showProgressDialog()
+//            showProgressDialog()
             travelViewModel.repository.insertTravelRecord(travelRecord)
-            travelViewModel.uploadLocation()
+            finish()
+//            travelViewModel.uploadLocation()
         }
     }
 
@@ -245,6 +266,11 @@ class TravelActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         binding.mapviewTarvelAc.onResume()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mLocationClient.stopLocation()
     }
 
     override fun onDestroy() {
