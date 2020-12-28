@@ -55,28 +55,28 @@ class TravelActivity : BaseActivity() {
                 try {
 
 
-                    var source=""
-                    when(amapLocation.locationType){
-                        1->{
-                            source="GPS定位"
+                    var source = ""
+                    when (amapLocation.locationType) {
+                        1 -> {
+                            source = "GPS定位"
                         }
-                        2->{
-                            source="前次定位"
+                        2 -> {
+                            source = "前次定位"
                         }
-                        4->{
-                            source="缓存定位"
+                        4 -> {
+                            source = "缓存定位"
                         }
-                        5->{
-                            source="Wifi定位"
+                        5 -> {
+                            source = "Wifi定位"
                         }
-                        6->{
-                            source="基站定位"
+                        6 -> {
+                            source = "基站定位"
                         }
-                        8->{
-                            source="离线定位"
+                        8 -> {
+                            source = "离线定位"
                         }
-                        9->{
-                            source="最后位置"
+                        9 -> {
+                            source = "最后位置"
                         }
                     }
                     val loca = Location(
@@ -87,7 +87,7 @@ class TravelActivity : BaseActivity() {
                         direction = amapLocation.description,
                         altitude = amapLocation.altitude,
                         accuracy = amapLocation.accuracy,
-                        source = amapLocation.locationType,
+                        source = source,
                         creatTime = format.format(Date().time),
                         address = amapLocation.address
                     )

@@ -11,7 +11,7 @@ import com.zjdx.point.db.model.TravelRecord
 
 @Database(
     entities = [Location::class, TravelRecord::class],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 abstract class MyDataBase : RoomDatabase() {
@@ -49,8 +49,34 @@ abstract class MyDataBase : RoomDatabase() {
 
         val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(" ALTER TABLE Location RENAME TO Location_temp_old ")
+                database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS Location(\n" +
+                            "\t\"lid\"  TEXT NOT NULL PRIMARY KEY DEFAULT 0,\n" +
+                            "\t\"t_id\" TEXT ,\n" +
+                            "\t\"lat\" TEXT ,\n" +
+                            "\t\"lng\" TEXT ,\n" +
+                            "\t\"speed\" TEXT,\n" +
+                            "\t\"direction\" TEXT ,\n" +
+                            "\t\"altitude\" TEXT,\n" +
+                            "\t\"accuracy\" TEXT ,\n" +
+                            "\t\"source\" TEXT ,\n" +
+                            "\t\"address\" TEXT ,\n" +
+                            "\t\"creat_time\" TEXT \n" +
+                            ")"
+                )
+                database.execSQL(
+                    "INSERT INTO Location SELECT\n" +
+                            " * \n" +
+                            "FROM\n " +
+                            " Location_temp_old;"
+                )
+                database.execSQL("drop TABLE Location_temp_old")
+
             }
         }
+
+
     }
 
 
