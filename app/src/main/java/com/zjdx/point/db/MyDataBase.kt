@@ -52,22 +52,22 @@ abstract class MyDataBase : RoomDatabase() {
                 database.execSQL(" ALTER TABLE Location RENAME TO Location_temp_old ")
                 database.execSQL(
                     "CREATE TABLE IF NOT EXISTS Location(\n" +
-                            "\t\"lid\"  TEXT NOT NULL PRIMARY KEY DEFAULT 0,\n" +
-                            "\t\"t_id\" TEXT ,\n" +
-                            "\t\"lat\" TEXT ,\n" +
-                            "\t\"lng\" TEXT ,\n" +
-                            "\t\"speed\" TEXT,\n" +
-                            "\t\"direction\" TEXT ,\n" +
-                            "\t\"altitude\" TEXT,\n" +
-                            "\t\"accuracy\" TEXT ,\n" +
-                            "\t\"source\" TEXT ,\n" +
-                            "\t\"address\" TEXT ,\n" +
-                            "\t\"creat_time\" TEXT \n" +
+                            "\tlid  TEXT NOT NULL PRIMARY KEY DEFAULT 0,\n" +
+                            "\tt_id TEXT ,\n" +
+                            "\tlat TEXT ,\n" +
+                            "\tlng TEXT ,\n" +
+                            "\tspeed TEXT,\n" +
+                            "\tdirection TEXT ,\n" +
+                            "\taltitude TEXT,\n" +
+                            "\taccuracy TEXT ,\n" +
+                            "\tsource TEXT ,\n" +
+                            "\taddress TEXT ,\n" +
+                            "\tcreat_time TEXT \n" +
                             ")"
                 )
                 database.execSQL(
                     "INSERT INTO Location (lid,t_id,lat,lng,speed,direction,altitude,accuracy,address,creat_time) SELECT\n" +
-                            " (lid,t_id,lat,lng,speed,direction,altitude,accuracy,address,creat_time)\n" +
+                            " lid,t_id,lat,lng,speed,direction,altitude,accuracy,address,creat_time\n" +
                             "FROM\n " +
                             " Location_temp_old;"
                 )
