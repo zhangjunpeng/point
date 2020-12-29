@@ -21,7 +21,7 @@ import permissions.dispatcher.RuntimePermissions
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-
+@RuntimePermissions
 class TravelActivity : BaseActivity() {
 
     lateinit var binding: ActivityTravelBinding
@@ -142,8 +142,8 @@ class TravelActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.mapviewTarvelAc.onCreate(savedInstanceState)
-        initMap()
-        initLocationService()
+        initMapWithPermissionCheck()
+        initLocationServiceWithPermissionCheck()
         startLoactionService()
     }
 
@@ -163,6 +163,11 @@ class TravelActivity : BaseActivity() {
 
 
 
+    @NeedsPermission(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION
+    )
     fun initMap() {
 
         map = binding.mapviewTarvelAc.map
@@ -176,10 +181,18 @@ class TravelActivity : BaseActivity() {
 
         //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
         map.isMyLocationEnabled = true
+        map.setOnMapLoadedListener {
+            map.moveCamera(CameraUpdateFactory.zoomTo(18f))
+        }
 
     }
 
-    private fun initLocationService() {
+    @NeedsPermission(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION
+    )
+    fun initLocationService() {
 
         mLocationClient = AMapLocationClient(applicationContext)
 

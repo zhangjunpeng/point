@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.text.Html
 import android.util.Log
 import android.view.Gravity
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -114,7 +115,7 @@ class MainActivity : BaseActivity() {
     )
     fun initLocationService() {
         //这里以ACCESS_COARSE_LOCATION为例
-
+        Toast.makeText(this,"成功申请",Toast.LENGTH_LONG)
     }
 
 
