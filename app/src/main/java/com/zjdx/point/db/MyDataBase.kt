@@ -66,12 +66,12 @@ abstract class MyDataBase : RoomDatabase() {
                             ")"
                 )
                 database.execSQL(
-                    "INSERT INTO Location SELECT\n" +
-                            " * \n" +
+                    "INSERT INTO Location (lid,t_id,lat,lng,speed,direction,altitude,accuracy,address,creat_time) SELECT\n" +
+                            " (lid,t_id,lat,lng,speed,direction,altitude,accuracy,address,creat_time)\n" +
                             "FROM\n " +
                             " Location_temp_old;"
                 )
-                database.execSQL("drop TABLE Location_temp_old")
+//                database.execSQL("drop TABLE Location_temp_old")
 
             }
         }
