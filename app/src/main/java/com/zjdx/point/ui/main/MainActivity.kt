@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.work.*
-import com.amap.api.location.AMapLocationClient
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityMainBinding
 import com.zjdx.point.ui.base.BaseActivity
@@ -18,7 +17,6 @@ import com.zjdx.point.ui.history.HistoryTravelActivity
 import com.zjdx.point.ui.travel.TravelActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
 import com.zjdx.point.work.UploadLocationsWork
-import java.util.concurrent.TimeUnit
 
 
 class MainActivity : BaseActivity() {
