@@ -51,26 +51,14 @@ abstract class MyDataBase : RoomDatabase() {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL(" ALTER TABLE Location RENAME TO Location_temp_old ")
                 database.execSQL(
-                    "CREATE TABLE IF NOT EXISTS Location(\n" +
-                            "\tlid  TEXT NOT NULL PRIMARY KEY DEFAULT 0,\n" +
-                            "\tt_id TEXT ,\n" +
-                            "\tlat TEXT ,\n" +
-                            "\tlng TEXT ,\n" +
-                            "\tspeed TEXT,\n" +
-                            "\tdirection TEXT ,\n" +
-                            "\taltitude TEXT,\n" +
-                            "\taccuracy TEXT ,\n" +
-                            "\tsource TEXT ,\n" +
-                            "\taddress TEXT ,\n" +
-                            "\tcreat_time TEXT \n" +
-                            ")"
+                    "CREATE TABLE IF NOT EXISTS Location (`lid` TEXT NOT NULL, `t_id` TEXT NOT NULL, `lat` REAL NOT NULL, `lng` REAL NOT NULL, `speed` REAL NOT NULL, `direction` TEXT NOT NULL, `altitude` REAL NOT NULL, `accuracy` REAL NOT NULL, `source` TEXT NOT NULL, `address` TEXT NOT NULL, `creat_time` TEXT NOT NULL, PRIMARY KEY(`lid`))"
                 )
-//                database.execSQL(
-//                    "INSERT INTO Location (lid,t_id,lat,lng,speed,direction,altitude,accuracy,address,creat_time) SELECT\n" +
-//                            " lid,t_id,lat,lng,speed,direction,altitude,accuracy,address,creat_time\n" +
-//                            "FROM\n " +
-//                            " Location_temp_old;"
-//                )
+                database.execSQL(
+                    "INSERT INTO Location  SELECT " +
+                            " * " +
+                            " FROM  " +
+                            " Location_temp_old;"
+                )
 //                database.execSQL("drop TABLE Location_temp_old")
 
             }

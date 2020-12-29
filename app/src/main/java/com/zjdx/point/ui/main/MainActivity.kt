@@ -17,8 +17,10 @@ import com.zjdx.point.ui.history.HistoryTravelActivity
 import com.zjdx.point.ui.travel.TravelActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
 import com.zjdx.point.work.UploadLocationsWork
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.RuntimePermissions
 
-
+@RuntimePermissions
 class MainActivity : BaseActivity() {
 
     val TAG = "LocationService"
@@ -33,7 +35,8 @@ class MainActivity : BaseActivity() {
     override fun initRootView() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initLocationService()
+//        initLocationService()
+        initLocationServiceWithPermissionCheck()
     }
 
     override fun initViewMoedl() {
@@ -94,30 +97,23 @@ class MainActivity : BaseActivity() {
 
     }
 
+
+
+    @NeedsPermission(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_NETWORK_STATE,
+        Manifest.permission.ACCESS_WIFI_STATE,
+        Manifest.permission.CHANGE_WIFI_STATE,
+        Manifest.permission.READ_PHONE_STATE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
+        Manifest.permission.BLUETOOTH,
+        Manifest.permission.BLUETOOTH_ADMIN,
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION
+    )
     fun initLocationService() {
         //这里以ACCESS_COARSE_LOCATION为例
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            //申请WRITE_EXTERNAL_STORAGE权限
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_NETWORK_STATE,
-                    Manifest.permission.ACCESS_WIFI_STATE,
-                    Manifest.permission.CHANGE_WIFI_STATE,
-                    Manifest.permission.READ_PHONE_STATE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
-                    Manifest.permission.BLUETOOTH,
-                    Manifest.permission.BLUETOOTH_ADMIN,
-                ),
-                CODE
-            )//自定义的code
-        }
-
 
     }
 
