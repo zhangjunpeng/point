@@ -24,7 +24,6 @@ import kotlin.collections.ArrayList
 
 class TravelActivity : BaseActivity() {
 
-    private lateinit var adapter: TravelRecylerAdapter
     lateinit var binding: ActivityTravelBinding
     lateinit var map: AMap
     private var polyline: Polyline? = null
@@ -169,7 +168,7 @@ class TravelActivity : BaseActivity() {
     override fun initViewMoedl() {
 //        travelViewModel.setQueryId(travelRecord.id)
         travelViewModel.allLication.observe(this, { locations ->
-            adapter.notifyDataSetChanged()
+//            adapter.notifyDataSetChanged()
         })
 
         travelViewModel.submitBackBeanLiveData.observe(this, {
