@@ -225,7 +225,7 @@ class TravelActivity : BaseActivity() {
                 direction = amapLocation.bearing.toString(),
                 altitude = amapLocation.altitude,
                 accuracy = amapLocation.accuracy,
-                sourceText = source,
+                source = source,
                 creatTime = format.format(Date().time),
                 address = ""
             )

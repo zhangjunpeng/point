@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "653ef7f1d238c73b0f43c8de077eb2d3",
+    "identityHash": "76eb40673c38bf212a52c2549c5b2096",
     "entities": [
       {
         "tableName": "Location",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`lid` TEXT NOT NULL, `t_id` TEXT NOT NULL, `lat` REAL NOT NULL, `lng` REAL NOT NULL, `speed` REAL NOT NULL, `direction` TEXT NOT NULL, `altitude` REAL NOT NULL, `accuracy` REAL NOT NULL, `source` INTEGER NOT NULL, `address` TEXT NOT NULL, `creat_time` TEXT NOT NULL, `source_text` TEXT NOT NULL, PRIMARY KEY(`lid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`lid` TEXT NOT NULL, `t_id` TEXT NOT NULL, `lat` REAL NOT NULL, `lng` REAL NOT NULL, `speed` REAL NOT NULL, `direction` TEXT NOT NULL, `altitude` REAL NOT NULL, `accuracy` REAL NOT NULL, `source` TEXT NOT NULL, `address` TEXT NOT NULL, `creat_time` TEXT NOT NULL, PRIMARY KEY(`lid`))",
         "fields": [
           {
             "fieldPath": "lid",
@@ -59,7 +59,7 @@
           {
             "fieldPath": "source",
             "columnName": "source",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -71,12 +71,6 @@
           {
             "fieldPath": "creatTime",
             "columnName": "creat_time",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sourceText",
-            "columnName": "source_text",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -138,7 +132,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '653ef7f1d238c73b0f43c8de077eb2d3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '76eb40673c38bf212a52c2549c5b2096')"
     ]
   }
 }

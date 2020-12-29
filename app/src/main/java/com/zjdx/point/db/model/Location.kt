@@ -17,10 +17,10 @@ data class Location(
     @ColumnInfo(name = "direction") val direction: String,//方向
     @ColumnInfo(name = "altitude") val altitude: Double,//高度
     @ColumnInfo(name = "accuracy") val accuracy: Float,//精度
-    @ColumnInfo(name = "source") val source: Int=0,//来源
+    @ColumnInfo(name = "source") val source: String,//来源
     @ColumnInfo(name = "address") val address: String,
     @ColumnInfo(name = "creat_time") val creatTime: String,//采集时间
-    @ColumnInfo(name = "source_text") val sourceText: String,//来源
+//    @ColumnInfo(name = "source_text") val sourceText: String,//来源
 ) {
 
 }
