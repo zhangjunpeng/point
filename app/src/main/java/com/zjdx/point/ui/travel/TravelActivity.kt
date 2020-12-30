@@ -126,7 +126,9 @@ class TravelActivity : BaseActivity() {
             )
         } else {
             polyline!!.remove()
+            options = PolylineOptions().width(10f).color(Color.BLUE)
             options.addAll(latLngList)
+
             polyline = map.addPolyline(options)
         }
     }
