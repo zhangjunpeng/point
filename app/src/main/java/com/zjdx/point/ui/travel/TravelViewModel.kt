@@ -26,6 +26,11 @@ class TravelViewModel(val repository: TravelRepository, val id: String) : ViewMo
     }
 
 
+    fun getLocationsById(tid:String){
+        allLication.value= repository.getLocationListById(tid)
+    }
+
+
     fun insertLocation(location: Location) {
         repository.insertLocation(location)
     }
@@ -35,111 +40,6 @@ class TravelViewModel(val repository: TravelRepository, val id: String) : ViewMo
         repository.insertTravelRecord(travelRecord)
     }
 
-    val submitBackBeanLiveData = MutableLiveData<SubmitBackBean>()
-
-
-    fun uploadLocation() {
-        Thread {
-            var travelRecord: TravelRecord? = repository.findHasNotUpload()
-            if (travelRecord != null) {
-
-                val jsonObject = JSONObject()
-                val locations = repository.getLocationListById(travelRecord.id)
-
-                val paramArray = JSONArray()
-                if (locations.isNotEmpty()) {
-                    locations.forEach { loca ->
-                        val locationObj = JSONObject()
-                        locationObj.put("longitude", loca.lng)
-                        locationObj.put("latitude", loca.lat)
-                        locationObj.put("speed", loca.speed)
-                        locationObj.put("height", loca.altitude)
-                        locationObj.put("accuracy", loca.accuracy)
-                        locationObj.put("source", loca.source)
-                        locationObj.put("travelposition", loca.address)
-                        locationObj.put(
-                            "collecttime",
-                            loca.creatTime
-                        )
-                        paramArray.put(locationObj)
-                    }
-                }
-                val travelObj = JSONObject()
-                travelObj.put("traveltypes", travelRecord.travelTypes)
-                travelObj.put("traveluser", travelRecord.travelUser)
-                travelObj.put("travelid", travelRecord.id)
-                travelObj.put(
-                    "traveltime",
-                    travelRecord.createTime
-                )
-
-                jsonObject.put("param", paramArray)
-                jsonObject.put("object", travelObj)
-
-                val back = postTravel(jsonObject.toString())
-                if (back is Back.Success) {
-                    travelRecord.isUpload = 1
-                    repository.insertTravelRecord(travelRecord)
-                    submitBackBeanLiveData.postValue(back.data)
-                } else if (back is Back.Error) {
-                    submitBackBeanLiveData.postValue(back.error)
-                }
-            }
-        }.start()
-
-    }
-
-
-    fun postTravel(travelInfo: String): Back<SubmitBackBean> {
-        try {
-
-            Log.i("data", travelInfo)
-            val mediaType = "application/json; charset=utf-8".toMediaType()
-
-            val client = OkHttpClient()
-
-            val requestBody = travelInfo.toRequestBody(mediaType)
-
-            val request: Request = Request.Builder()
-                .url(REST.upload)
-                .post(requestBody)
-                .build()
-            val call: Call = client.newCall(request)
-            val response = call.execute()
-            if (response.isSuccessful) {
-                val data = response.body!!.string()
-                Log.i("data", data)
-                val jsonObject = JSONObject(data)
-
-                val submitBackBean = SubmitBackBean(
-                    code = jsonObject.getInt("code"),
-                    msg = jsonObject.getString("msg"),
-                    time = Date().time
-                )
-                return Back.Success(submitBackBean)
-            } else {
-                val data = response.body!!.string()
-                Log.i("data", data)
-                val jsonObject = JSONObject(data)
-                val submitBackBean = SubmitBackBean(
-                    code = jsonObject.getInt("code"),
-                    msg = jsonObject.getString("msg"),
-                    time = Date().time
-                )
-                return Back.Error(submitBackBean!!)
-            }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-            return Back.Error(
-                SubmitBackBean(
-                    code = 600,
-                    data = "",
-                    msg = "服务器异常",
-                    time = Date().time
-                )
-            )
-        }
-    }
 
 }
 

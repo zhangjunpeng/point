@@ -21,6 +21,7 @@ import permissions.dispatcher.RuntimePermissions
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+
 @RuntimePermissions
 class TravelActivity : BaseActivity() {
 
@@ -87,7 +88,7 @@ class TravelActivity : BaseActivity() {
                         altitude = amapLocation.altitude,
                         accuracy = amapLocation.accuracy,
                         source = source,
-                        creatTime = format.format(Date().time),
+                        creatTime = format.format(amapLocation.time),
                         address = amapLocation.address
                     )
 
@@ -95,7 +96,6 @@ class TravelActivity : BaseActivity() {
                     travelViewModel.repository.insertLocation(loca)
 //                    locationList.add(loca)
 //                    travelViewModel.allLication.value = locationList
-                    addPointOnMap(loca)
 //                    map.animateCamera(
 //                        CameraUpdateFactory.newCameraPosition(
 //                            CameraPosition(
@@ -123,18 +123,22 @@ class TravelActivity : BaseActivity() {
     }
 
 
-    private fun addPointOnMap(loca: Location) {
-//        latLngs.add(LatLng(loca.lat, loca.lng))
+    private fun addPointOnMap() {
+
+        val latLngList = ArrayList<LatLng>()
+        for (loca in travelViewModel.allLication.value!!) {
+            latLngList.add(LatLng(loca.lat, loca.lng))
+        }
 
         if (!this::options.isInitialized) {
             options = PolylineOptions()
             polyline = map.addPolyline(
-                options.add(LatLng(loca.lat, loca.lng)).width(10f).color(Color.BLUE)
+                options.addAll(latLngList).width(10f).color(Color.BLUE)
             )
-        }else{
+        } else {
             polyline!!.remove()
-            options.add(LatLng(loca.lat, loca.lng))
-            polyline= map.addPolyline(options)
+            options.addAll(latLngList)
+            polyline = map.addPolyline(options)
         }
     }
 
@@ -151,16 +155,9 @@ class TravelActivity : BaseActivity() {
     override fun initViewMoedl() {
 //        travelViewModel.setQueryId(travelRecord.id)
         travelViewModel.allLication.observe(this, { locations ->
-        })
-
-        travelViewModel.submitBackBeanLiveData.observe(this, {
-            dismissProgressDialog()
-            if (it.msg.isNotEmpty()) {
-                showAlerDialog(it)
-            }
+            addPointOnMap()
         })
     }
-
 
 
     @NeedsPermission(
@@ -231,15 +228,6 @@ class TravelActivity : BaseActivity() {
     }
 
     override fun initView() {
-//        binding.recylerTravelAc.layoutManager = LinearLayoutManager(this)
-//        binding.titleBarTravelAc.rightIvTitleBar.setOnClickListener {
-//            binding.root.openDrawer(Gravity.RIGHT, false)
-//        }
-//
-//        binding.recylerTravelAc.layoutManager = LinearLayoutManager(this)
-//        adapter = TravelRecylerAdapter(this, travelViewModel.allLication)
-//
-//        binding.recylerTravelAc.adapter = adapter
 
 
         binding.endTravel.setOnClickListener {
@@ -268,7 +256,7 @@ class TravelActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
-//        mLocationClient.stopLocation()
+        mLocationClient.stopLocation()
     }
 
     override fun onDestroy() {

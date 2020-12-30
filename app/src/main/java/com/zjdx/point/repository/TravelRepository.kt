@@ -20,7 +20,7 @@ class TravelRepository(
 
     @WorkerThread
     fun getLocationListById(tid: String): MutableList<Location> {
-        return locationDao.queryListByTid(tid).toMutableList()
+        return locationDao.queryByTid(tid).toMutableList()
     }
 
     @WorkerThread
@@ -48,4 +48,13 @@ class TravelRepository(
         return travelRecordDao.getCountNotUpload()
     }
 
+    @WorkerThread
+    fun updateLocations(locations: List<Location>){
+        locationDao.updateLocations(locations)
+    }
+
+    @WorkerThread
+    fun getLocationsHasNotUpload(tid:String): MutableList<Location>{
+        return locationDao.queryListHasNotUploadByTid(tid).toMutableList()
+    }
 }

@@ -11,6 +11,7 @@ import com.zjdx.point.bean.Back
 import com.zjdx.point.bean.SubmitBackBean
 import com.zjdx.point.config.REST
 import com.zjdx.point.db.MyDataBase
+import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.repository.TravelRepository
 import okhttp3.*
@@ -27,69 +28,94 @@ class UploadLocationsWork(
 ) :
     Worker(context, workerParams) {
 
+    private var travelRecord: TravelRecord?=null
+    private lateinit var locations: MutableList<Location>
     val database by lazy { MyDataBase.getDatabase(context) }
 
+    val repository = TravelRepository(database.travelRecordDao(), database.locationDao())
 
     override fun doWork(): Result {
 
         // Do the work here--in this case, upload the images.
 
-        // Indicate whether the work finished successfully with the Result
-        return UploadLocation()
+        travelRecord = repository.findHasNotUpload()
+        travelRecord?.let {
+            locations = repository.getLocationsHasNotUpload(travelRecord!!.id)
+            UploadLocation()
+        }
+        return Result.failure()
     }
 
 
     private fun UploadLocation(): Result {
-        val repository = TravelRepository(database.travelRecordDao(), database.locationDao())
 
-        var travelRecord: TravelRecord? = repository.findHasNotUpload()
-        while (travelRecord != null) {
 
-            val jsonObject = JSONObject()
-            val locations = repository.getLocationListById(travelRecord.id)
+        val jsonObject = JSONObject()
 
-            val paramArray = JSONArray()
-            if (locations.isNotEmpty()) {
-                locations.forEach { loca ->
-                    val locationObj = JSONObject()
-                    locationObj.put("longitude", loca.lng)
-                    locationObj.put("latitude", loca.lng)
-                    locationObj.put("speed", loca.lng)
-                    locationObj.put("height", loca.lng)
-                    locationObj.put("accuracy", loca.lng)
-                    locationObj.put("source", loca.lng)
-                    locationObj.put("travelposition", loca.lng)
-                    locationObj.put("collecttime", loca.lng)
-                    paramArray.put(locationObj)
+
+        val paramArray = JSONArray()
+        if (locations.isNotEmpty()) {
+            locations.forEach { loca ->
+                val locationObj = JSONObject()
+
+                locationObj.put("longitude", loca.lng)
+                locationObj.put("latitude", loca.lat)
+                locationObj.put("speed", loca.speed)
+                locationObj.put("height", loca.altitude)
+                locationObj.put("accuracy", loca.accuracy)
+                locationObj.put("source", loca.source)
+                locationObj.put("travelposition", loca.address)
+                locationObj.put("collecttime", loca.lng)
+                paramArray.put(locationObj)
+            }
+        }
+        val travelObj = JSONObject()
+        travelObj.put("traveltypes", travelRecord!!.travelTypes)
+        travelObj.put("traveluser", travelRecord!!.travelUser)
+        travelObj.put("travelid", travelRecord!!.id)
+        travelObj.put(
+            "traveltime",
+            travelRecord!!.createTime
+        )
+
+        jsonObject.put("param", paramArray)
+        jsonObject.put("object", travelObj)
+
+        val back = postTravel(jsonObject.toString())
+        if (back is Back.Success) {
+            for (loca in locations) {
+                loca.isUpload = 1
+            }
+            repository.updateLocations(locations)
+
+
+            if (checkHasMoreLocationNotUpload(travelRecord!!.id)) {
+                UploadLocation()
+            } else {
+                travelRecord!!.isUpload = 1
+                repository.insertTravelRecord(travelRecord!!)
+
+                travelRecord = repository.findHasNotUpload()
+                travelRecord?.let {
+                    locations = repository.getLocationsHasNotUpload(travelRecord!!.id)
+                    UploadLocation()
                 }
             }
-            val travelObj = JSONObject()
-            travelObj.put("traveltypes", travelRecord.travelTypes)
-            travelObj.put("traveluser", travelRecord.travelUser)
-            travelObj.put("travelid", travelRecord.id)
-            travelObj.put(
-                "traveltime",
-                travelRecord.createTime
-            )
 
-            jsonObject.put("param", paramArray)
-            jsonObject.put("object", travelObj)
 
-            val back = postTravel(jsonObject.toString())
-            if (back is Back.Success) {
-                travelRecord.isUpload = 1
-                repository.insertTravelRecord(travelRecord)
-//                val outputData =
-//                    workDataOf(Pair("msg", back.data.msg), (Pair("code", back.data.code)))
-//                return Result.success(outputData)
-            } else {
-//                return Result.failure()
-            }
-
-            travelRecord = repository.findHasNotUpload()
         }
 
+
         return Result.success()
+    }
+
+    private fun checkHasMoreLocationNotUpload(id: String): Boolean {
+        locations = repository.getLocationsHasNotUpload(id)
+        if (locations.isNullOrEmpty()) {
+            return false
+        }
+
+        return true
     }
 
 

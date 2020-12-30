@@ -33,7 +33,7 @@ abstract class MyDataBase : RoomDatabase() {
                     MyDataBase::class.java,
                     "Point"
                 ).allowMainThreadQueries()
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                     .build()
                 INSTANCE = instance
                 // return instance
@@ -51,7 +51,7 @@ abstract class MyDataBase : RoomDatabase() {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL(" ALTER TABLE Location RENAME TO Location_temp_old ")
                 database.execSQL(
-                    "CREATE TABLE IF NOT EXISTS Location (`lid` TEXT NOT NULL, `t_id` TEXT NOT NULL, `lat` REAL NOT NULL, `lng` REAL NOT NULL, `speed` REAL NOT NULL, `direction` TEXT NOT NULL, `altitude` REAL NOT NULL, `accuracy` REAL NOT NULL, `source` TEXT NOT NULL, `address` TEXT NOT NULL, `creat_time` TEXT NOT NULL, PRIMARY KEY(`lid`))"
+                    "CREATE TABLE IF NOT EXISTS Location (`lid` TEXT NOT NULL, `t_id` TEXT NOT NULL, `lat` REAL NOT NULL, `lng` REAL NOT NULL, `speed` REAL NOT NULL, `direction` TEXT NOT NULL, `altitude` REAL NOT NULL, `accuracy` REAL NOT NULL, `source` TEXT NOT NULL, `is_upload` INTEGER NOT NULL, `address` TEXT NOT NULL, `creat_time` TEXT NOT NULL, PRIMARY KEY(`lid`))"
                 )
                 database.execSQL(
                     "INSERT INTO Location  SELECT " +
@@ -60,6 +60,12 @@ abstract class MyDataBase : RoomDatabase() {
                             " Location_temp_old;"
                 )
 //                database.execSQL("drop TABLE Location_temp_old")
+
+            }
+        }
+
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
 
             }
         }
