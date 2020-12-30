@@ -54,7 +54,6 @@ class TravelActivity : BaseActivity() {
             if (amapLocation.errorCode == 0) {
                 try {
 
-
                     var source = ""
                     when (amapLocation.locationType) {
                         1 -> {
@@ -94,18 +93,8 @@ class TravelActivity : BaseActivity() {
 
 
                     travelViewModel.repository.insertLocation(loca)
-//                    locationList.add(loca)
-//                    travelViewModel.allLication.value = locationList
-//                    map.animateCamera(
-//                        CameraUpdateFactory.newCameraPosition(
-//                            CameraPosition(
-//                                LatLng(
-//                                    amapLocation.latitude,
-//                                    amapLocation.longitude
-//                                ), 18f, 30f, 0f
-//                            )
-//                        )
-//                    )
+                    travelViewModel.getLocationsById(travelRecord.id)
+
 
                     Log.i(
                         TAG,
@@ -229,12 +218,12 @@ class TravelActivity : BaseActivity() {
 
     override fun initView() {
 
-
         binding.endTravel.setOnClickListener {
 //            showProgressDialog()
             travelViewModel.repository.insertTravelRecord(travelRecord)
             finish()
-//            travelViewModel.uploadLocation()
+
+
         }
     }
 
