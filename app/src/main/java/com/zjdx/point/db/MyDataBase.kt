@@ -58,7 +58,7 @@ abstract class MyDataBase : RoomDatabase() {
                             " lid,t_id,lat,lng,speed,direction,altitude,accuracy,source,address,creat_time " +
                             " FROM Location_temp_old"
                 )
-                database.execSQL("drop TABLE Location_temp_old")
+//                database.execSQL("drop TABLE Location_temp_old")
 
             }
         }

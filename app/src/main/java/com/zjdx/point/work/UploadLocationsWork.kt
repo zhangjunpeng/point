@@ -1,5 +1,6 @@
 package com.zjdx.point.work
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.work.ListenableWorker
@@ -34,6 +35,7 @@ class UploadLocationsWork(
 
     val repository = TravelRepository(database.travelRecordDao(), database.locationDao())
 
+    @SuppressLint("RestrictedApi")
     override fun doWork(): Result {
 
         // Do the work here--in this case, upload the images.
@@ -43,7 +45,7 @@ class UploadLocationsWork(
             locations = repository.getLocationsHasNotUpload(travelRecord!!.id)
             UploadLocation()
         }
-        return Result.failure()
+        return Result.Success()
     }
 
 
