@@ -29,9 +29,9 @@ class MigrationTest {
             // db has schema version 1. insert some data using SQL queries.
             // You cannot use DAO classes because they expect the latest schema.
 
-           execSQL("Insert Into Location values('bdfa0840-79a9-45c0-8917-d6cd95209188','62c5bbee-e683-4ec0-90c3-31554927898f','34.79235507471677'," +
-                   "'113.59934812834608','0.0',''在河南中天航空大厦附近','140.55','9.476947784423828','1','河南省郑州市中原区外方路269号靠近河南中天航空大厦'," +
-                   "'2020-12-31 15:30:18')")
+//           execSQL("Insert Into Location values('bdfa0840-79a9-45c0-8917-d6cd95209188','62c5bbee-e683-4ec0-90c3-31554927898f','34.79235507471677'," +
+//                   "'113.59934812834608','0.0',''在河南中天航空大厦附近','140.55','9.476947784423828','1','河南省郑州市中原区外方路269号靠近河南中天航空大厦'," +
+//                   "'2020-12-31 15:30:18')")
 
             // Prepare for the next version.
             close()
