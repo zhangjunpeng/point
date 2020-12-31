@@ -1,6 +1,7 @@
 package com.zjdx.point.ui.travel
 
 import android.Manifest
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +16,12 @@ import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityTravelBinding
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
+import com.zjdx.point.event.UpdateMapEvent
+import com.zjdx.point.services.LocationService
 import com.zjdx.point.ui.base.BaseActivity
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 import java.text.SimpleDateFormat
@@ -25,6 +31,7 @@ import kotlin.collections.ArrayList
 @RuntimePermissions
 class TravelActivity : BaseActivity() {
 
+    private lateinit var serviceIntent: Intent
     lateinit var binding: ActivityTravelBinding
     lateinit var map: AMap
     private var polyline: Polyline? = null
@@ -37,14 +44,9 @@ class TravelActivity : BaseActivity() {
         TravelRecord(createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date().time))
 
 
-    val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-
-
     private val travelViewModel: TravelViewModel by viewModels<TravelViewModel> {
         TravelViewModelFactory((application as PointApplication).travelRepository, travelRecord.id)
     }
-
-
 
 
     private fun addPointOnMap() {
@@ -71,8 +73,12 @@ class TravelActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EventBus.getDefault().register(this)
         binding.mapviewTarvelAc.onCreate(savedInstanceState)
         initMapWithPermissionCheck()
+
+        serviceIntent = Intent(this, LocationService::class.java)
+        startService(serviceIntent)
 
     }
 
@@ -118,12 +124,13 @@ class TravelActivity : BaseActivity() {
     override fun initView() {
 
         binding.endTravel.setOnClickListener {
-//            showProgressDialog()
             travelViewModel.repository.insertTravelRecord(travelRecord)
             finish()
-
-
         }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdatemapEvent(event:UpdateMapEvent){
+        travelViewModel.getLocationsById(event.tid)
     }
 
     override fun onPause() {
@@ -142,15 +149,12 @@ class TravelActivity : BaseActivity() {
         binding.mapviewTarvelAc.onResume()
     }
 
-    override fun onStop() {
-        super.onStop()
-        mLocationClient.stopLocation()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         //在activity执行onDestroy时执行mMapView.onDestroy()，销毁地图
-        binding.mapviewTarvelAc.onDestroy();
+        EventBus.getDefault().unregister(this)
+        binding.mapviewTarvelAc.onDestroy()
+        stopService(serviceIntent)
     }
 
 }

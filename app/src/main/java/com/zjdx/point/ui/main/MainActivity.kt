@@ -25,7 +25,6 @@ import permissions.dispatcher.RuntimePermissions
 class MainActivity : BaseActivity() {
 
     val TAG = "LocationService"
-    private val CODE: Int = 3000
     lateinit var binding: ActivityMainBinding
 
 
@@ -84,8 +83,8 @@ class MainActivity : BaseActivity() {
             .build()
 
         val uploadWorkRequest = OneTimeWorkRequestBuilder<UploadLocationsWork>()
-                .setConstraints(constraints)
-                .build()
+            .setConstraints(constraints)
+            .build()
         WorkManager.getInstance(this).enqueue(uploadWorkRequest)
 
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(uploadWorkRequest.id)
@@ -97,7 +96,6 @@ class MainActivity : BaseActivity() {
             }
 
     }
-
 
 
     @NeedsPermission(
@@ -115,7 +113,7 @@ class MainActivity : BaseActivity() {
     )
     fun initLocationService() {
         //这里以ACCESS_COARSE_LOCATION为例
-        Toast.makeText(this,"成功申请",Toast.LENGTH_LONG)
+        Toast.makeText(this, "成功申请", Toast.LENGTH_LONG)
     }
 
 

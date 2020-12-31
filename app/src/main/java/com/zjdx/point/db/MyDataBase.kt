@@ -54,8 +54,8 @@ abstract class MyDataBase : RoomDatabase() {
                     "CREATE TABLE IF NOT EXISTS Location (`lid` TEXT NOT NULL, `t_id` TEXT NOT NULL, `lat` REAL NOT NULL, `lng` REAL NOT NULL, `speed` REAL NOT NULL, `direction` TEXT NOT NULL, `altitude` REAL NOT NULL, `accuracy` REAL NOT NULL, `source` TEXT NOT NULL, `is_upload` INTEGER NOT NULL, `address` TEXT NOT NULL, `creat_time` TEXT NOT NULL, PRIMARY KEY(`lid`))"
                 )
                 database.execSQL(
-                    "INSERT INTO Location  SELECT " +
-                            " * " +
+                    "INSERT INTO Location (lid,t_id,lat,lng,speed,direction,altitude,accuracy,source,address,creat_time) SELECT " +
+                            " lid,t_id,lat,lng,speed,direction,altitude,accuracy,source,address,creat_time " +
                             " FROM  " +
                             " Location_temp_old;"
                 )

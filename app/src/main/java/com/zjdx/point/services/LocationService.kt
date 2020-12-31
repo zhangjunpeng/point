@@ -7,28 +7,41 @@ import android.util.Log
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
+import com.zjdx.point.PointApplication
+import com.zjdx.point.db.dao.LocationDao
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
+import com.zjdx.point.event.UpdateMapEvent
+import org.greenrobot.eventbus.EventBus
 import java.text.SimpleDateFormat
 import java.util.*
 
 class LocationService : Service() {
+    lateinit var mLocationOption: AMapLocationClientOption
     lateinit var mLocationClient: AMapLocationClient
 
 
     val travelRecord =
         TravelRecord(createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date().time))
+
+    lateinit var locationDao:LocationDao
+
+    val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+
+
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
 
-
     override fun onCreate() {
         super.onCreate()
+        locationDao= (application as PointApplication).database.locationDao()
+        initLocationService()
+
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
+        startLoactionService()
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -37,7 +50,7 @@ class LocationService : Service() {
 
         mLocationClient = AMapLocationClient(applicationContext)
 
-        val mLocationOption = AMapLocationClientOption()
+        mLocationOption = AMapLocationClientOption()
         /**
          * 设置定位场景，目前支持三种场景（签到、出行、运动，默认无场景）
          */
@@ -112,12 +125,13 @@ class LocationService : Service() {
                     )
 
 
-                    travelViewModel.repository.insertLocation(loca)
-                    travelViewModel.getLocationsById(travelRecord.id)
-
+                    locationDao.insertLocation(loca)
+                    val event=UpdateMapEvent()
+                    event.tid=travelRecord.id
+                    EventBus.getDefault().post(event)
 
                     Log.i(
-                        TAG,
+                        "TAG",
                         "source==$source"
                     )
                 } catch (e: Exception) {
@@ -129,5 +143,17 @@ class LocationService : Service() {
         } else {
             Log.i("LocationService", "amapLocation null")
         }
+    }
+
+    private fun destroyLocation() {
+        mLocationClient.stopLocation()
+
+    }
+
+
+    override fun onDestroy() {
+        destroyLocation()
+        super.onDestroy()
+
     }
 }
