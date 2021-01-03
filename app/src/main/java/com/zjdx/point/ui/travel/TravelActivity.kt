@@ -52,6 +52,8 @@ class TravelActivity : BaseActivity() {
 
     val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
+    var isFirst=true
+
 
     private val travelViewModel: TravelViewModel by viewModels<TravelViewModel> {
         TravelViewModelFactory((application as PointApplication).travelRepository, travelRecord.id)
@@ -105,6 +107,7 @@ class TravelActivity : BaseActivity() {
 
                     travelViewModel.repository.insertLocation(loca)
                     travelViewModel.getLocationsById(travelRecord.id)
+
 
 
                     Log.i(
@@ -175,7 +178,7 @@ class TravelActivity : BaseActivity() {
 
         myLocationStyle.interval(1000) //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
 
-        map.setMyLocationStyle(myLocationStyle) //设置定位蓝点的Style
+        map.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW)) //设置定位蓝点的Style
 
         //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
         map.isMyLocationEnabled = true
@@ -237,8 +240,9 @@ class TravelActivity : BaseActivity() {
             finish()
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdatemapEvent(event: UpdateMapEvent){
+    fun onUpdatemapEvent(event: UpdateMapEvent) {
         travelViewModel.getLocationsById(event.tid)
     }
 
@@ -273,6 +277,7 @@ class TravelActivity : BaseActivity() {
     private val NOTIFICATION_CHANNEL_NAME = "BackgroundLocation"
     private var notificationManager: NotificationManager? = null
     var isCreateChannel = false
+
     @SuppressLint("NewApi")
     private fun buildNotification(): Notification? {
         var builder: Notification.Builder? = null
