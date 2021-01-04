@@ -1,6 +1,7 @@
 package com.zjdx.point.ui.travel
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,7 +10,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
@@ -17,6 +20,7 @@ import com.amap.api.location.AMapLocationListener
 import com.amap.api.maps2d.AMap
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.*
+import com.amap.api.maps2d.model.MyLocationStyle.LOCATION_TYPE_LOCATE
 import com.zjdx.point.PointApplication
 import com.zjdx.point.R
 import com.zjdx.point.databinding.ActivityTravelBinding
@@ -52,11 +56,24 @@ class TravelActivity : BaseActivity() {
 
     val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
-    var isFirst=true
+    var isFirst = true
 
 
     private val travelViewModel: TravelViewModel by viewModels<TravelViewModel> {
         TravelViewModelFactory((application as PointApplication).travelRepository, travelRecord.id)
+    }
+
+
+    init {
+        clickListener= View.OnClickListener {
+            if (!TextUtils.isEmpty(editText.editableText.toString())){
+                qixingType=editText.editableText.toString()
+            }
+            travelRecord.travelTypes=qixingType
+            travelViewModel.repository.insertTravelRecord(travelRecord)
+            dismissAbnormalDialog()
+            finish()
+        }
     }
 
     //声明AMapLocationClient类对象
@@ -107,6 +124,10 @@ class TravelActivity : BaseActivity() {
 
                     travelViewModel.repository.insertLocation(loca)
                     travelViewModel.getLocationsById(travelRecord.id)
+                    if (isFirst) {
+                        addMakerOnMap(loca)
+                        isFirst = false
+                    }
 
 
 
@@ -123,6 +144,14 @@ class TravelActivity : BaseActivity() {
         } else {
             Log.i("LocationService", "amapLocation null")
         }
+    }
+
+    private fun addMakerOnMap(loca: Location) {
+
+        val latLng: LatLng = LatLng(loca.lat, loca.lng)
+        val marker: Marker =
+            map.addMarker(MarkerOptions().position(latLng).title("起点").snippet("DefaultMarker"))
+
     }
 
 
@@ -175,13 +204,15 @@ class TravelActivity : BaseActivity() {
 
         val myLocationStyle: MyLocationStyle = MyLocationStyle()
         //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW)
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE)
         myLocationStyle.interval(1000) //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
 
-        map.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW)) //设置定位蓝点的Style
+        map.setMyLocationStyle(myLocationStyle) //设置定位蓝点的Style
+
 
         //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
         map.isMyLocationEnabled = true
+        map.setMyLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW)
         map.setOnMapLoadedListener {
             map.moveCamera(CameraUpdateFactory.zoomTo(18f))
         }
@@ -236,8 +267,8 @@ class TravelActivity : BaseActivity() {
     override fun initView() {
 
         binding.endTravel.setOnClickListener {
-            travelViewModel.repository.insertTravelRecord(travelRecord)
-            finish()
+            showAbnormalDialog("请选择出行方式")
+
         }
     }
 

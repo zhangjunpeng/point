@@ -67,7 +67,7 @@ class UploadLocationsWork(
                 locationObj.put("accuracy", loca.accuracy)
                 locationObj.put("source", loca.source)
                 locationObj.put("travelposition", loca.address)
-                locationObj.put("collecttime", loca.lng)
+                locationObj.put("collecttime", loca.creatTime)
                 paramArray.put(locationObj)
             }
         }

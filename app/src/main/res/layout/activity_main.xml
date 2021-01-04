@@ -56,7 +56,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <TextView
                 android:id="@+id/countnum_main_ac"
@@ -78,6 +79,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
+                android:visibility="gone"
+
                 android:text="点位数据已全部上传完成" />
 
 
@@ -86,6 +89,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
+                android:visibility="gone"
 
                 />
 

@@ -14,7 +14,7 @@ data class TravelRecord(
     val createTime: String,
 
     @ColumnInfo(name = "travel_type")
-    val travelTypes:String="骑行",
+    var travelTypes:String="骑行",
 
     @ColumnInfo(name = "travel_user")
     var travelUser:String="Test",

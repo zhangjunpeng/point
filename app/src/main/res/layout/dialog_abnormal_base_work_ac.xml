@@ -9,24 +9,38 @@
         android:layout_height="40dp"
         android:layout_marginTop="60dp"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        >
+        android:paddingRight="20dp">
 
         <TextView
             android:id="@+id/title_dialog_abnormal_base_work_ac"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="异常原因:"
-            android:textColor="@color/black"
             android:gravity="center"
-        />
+            android:text="异常原因:"
+            android:textColor="@color/black" />
 
         <Spinner
             android:id="@+id/spinner_dialog_abnormal_base_work_ac"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            />
+            android:layout_marginLeft="10dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/Linear_other_dialog_abnormal_base_work_ac"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:visibility="gone"
+        >
+        <EditText
+            android:id="@+id/other_dialog_abnormal_base_work_ac"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/border_text" />
 
     </LinearLayout>
 
@@ -41,18 +55,16 @@
         <TextView
             android:id="@+id/cancel_dialog_abnormal_base_work_ac"
             style="@style/TextViewAsButtonInLinear"
-            android:text="取消"
             android:background="@drawable/border_text"
-            android:textColor="@color/black"
-            />
+            android:text="取消"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/submit_dialog_abnormal_base_work_ac"
             style="@style/TextViewAsButtonInLinear"
-            android:text="提交"
-            android:background="@drawable/border_text_blue"
-            android:textColor="@color/white"
             android:layout_marginLeft="10dp"
-            />
+            android:background="@drawable/border_text_blue"
+            android:text="提交"
+            android:textColor="@color/white" />
     </LinearLayout>
 </LinearLayout>

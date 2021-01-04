@@ -2,10 +2,9 @@ package com.zjdx.point.ui.base
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.View
 import android.view.Window
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.zjdx.point.R
@@ -14,11 +13,38 @@ import com.zjdx.point.bean.SubmitBackBean
 open class BaseActivity : AppCompatActivity() {
 
 
-    private var spinner: Spinner?=null
+    var clickListener: View.OnClickListener = View.OnClickListener { }
+    lateinit var linear: LinearLayout
+    lateinit var editText: EditText
+    private var spinner: Spinner? = null
 
     lateinit var abnormalDialog: Dialog
 
-    val typeList= arrayListOf<String>("骑行","步行","开车")
+    val typeList = arrayListOf<String>("骑行", "步行", "开车", "其他")
+
+    var qixingType = typeList[0]
+
+    open var itemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(
+            parent: AdapterView<*>?,
+            view: View?,
+            position: Int,
+            id: Long
+        ) {
+            if (position == 3) {
+                linear.visibility = View.VISIBLE
+
+            } else {
+                linear.visibility = View.GONE
+                qixingType = typeList[position]
+            }
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +110,6 @@ open class BaseActivity : AppCompatActivity() {
     }
 
 
-
     fun showAbnormalDialog(msg: String = "出行方式") {
         if (!this::abnormalDialog.isInitialized) {
             abnormalDialog = createAbnormalDialog(msg)
@@ -106,6 +131,9 @@ open class BaseActivity : AppCompatActivity() {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_abnormal_base_work_ac)
         spinner = dialog.findViewById<Spinner>(R.id.spinner_dialog_abnormal_base_work_ac)
+        linear = dialog.findViewById<LinearLayout>(R.id.Linear_other_dialog_abnormal_base_work_ac)
+        editText = dialog.findViewById(R.id.other_dialog_abnormal_base_work_ac)
+
 //        val adapter=ArrayAdapter(this,android.R.layout.simple_spinner_item)
         val adapter = ArrayAdapter<String>(
             this,
@@ -114,12 +142,11 @@ open class BaseActivity : AppCompatActivity() {
             typeList
         )
         spinner!!.adapter = adapter
+        spinner!!.onItemSelectedListener = itemSelectedListener
         dialog.findViewById<TextView>(R.id.cancel_dialog_abnormal_base_work_ac)
             .setOnClickListener { dismissAbnormalDialog() }
         dialog.findViewById<TextView>(R.id.submit_dialog_abnormal_base_work_ac)
-            .setOnClickListener { }
-
-
+            .setOnClickListener(clickListener)
         val titleText = dialog.findViewById<TextView>(R.id.title_dialog_abnormal_base_work_ac)
         titleText.text = msg
 
