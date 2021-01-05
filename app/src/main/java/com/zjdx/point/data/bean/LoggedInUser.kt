@@ -1,4 +1,4 @@
-package com.zjdx.point.ui.data.model
+package com.zjdx.point.data.bean
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository

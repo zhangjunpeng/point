@@ -1,7 +1,7 @@
-package com.zjdx.point.bean
+package com.zjdx.point.data.bean
 
 
-data class SubmitBackBean(
+data class SubmitBackModel(
     var code: Int,
     var data: Any?=null,
     var msg: String,

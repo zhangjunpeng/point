@@ -2,7 +2,7 @@ package com.zjdx.point.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.zjdx.point.repository.TravelRepository
+import com.zjdx.point.data.repository.TravelRepository
 import com.zjdx.point.ui.history.HistoryLocationViewModel
 import com.zjdx.point.ui.history.HistoryTravelViewModel
 import com.zjdx.point.ui.main.MainViewModel

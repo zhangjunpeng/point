@@ -1,16 +1,20 @@
-package com.zjdx.point.repository
+package com.zjdx.point.data.repository
 
 import androidx.annotation.WorkerThread
+import com.zjdx.point.data.DataSource
+import com.zjdx.point.data.bean.AppVersionModel
+import com.zjdx.point.data.bean.Back
 import com.zjdx.point.db.dao.LocationDao
 import com.zjdx.point.db.dao.TravelRecordDao
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
-import kotlinx.coroutines.flow.Flow
 
 class TravelRepository(
     private val travelRecordDao: TravelRecordDao,
     private val locationDao: LocationDao
 ) {
+
+    val dataSource = DataSource()
 
     @WorkerThread
     fun getAll(): List<TravelRecord> {
@@ -39,22 +43,28 @@ class TravelRepository(
     }
 
     @WorkerThread
-    fun getCount():Int{
+    fun getCount(): Int {
         return travelRecordDao.getCount()
     }
 
     @WorkerThread
-    fun getCountNotUpload():Int{
+    fun getCountNotUpload(): Int {
         return travelRecordDao.getCountNotUpload()
     }
 
     @WorkerThread
-    fun updateLocations(locations: List<Location>){
+    fun updateLocations(locations: List<Location>) {
         locationDao.updateLocations(locations)
     }
 
     @WorkerThread
-    fun getLocationsHasNotUpload(tid:String): MutableList<Location>{
+    fun getLocationsHasNotUpload(tid: String): MutableList<Location> {
         return locationDao.queryListHasNotUploadByTid(tid).toMutableList()
     }
+
+    suspend fun getAppVersion(): Back<AppVersionModel> {
+
+        return dataSource.getAppVersion()
+    }
+
 }

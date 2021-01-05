@@ -48,11 +48,15 @@ class MainActivity : BaseActivity() {
             binding.countNotUploadNumMainAc.text =
                 Html.fromHtml("未上传 <font color='red'>${it}</font> 条")
         })
+        mainViewModel.appVersionModelLiveData.observe(this,{
+            showAlerDialog("发现新版本！！")
+        })
     }
 
     override fun initData() {
         mainViewModel.findTravelNum()
         addUploadWork()
+        mainViewModel.getAppVersion()
     }
 
     override fun initView() {

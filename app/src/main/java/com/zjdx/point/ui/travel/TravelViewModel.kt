@@ -1,22 +1,9 @@
 package com.zjdx.point.ui.travel
 
-import android.util.Log
 import androidx.lifecycle.*
-import com.zjdx.point.bean.Back
-import com.zjdx.point.bean.SubmitBackBean
-import com.zjdx.point.config.REST
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
-import com.zjdx.point.repository.TravelRepository
-import okhttp3.Call
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONArray
-import org.json.JSONObject
-import java.util.*
-import kotlin.collections.ArrayList
+import com.zjdx.point.data.repository.TravelRepository
 
 class TravelViewModel(val repository: TravelRepository, val id: String) : ViewModel() {
 

@@ -1,13 +1,15 @@
-package com.zjdx.point.ui.data
+package com.zjdx.point.data.repository
 
-import com.zjdx.point.ui.data.model.LoggedInUser
+import com.zjdx.point.data.DataSource
+import com.zjdx.point.data.bean.Back
+import com.zjdx.point.data.bean.LoggedInUser
 
 /**
  * Class that requests authentication and user information from the remote data source and
  * maintains an in-memory cache of login status and user credentials information.
  */
 
-class LoginRepository(val dataSource: LoginDataSource) {
+class LoginRepository(val dataSource: DataSource) {
 
     // in-memory cache of the loggedInUser object
     var user: LoggedInUser? = null
@@ -27,11 +29,11 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout()
     }
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
+    fun login(username: String, password: String): Back<LoggedInUser> {
         // handle login
         val result = dataSource.login(username, password)
 
-        if (result is Result.Success) {
+        if (result is Back.Success) {
             setLoggedInUser(result.data)
         }
 

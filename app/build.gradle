@@ -138,7 +138,6 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
-    implementation 'com.google.code.gson:gson:2.8.6'
 
     //permissionsdispatcher
     implementation "org.permissionsdispatcher:permissionsdispatcher:4.8.0"
@@ -146,6 +145,14 @@ dependencies {
 
     //eventbus
     implementation 'org.greenrobot:eventbus:3.2.0'
+
+    //moshi
+    implementation("com.squareup.moshi:moshi:1.11.0")
+
+    //coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
+
 
 
 }

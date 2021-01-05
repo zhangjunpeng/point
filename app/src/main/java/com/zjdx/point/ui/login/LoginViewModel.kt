@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
 import com.zjdx.point.R
-import com.zjdx.point.ui.data.LoginRepository
-import com.zjdx.point.ui.data.Result
+import com.zjdx.point.data.bean.Back
+import com.zjdx.point.data.repository.LoginRepository
 
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
@@ -21,7 +21,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         // can be launched in a separate asynchronous job
         val result = loginRepository.login(username, password)
 
-        if (result is Result.Success) {
+        if (result is Back.Success) {
             _loginResult.value =
                 LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
         } else {

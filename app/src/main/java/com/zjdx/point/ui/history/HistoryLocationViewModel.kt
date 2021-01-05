@@ -3,7 +3,7 @@ package com.zjdx.point.ui.history
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.zjdx.point.db.model.Location
-import com.zjdx.point.repository.TravelRepository
+import com.zjdx.point.data.repository.TravelRepository
 
 class HistoryLocationViewModel(private val repository: TravelRepository) : ViewModel() {
 

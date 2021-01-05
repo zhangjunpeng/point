@@ -1,4 +1,6 @@
-package com.zjdx.point.bean
+package com.zjdx.point.data.bean
+
+import java.lang.Exception
 
 
 /**
@@ -8,7 +10,7 @@ package com.zjdx.point.bean
 sealed class Back<out T : Any> {
 
     data class Success<out T : Any>(val data: T) : Back<T>()
-    data class Error(val error: SubmitBackBean) : Back<Nothing>()
+    data class Error(val error: SubmitBackModel) : Back<Nothing>()
 
     override fun toString(): String {
         return when (this) {

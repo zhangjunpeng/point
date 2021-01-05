@@ -8,7 +8,7 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.zjdx.point.R
-import com.zjdx.point.bean.SubmitBackBean
+import com.zjdx.point.data.bean.SubmitBackModel
 
 open class BaseActivity : AppCompatActivity() {
 
@@ -96,12 +96,12 @@ open class BaseActivity : AppCompatActivity() {
         return dialog
     }
 
-    fun showAlerDialog(submitBackBean: SubmitBackBean) {
+    fun showAlerDialog(submitBackModel: SubmitBackModel) {
         val alertDialog = AlertDialog.Builder(this)
-            .setMessage(submitBackBean.msg)
+            .setMessage(submitBackModel.msg)
             .setPositiveButton("确定") { dialog, which ->
                 dialog.dismiss()
-                if (submitBackBean.code == 200) {
+                if (submitBackModel.code == 200) {
                     finish()
                 }
             }
@@ -109,6 +109,16 @@ open class BaseActivity : AppCompatActivity() {
         alertDialog.show()
     }
 
+    fun showAlerDialog(msg: String) {
+        val alertDialog = AlertDialog.Builder(this)
+            .setMessage(msg)
+            .setPositiveButton("确定") { dialog, which ->
+                dialog.dismiss()
+
+            }
+            .create()
+        alertDialog.show()
+    }
 
     fun showAbnormalDialog(msg: String = "出行方式") {
         if (!this::abnormalDialog.isInitialized) {

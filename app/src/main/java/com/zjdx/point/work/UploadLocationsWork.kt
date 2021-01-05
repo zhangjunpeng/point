@@ -3,24 +3,20 @@ package com.zjdx.point.work
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
-import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import androidx.work.workDataOf
-import com.zjdx.point.PointApplication
-import com.zjdx.point.bean.Back
-import com.zjdx.point.bean.SubmitBackBean
+import com.zjdx.point.data.bean.Back
+import com.zjdx.point.data.bean.SubmitBackModel
 import com.zjdx.point.config.REST
 import com.zjdx.point.db.MyDataBase
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
-import com.zjdx.point.repository.TravelRepository
+import com.zjdx.point.data.repository.TravelRepository
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
-import java.text.SimpleDateFormat
 import java.util.*
 
 class UploadLocationsWork(
@@ -121,7 +117,7 @@ class UploadLocationsWork(
     }
 
 
-    fun postTravel(travelInfo: String): Back<SubmitBackBean> {
+    fun postTravel(travelInfo: String): Back<SubmitBackModel> {
         try {
 
             val mediaType = "application/json; charset=utf-8".toMediaType()
@@ -140,7 +136,7 @@ class UploadLocationsWork(
                 val data = response.body!!.string()
                 Log.i("data", data)
                 val jsonObject = JSONObject(data)
-                val submitBackBean = SubmitBackBean(
+                val submitBackBean = SubmitBackModel(
                     code = jsonObject.getInt("code"),
                     msg = jsonObject.getString("msg"),
                     time = Date().time
@@ -150,7 +146,7 @@ class UploadLocationsWork(
                 val data = response.body!!.string()
                 Log.i("data", data)
                 val jsonObject = JSONObject(data)
-                val submitBackBean = SubmitBackBean(
+                val submitBackBean = SubmitBackModel(
                     code = jsonObject.getInt("code"),
                     msg = jsonObject.getString("msg"),
                     time = Date().time
@@ -159,7 +155,7 @@ class UploadLocationsWork(
             }
         } catch (e: java.lang.Exception) {
             return Back.Error(
-                SubmitBackBean(
+                SubmitBackModel(
                     code = 600,
                     data = "",
                     msg = "服务器异常",
