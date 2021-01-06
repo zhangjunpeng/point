@@ -2,6 +2,7 @@ package com.zjdx.point.data
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.zjdx.point.config.REST
 import com.zjdx.point.data.bean.*
 import okhttp3.*

@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Gravity
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.work.*
@@ -17,6 +18,7 @@ import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.history.HistoryTravelActivity
 import com.zjdx.point.ui.travel.TravelActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
+import com.zjdx.point.utils.DownloadUtils
 import com.zjdx.point.work.UploadLocationsWork
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
@@ -48,8 +50,20 @@ class MainActivity : BaseActivity() {
             binding.countNotUploadNumMainAc.text =
                 Html.fromHtml("未上传 <font color='red'>${it}</font> 条")
         })
-        mainViewModel.appVersionModelLiveData.observe(this,{
-            showAlerDialog("发现新版本！！")
+        mainViewModel.appVersionModelLiveData.observe(this, {
+            val packageInfo=packageManager.getPackageInfo(packageName,0)
+            val versionCode=packageInfo.versionCode
+            if (it.list.isEmpty() ||versionCode>=it.list[0].version){
+                return@observe
+            }
+            val alertDialog = AlertDialog.Builder(this)
+                .setMessage("发现新版本，请更新！")
+                .setPositiveButton("下载") { dialog, which ->
+                    dialog.dismiss()
+                    DownloadUtils(this, it, "point.apk")
+                }
+                .create()
+            alertDialog.show()
         })
     }
 

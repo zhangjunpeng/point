@@ -109,16 +109,6 @@ open class BaseActivity : AppCompatActivity() {
         alertDialog.show()
     }
 
-    fun showAlerDialog(msg: String) {
-        val alertDialog = AlertDialog.Builder(this)
-            .setMessage(msg)
-            .setPositiveButton("确定") { dialog, which ->
-                dialog.dismiss()
-
-            }
-            .create()
-        alertDialog.show()
-    }
 
     fun showAbnormalDialog(msg: String = "出行方式") {
         if (!this::abnormalDialog.isInitialized) {

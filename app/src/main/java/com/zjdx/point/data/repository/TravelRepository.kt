@@ -63,7 +63,6 @@ class TravelRepository(
     }
 
     suspend fun getAppVersion(): Back<AppVersionModel> {
-
         return dataSource.getAppVersion()
     }
 
