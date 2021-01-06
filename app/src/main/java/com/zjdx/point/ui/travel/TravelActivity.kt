@@ -64,16 +64,20 @@ class TravelActivity : BaseActivity() {
     }
 
 
-    init {
-        clickListener= View.OnClickListener {
-            if (!TextUtils.isEmpty(editText.editableText.toString())){
-                qixingType=editText.editableText.toString()
-            }
-            travelRecord.travelTypes=qixingType
-            travelViewModel.repository.insertTravelRecord(travelRecord)
-            dismissAbnormalDialog()
-            finish()
+    val startListener = View.OnClickListener {
+        if (!TextUtils.isEmpty(editText.editableText.toString())) {
+            qixingType = editText.editableText.toString()
         }
+        travelRecord.travelTypes = qixingType
+        travelViewModel.repository.insertTravelRecord(travelRecord)
+        dismissAbnormalDialog()
+    }
+    val endListener = View.OnClickListener {
+
+    }
+
+    init {
+
     }
 
     //声明AMapLocationClient类对象
@@ -265,11 +269,9 @@ class TravelActivity : BaseActivity() {
     }
 
     override fun initView() {
+        binding.endTravel.text = "开始出行"
+        binding.endTravel.setOnClickListener(startListener)
 
-        binding.endTravel.setOnClickListener {
-            showAbnormalDialog("请选择出行方式")
-
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
