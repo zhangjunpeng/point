@@ -1,16 +1,13 @@
 package com.zjdx.point.ui.travel
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
@@ -20,7 +17,6 @@ import com.amap.api.location.AMapLocationListener
 import com.amap.api.maps2d.AMap
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.*
-import com.amap.api.maps2d.model.MyLocationStyle.LOCATION_TYPE_LOCATE
 import com.zjdx.point.PointApplication
 import com.zjdx.point.R
 import com.zjdx.point.databinding.ActivityTravelBinding
@@ -39,46 +35,58 @@ import kotlin.collections.ArrayList
 
 class TravelActivity : BaseActivity() {
 
-    private lateinit var serviceIntent: Intent
     lateinit var binding: ActivityTravelBinding
     lateinit var map: AMap
     private var polyline: Polyline? = null
     private lateinit var options: PolylineOptions
 //    val locationList = ArrayList<Location>()
 
+    var startTime: Long = 0
+    var endTime: Long = 0
+
 
     lateinit var mLocationClient: AMapLocationClient
 
     val TAG = "TravlelActivity"
-    val travelRecord =
-        TravelRecord(createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date().time))
-
+    var travelRecord: TravelRecord? = null
 
     val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
     var isFirst = true
 
+    init {
+        cancelListener = View.OnClickListener {
+            travelViewModel.deleteTravelRecord(travelRecord!!)
+            finish()
+        }
+    }
+
 
     private val travelViewModel: TravelViewModel by viewModels<TravelViewModel> {
-        TravelViewModelFactory((application as PointApplication).travelRepository, travelRecord.id)
+        TravelViewModelFactory((application as PointApplication).travelRepository)
     }
 
 
     val startListener = View.OnClickListener {
-        if (!TextUtils.isEmpty(editText.editableText.toString())) {
-            qixingType = editText.editableText.toString()
-        }
-        travelRecord.travelTypes = qixingType
-        travelViewModel.repository.insertTravelRecord(travelRecord)
-        dismissAbnormalDialog()
+        startTime = Date().time
+        travelRecord =
+            TravelRecord(createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime))
+        travelViewModel.repository.insertTravelRecord(travelRecord!!)
     }
     val endListener = View.OnClickListener {
+        endTime = Date().time
+        var msg = ""
+        if ((endTime - startTime) > 60 * 1000) {
+            msg = "是否结束本次出行？"
+            showAbnormalDialog(msg, 1)
 
+        } else {
+            msg = "是否结束本次出行？出行时间过短，将不保存记录！"
+            showAbnormalDialog(msg, 2)
+
+        }
     }
 
-    init {
-
-    }
 
     //声明AMapLocationClient类对象
 
@@ -113,7 +121,7 @@ class TravelActivity : BaseActivity() {
                         }
                     }
                     val loca = Location(
-                        tId = travelRecord.id,
+                        tId = travelRecord!!.id,
                         lat = amapLocation.latitude,
                         lng = amapLocation.longitude,
                         speed = amapLocation.speed,
@@ -127,7 +135,7 @@ class TravelActivity : BaseActivity() {
 
 
                     travelViewModel.repository.insertLocation(loca)
-                    travelViewModel.getLocationsById(travelRecord.id)
+                    travelViewModel.getLocationsById(travelRecord!!.id)
                     if (isFirst) {
                         addMakerOnMap(loca)
                         isFirst = false

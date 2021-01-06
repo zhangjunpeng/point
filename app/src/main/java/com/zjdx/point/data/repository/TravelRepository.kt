@@ -8,6 +8,8 @@ import com.zjdx.point.db.dao.LocationDao
 import com.zjdx.point.db.dao.TravelRecordDao
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class TravelRepository(
     private val travelRecordDao: TravelRecordDao,
@@ -22,13 +24,15 @@ class TravelRepository(
     }
 
 
-    @WorkerThread
-    fun getLocationListById(tid: String): MutableList<Location> {
-        return locationDao.queryByTid(tid).toMutableList()
+    suspend fun getLocationListById(tid: String): MutableList<Location> {
+        return withContext(Dispatchers.IO){
+            locationDao.queryByTid(tid).toMutableList()
+        }
     }
 
     @WorkerThread
     fun insertTravelRecord(travelRecord: TravelRecord) {
+
         travelRecordDao.insertTravelRecord(travelRecord)
     }
 
@@ -60,6 +64,11 @@ class TravelRepository(
     @WorkerThread
     fun getLocationsHasNotUpload(tid: String): MutableList<Location> {
         return locationDao.queryListHasNotUploadByTid(tid).toMutableList()
+    }
+
+    @WorkerThread
+    fun deteleTravel(travelRecords: TravelRecord){
+        travelRecordDao.deleteTravelRecrod(travelRecords)
     }
 
     suspend fun getAppVersion(): Back<AppVersionModel> {

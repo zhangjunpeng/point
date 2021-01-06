@@ -2,18 +2,21 @@ package com.zjdx.point.ui.base
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
-import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.zjdx.point.R
 import com.zjdx.point.data.bean.SubmitBackModel
+import com.zjdx.point.databinding.DialogAbnormalBaseWorkAcBinding
 
 open class BaseActivity : AppCompatActivity() {
 
 
-    var clickListener: View.OnClickListener = View.OnClickListener { }
+    lateinit var clickListener: View.OnClickListener
+    lateinit var cancelListener: View.OnClickListener
+
     lateinit var abnormalDialog: Dialog
 
     val typeList = arrayListOf<String>("骑行", "步行", "开车", "其他")
@@ -85,9 +88,9 @@ open class BaseActivity : AppCompatActivity() {
     }
 
 
-    fun showAbnormalDialog(msg: String = "") {
+    fun showAbnormalDialog(msg: String, type: Int) {
         if (!this::abnormalDialog.isInitialized) {
-            abnormalDialog = createAbnormalDialog(msg)
+            abnormalDialog = createAbnormalDialog(msg,type)
         }
 
         if (!abnormalDialog.isShowing) {
@@ -101,20 +104,28 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    open fun createAbnormalDialog(msg: String): Dialog {
+    lateinit var dialogBinding:DialogAbnormalBaseWorkAcBinding
+
+    open fun createAbnormalDialog(msg: String, type: Int): Dialog {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.dialog_abnormal_base_work_ac)
+        dialogBinding=DialogAbnormalBaseWorkAcBinding.inflate(LayoutInflater.from(this))
+        dialog.setContentView(dialogBinding.root)
+
+        dialogBinding.titleDialogAbnormalBaseWorkAc.text = msg
 
 
-        val text=dialog.findViewById<TextView>(R.id.title_dialog_abnormal_base_work_ac)
-        text.text = msg
-        dialog.findViewById<TextView>(R.id.cancel_dialog_abnormal_base_work_ac)
-            .setOnClickListener { dismissAbnormalDialog() }
-        dialog.findViewById<TextView>(R.id.submit_dialog_abnormal_base_work_ac)
-            .setOnClickListener(clickListener)
-        val titleText = dialog.findViewById<TextView>(R.id.title_dialog_abnormal_base_work_ac)
-        titleText.text = msg
+        if (type==1){
+            dialogBinding.cancelDialogAbnormalBaseWorkAc.setOnClickListener { dismissAbnormalDialog() }
+            dialogBinding.submitDialogAbnormalBaseWorkAc.setOnClickListener(clickListener)
+        }else{
+            dialogBinding.cancelDialogAbnormalBaseWorkAc.text="停止记录"
+            dialogBinding.submitDialogAbnormalBaseWorkAc.text="继续记录"
+            dialogBinding.submitDialogAbnormalBaseWorkAc.setOnClickListener{
+                dialog.dismiss()
+            }
+            dialogBinding.cancelDialogAbnormalBaseWorkAc.setOnClickListener(cancelListener)
+        }
 
         dialog.setCanceledOnTouchOutside(false)
         return dialog

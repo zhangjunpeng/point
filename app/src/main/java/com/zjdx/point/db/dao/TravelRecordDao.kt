@@ -1,10 +1,7 @@
 package com.zjdx.point.db.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
 import kotlinx.coroutines.flow.Flow
@@ -25,4 +22,7 @@ interface TravelRecordDao {
 
     @Query("Select count(*) from TravelRecord  where is_upload= 0")
     fun getCountNotUpload(): Int
+
+    @Delete
+    fun deleteTravelRecrod(travelRecords: TravelRecord)
 }
