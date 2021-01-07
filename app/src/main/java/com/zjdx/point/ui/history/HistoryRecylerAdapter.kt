@@ -26,8 +26,8 @@ class HistoryRecylerAdapter(val context: Context, val travelRecordList: List<Tra
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         travelRecordList[position].run {
-            binding.starttimeItemRecylerHistoryAc.text = if (startTime.toInt()==0){DateUtil.dateFormat.format(startTime)}else{"无"}
-            binding.endtimeItemRecylerHistoryAc.text = if (endTime.toInt()==0){DateUtil.dateFormat.format(endTime)}else{"无"}
+            binding.starttimeItemRecylerHistoryAc.text = if (startTime.toInt()!=0){DateUtil.dateFormat.format(startTime)}else{"无"}
+            binding.endtimeItemRecylerHistoryAc.text = if (endTime.toInt()!=0){DateUtil.dateFormat.format(endTime)}else{"无"}
             binding.isuploadItemRecylerHistoryAc.text = if (isUpload == 0) {
                 "否"
             } else {
