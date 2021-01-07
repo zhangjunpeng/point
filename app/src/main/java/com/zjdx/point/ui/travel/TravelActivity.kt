@@ -64,6 +64,8 @@ class TravelActivity : BaseActivity() {
             travelRecord!!.startTime = startTime
             travelRecord!!.endTime = endTime
             travelViewModel.repository.updateTravelRecord(travelRecord!!)
+            mLocationClient.disableBackgroundLocation(true)
+            mLocationClient.stopLocation()
             dismissAbnormalDialog()
             finish()
 
@@ -334,8 +336,7 @@ class TravelActivity : BaseActivity() {
         EventBus.getDefault().unregister(this)
         binding.mapviewTarvelAc.onDestroy()
         //关闭后台定位，参数为true时会移除通知栏，为false时不会移除通知栏，但是可以手动移除
-        mLocationClient.disableBackgroundLocation(true)
-        mLocationClient.stopLocation()
+
 //        stopService(serviceIntent)
     }
 
