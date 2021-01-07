@@ -11,7 +11,7 @@ import com.zjdx.point.db.model.TravelRecord
 
 @Database(
     entities = [Location::class, TravelRecord::class],
-    version = 3,
+    version = 4,
     exportSchema = true
 )
 abstract class MyDataBase : RoomDatabase() {
@@ -65,7 +65,8 @@ abstract class MyDataBase : RoomDatabase() {
 
         val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(database: SupportSQLiteDatabase) {
-
+                database.execSQL("ALTER TABLE TravelRecord ADD COLUMN start_time INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE TravelRecord ADD COLUMN end_time INTEGER NOT NULL DEFAULT 0")
             }
         }
 

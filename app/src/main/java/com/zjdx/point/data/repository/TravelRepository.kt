@@ -60,6 +60,10 @@ class TravelRepository(
     fun updateLocations(locations: List<Location>) {
         locationDao.updateLocations(locations)
     }
+    @WorkerThread
+    fun updateTravelRecord(locations: List<Location>) {
+        locationDao.updateLocations(locations)
+    }
 
     @WorkerThread
     fun getLocationsHasNotUpload(tid: String): MutableList<Location> {

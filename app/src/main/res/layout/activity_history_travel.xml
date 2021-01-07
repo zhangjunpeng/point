@@ -22,10 +22,10 @@
             android:layout_marginLeft="1px"
             android:layout_marginTop="1px"
             android:layout_marginBottom="1px"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:background="@color/white"
             android:gravity="center"
-            android:text="出行时间" />
+            android:text="开始时间" />
 
         <TextView
             android:layout_width="0dp"
@@ -36,7 +36,7 @@
             android:layout_weight="1"
             android:background="@color/white"
             android:gravity="center"
-            android:text="出行方式" />
+            android:text="结束时间" />
         <TextView
             android:id="@+id/isupload_item_recyler_history_ac"
             android:layout_width="90dp"

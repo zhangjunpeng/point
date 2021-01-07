@@ -14,11 +14,17 @@ data class TravelRecord(
     val createTime: String,
 
     @ColumnInfo(name = "travel_type")
-    var travelTypes:String="骑行",
+    var travelTypes: String = "骑行",
 
     @ColumnInfo(name = "travel_user")
-    var travelUser:String="Test",
+    var travelUser: String = "Test",
 
     @ColumnInfo(name = "is_upload")
-    var isUpload: Int = 0
+    var isUpload: Int = 0,
+
+    @ColumnInfo(name = "start_time",)
+    var startTime: Long =0,
+
+    @ColumnInfo(name = "end_time")
+    var endTime: Long=0
 )

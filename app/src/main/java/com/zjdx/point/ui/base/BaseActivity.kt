@@ -14,14 +14,13 @@ import com.zjdx.point.databinding.DialogAbnormalBaseWorkAcBinding
 open class BaseActivity : AppCompatActivity() {
 
 
-    lateinit var clickListener: View.OnClickListener
+    lateinit var saveListener: View.OnClickListener
     lateinit var cancelListener: View.OnClickListener
 
     lateinit var abnormalDialog: Dialog
 
     val typeList = arrayListOf<String>("骑行", "步行", "开车", "其他")
 
-    var qixingType = typeList[0]
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +60,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun dismissProgressDialog() {
-        if (progressDialog != null && progressDialog.isShowing) {
+        if (this::progressDialog.isInitialized && progressDialog.isShowing) {
             progressDialog.dismiss()
         }
     }
@@ -89,9 +88,7 @@ open class BaseActivity : AppCompatActivity() {
 
 
     fun showAbnormalDialog(msg: String, type: Int) {
-        if (!this::abnormalDialog.isInitialized) {
-            abnormalDialog = createAbnormalDialog(msg,type)
-        }
+        abnormalDialog = createAbnormalDialog(msg,type)
 
         if (!abnormalDialog.isShowing) {
             abnormalDialog.show()
@@ -117,7 +114,7 @@ open class BaseActivity : AppCompatActivity() {
 
         if (type==1){
             dialogBinding.cancelDialogAbnormalBaseWorkAc.setOnClickListener { dismissAbnormalDialog() }
-            dialogBinding.submitDialogAbnormalBaseWorkAc.setOnClickListener(clickListener)
+            dialogBinding.submitDialogAbnormalBaseWorkAc.setOnClickListener(saveListener)
         }else{
             dialogBinding.cancelDialogAbnormalBaseWorkAc.text="停止记录"
             dialogBinding.submitDialogAbnormalBaseWorkAc.text="继续记录"

@@ -59,6 +59,15 @@ class TravelActivity : BaseActivity() {
             travelViewModel.deleteTravelRecord(travelRecord!!)
             finish()
         }
+        saveListener = View.OnClickListener {
+
+            travelRecord!!.startTime = startTime
+            travelRecord!!.endTime = endTime
+            travelViewModel.repository
+            dismissAbnormalDialog()
+            finish()
+
+        }
     }
 
 
@@ -72,6 +81,9 @@ class TravelActivity : BaseActivity() {
         travelRecord =
             TravelRecord(createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime))
         travelViewModel.repository.insertTravelRecord(travelRecord!!)
+
+        binding.endTravel.text = "结束出行"
+        binding.endTravel.setOnClickListener(endListener)
     }
     val endListener = View.OnClickListener {
         endTime = Date().time
@@ -141,6 +153,17 @@ class TravelActivity : BaseActivity() {
                         isFirst = false
                     }
 
+
+                    val mCameraUpdate = CameraUpdateFactory.newCameraPosition(
+                        CameraPosition(
+                            LatLng(
+                                amapLocation.latitude,
+                                amapLocation.longitude,
+                            ), 18f, 0f, 0f
+                        )
+                    )
+
+                    map.moveCamera(mCameraUpdate)
 
 
                     Log.i(
