@@ -81,7 +81,7 @@ class TravelActivity : BaseActivity() {
         travelRecord =
             TravelRecord(createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime))
         travelViewModel.repository.insertTravelRecord(travelRecord!!)
-
+        startLoactionService()
         binding.endTravel.text = "结束出行"
         binding.endTravel.setOnClickListener(endListener)
     }
@@ -221,7 +221,6 @@ class TravelActivity : BaseActivity() {
 //        serviceIntent = Intent(this, LocationService::class.java)
 //        startService(serviceIntent)
         initLocationService()
-        startLoactionService()
     }
 
 
@@ -289,7 +288,6 @@ class TravelActivity : BaseActivity() {
 
         //启动后台定位，第一个参数为通知栏ID，建议整个APP使用一个
         mLocationClient.enableBackgroundLocation(2001, buildNotification())
-
         mLocationClient.startLocation()
 
     }
