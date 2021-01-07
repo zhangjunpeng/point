@@ -61,8 +61,8 @@ class TravelRepository(
         locationDao.updateLocations(locations)
     }
     @WorkerThread
-    fun updateTravelRecord(locations: List<Location>) {
-        locationDao.updateLocations(locations)
+    fun updateTravelRecord(travelRecord: TravelRecord) {
+        travelRecordDao.updateTravelRecrod(travelRecord)
     }
 
     @WorkerThread

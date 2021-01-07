@@ -63,7 +63,7 @@ class TravelActivity : BaseActivity() {
 
             travelRecord!!.startTime = startTime
             travelRecord!!.endTime = endTime
-            travelViewModel.repository
+            travelViewModel.repository.updateTravelRecord(travelRecord!!)
             dismissAbnormalDialog()
             finish()
 

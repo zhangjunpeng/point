@@ -25,4 +25,7 @@ interface TravelRecordDao {
 
     @Delete
     fun deleteTravelRecrod(travelRecords: TravelRecord)
+
+    @Update
+    fun updateTravelRecrod(travelRecord: TravelRecord)
 }
