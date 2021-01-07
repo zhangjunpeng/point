@@ -300,6 +300,10 @@ class TravelActivity : BaseActivity() {
     override fun initView() {
         binding.endTravel.text = "开始出行"
         binding.endTravel.setOnClickListener(startListener)
+        binding.titleBarTravelAc.leftIvTitleBar.setOnClickListener {
+            finish()
+        }
+        binding.titleBarTravelAc.rightIvTitleBar.visibility=View.INVISIBLE
 
     }
 
