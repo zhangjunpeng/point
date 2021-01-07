@@ -22,6 +22,7 @@ import com.zjdx.point.R
 import com.zjdx.point.databinding.ActivityTravelBinding
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
+import com.zjdx.point.event.TravelEvent
 import com.zjdx.point.event.UpdateMapEvent
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.utils.Utils
@@ -35,6 +36,7 @@ import kotlin.collections.ArrayList
 
 class TravelActivity : BaseActivity() {
 
+    private var marker: Marker? = null
     lateinit var binding: ActivityTravelBinding
     lateinit var map: AMap
     private var polyline: Polyline? = null
@@ -150,10 +152,6 @@ class TravelActivity : BaseActivity() {
 
                     travelViewModel.repository.insertLocation(loca)
                     travelViewModel.getLocationsById(travelRecord!!.id)
-                    if (isFirst) {
-                        addMakerOnMap(loca)
-                        isFirst = false
-                    }
 
 
                     val mCameraUpdate = CameraUpdateFactory.newCameraPosition(
@@ -183,11 +181,10 @@ class TravelActivity : BaseActivity() {
         }
     }
 
-    private fun addMakerOnMap(loca: Location) {
+    private fun addMakerOnMap(loca: LatLng) {
 
-        val latLng: LatLng = LatLng(loca.lat, loca.lng)
-        val marker: Marker =
-            map.addMarker(MarkerOptions().position(latLng).title("起点").snippet("DefaultMarker"))
+        marker =
+            map.addMarker(MarkerOptions().position(loca).title("起点").snippet("DefaultMarker"))
 
     }
 
@@ -197,6 +194,10 @@ class TravelActivity : BaseActivity() {
         val latLngList = ArrayList<LatLng>()
         for (loca in travelViewModel.allLication.value!!) {
             latLngList.add(LatLng(loca.lat, loca.lng))
+        }
+
+        if (marker == null && latLngList.size > 0) {
+            addMakerOnMap(latLngList[0])
         }
 
         if (!this::options.isInitialized) {
@@ -304,14 +305,27 @@ class TravelActivity : BaseActivity() {
         binding.endTravel.setOnClickListener(startListener)
         binding.titleBarTravelAc.leftIvTitleBar.setOnClickListener {
             finish()
+            if (travelRecord!=null) {
+                val travelEvent = TravelEvent()
+                travelEvent.travelRecord = travelRecord!!
+                EventBus.getDefault().postSticky(travelEvent)
+            }
         }
-        binding.titleBarTravelAc.rightIvTitleBar.visibility=View.INVISIBLE
+        binding.titleBarTravelAc.rightIvTitleBar.visibility = View.INVISIBLE
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdatemapEvent(event: UpdateMapEvent) {
         travelViewModel.getLocationsById(event.tid)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    fun onResumeTravel(travelEvent: TravelEvent) {
+        travelRecord = travelEvent.travelRecord
+        binding.endTravel.text = "结束出行"
+        binding.endTravel.setOnClickListener(endListener)
+        EventBus.getDefault().removeStickyEvent(travelEvent)
     }
 
     override fun onPause() {
