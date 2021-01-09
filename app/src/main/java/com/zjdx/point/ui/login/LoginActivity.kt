@@ -1,6 +1,7 @@
 package com.zjdx.point.ui.login
 
 import android.app.Activity
+import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -15,6 +16,8 @@ import android.widget.Toast
 import com.zjdx.point.R
 import com.zjdx.point.databinding.ActivityLoginBinding
 import com.zjdx.point.ui.base.BaseActivity
+import com.zjdx.point.ui.main.MainActivity
+import com.zjdx.point.ui.register.RegisterActivity
 
 
 class LoginActivity : BaseActivity() {
@@ -29,14 +32,19 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun initView() {
-
+        binding.titleBarLoginAc.leftIvTitleBar.visibility = View.GONE
+        binding.titleBarLoginAc.rightIvTitleBar.visibility = View.GONE
+        binding.titleBarLoginAc.middleTvTitleBar.text = "登录注册"
+        binding.registerLoginAc.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
     }
 
     override fun initViewMoedl() {
 
         val username = binding.username
         val password = binding.password
-        val login = binding.login
+        val login = binding.loginLoginAc
         val loading = binding.loading
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
@@ -69,6 +77,7 @@ class LoginActivity : BaseActivity() {
             setResult(Activity.RESULT_OK)
 
             //Complete and destroy login activity once successful
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
         })
 
@@ -130,6 +139,7 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
         override fun afterTextChanged(editable: Editable?) {
             afterTextChanged.invoke(editable.toString())
         }
+
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
