@@ -20,6 +20,8 @@ class RegisterActivity : BaseActivity() {
         }
         binding.titleBarRegisterAc.rightIvTitleBar.visibility=View.GONE
         binding.titleBarRegisterAc.middleTvTitleBar.text="注册"
+        binding.registerBtRegisterAc.setOnClickListener {
 
+        }
     }
 }
