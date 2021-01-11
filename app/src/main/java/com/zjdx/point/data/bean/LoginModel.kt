@@ -1,4 +1,4 @@
-package com.zjdx.point.ui.login
+package com.zjdx.point.data.bean
 
 /**
  * Authentication result : success (user details) or error message.

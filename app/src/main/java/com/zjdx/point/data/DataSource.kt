@@ -31,11 +31,34 @@ class DataSource {
         }
     }
 
-    fun login(username: String, password: String): Back<LoggedInUser> {
+    fun login(username: String, password: String): Back<LoginModel> {
         try {
-            // TODO: handle loggedInUser authentication
-            val fakeUser = LoggedInUser(UUID.randomUUID().toString(), "Jane Doe")
-            return Back.Success(fakeUser)
+            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+            val formBodyBulider = FormBody.Builder()
+            val formBody = formBodyBulider
+                .add("userCode", username)
+                .add("password", password)
+                .build()
+            val request: Request = Request.Builder()
+                .url(REST.login)
+                .post(formBody)
+                .build()
+            val call: Call = client.newCall(request)
+            val response = call.execute()
+//            val type = Types.newParameterizedType( AppVersionModel::class.java,List::class.java,AppVersion::class.java)
+            val jsonAdapter = moshi.adapter<LoginModel>(LoginModel::class.java)
+            return if (response.isSuccessful) {
+                val appVersionModel = jsonAdapter.fromJson(response.body!!.string())
+                Back.Success(appVersionModel!!)
+            } else {
+                val smJsonAdapter = moshi.adapter(SubmitBackModel::class.java)
+
+                Back.Error(
+                    smJsonAdapter.fromJson(
+                        response.body!!.string()
+                    )!!
+                )
+            }
         } catch (e: Throwable) {
             return getErrorSubmitBack(e)
         }

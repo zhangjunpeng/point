@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
 import com.zjdx.point.R
+import com.zjdx.point.data.bean.SysUser
 import com.zjdx.point.databinding.ActivityLoginBinding
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.main.MainActivity
@@ -68,11 +69,8 @@ class LoginActivity : BaseActivity() {
             val loginResult = it ?: return@Observer
 
             loading.visibility = View.GONE
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
-            }
-            if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
+            if (loginResult.sysUser != null) {
+                updateUiWithUser(loginResult.sysUser)
             }
             setResult(Activity.RESULT_OK)
 
@@ -116,9 +114,9 @@ class LoginActivity : BaseActivity() {
     }
 
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
+    private fun updateUiWithUser(model: SysUser) {
         val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
+        val displayName = model.username
         Toast.makeText(
             applicationContext,
             "$welcome $displayName",

@@ -56,8 +56,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/countnum_main_ac"
@@ -79,9 +78,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:visibility="gone"
+                android:text="点位数据已全部上传完成"
 
-                android:text="点位数据已全部上传完成" />
+                android:visibility="gone" />
 
 
             <ProgressBar
@@ -99,7 +98,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:text="立即上传" />
+                android:text="立即上传"
+                android:visibility="gone" />
 
         </LinearLayout>
 

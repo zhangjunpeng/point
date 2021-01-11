@@ -12,9 +12,11 @@ import com.zjdx.point.db.MyDataBase
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.data.repository.TravelRepository
+import com.zjdx.point.event.UpdateMsgEvent
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.greenrobot.eventbus.EventBus
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
@@ -81,6 +83,7 @@ class UploadLocationsWork(
 
         val back = postTravel(jsonObject.toString())
         if (back is Back.Success) {
+            EventBus.getDefault().post(UpdateMsgEvent())
             for (loca in locations) {
                 loca.isUpload = 1
             }

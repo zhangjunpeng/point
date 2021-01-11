@@ -14,12 +14,16 @@ import androidx.core.content.ContextCompat
 import androidx.work.*
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityMainBinding
+import com.zjdx.point.event.UpdateMsgEvent
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.history.HistoryTravelActivity
 import com.zjdx.point.ui.travel.TravelActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
 import com.zjdx.point.utils.DownloadUtils
 import com.zjdx.point.work.UploadLocationsWork
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 
@@ -37,6 +41,7 @@ class MainActivity : BaseActivity() {
     override fun initRootView() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        EventBus.getDefault().register(this)
 //        initLocationService()
         initLocationServiceWithPermissionCheck()
     }
@@ -51,9 +56,9 @@ class MainActivity : BaseActivity() {
                 Html.fromHtml("未上传 <font color='red'>${it}</font> 条")
         })
         mainViewModel.appVersionModelLiveData.observe(this, {
-            val packageInfo=packageManager.getPackageInfo(packageName,0)
-            val versionCode=packageInfo.versionCode
-            if (it.list.isEmpty() ||versionCode>=it.list[0].version){
+            val packageInfo = packageManager.getPackageInfo(packageName, 0)
+            val versionCode = packageInfo.versionCode
+            if (it.list.isEmpty() || versionCode >= it.list[0].version) {
                 return@observe
             }
             val alertDialog = AlertDialog.Builder(this)
@@ -115,6 +120,10 @@ class MainActivity : BaseActivity() {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun getUpdateMsgEvent(event: UpdateMsgEvent) {
+        mainViewModel.findTravelNum()
+    }
 
     @NeedsPermission(
         Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -132,6 +141,12 @@ class MainActivity : BaseActivity() {
     fun initLocationService() {
         //这里以ACCESS_COARSE_LOCATION为例
         Toast.makeText(this, "成功申请", Toast.LENGTH_LONG)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+
     }
 
 
