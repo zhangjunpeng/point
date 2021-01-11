@@ -1,10 +1,11 @@
 package com.zjdx.point.data
 
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+
+import com.blankj.utilcode.util.GsonUtils
+import com.zjdx.point.NameSpace
 import com.zjdx.point.config.REST
 import com.zjdx.point.data.bean.*
+import com.zjdx.point.utils.SPUtils
 import okhttp3.*
 import java.util.*
 
@@ -12,8 +13,6 @@ import java.util.*
  * Class that handles authentication w/ login credentials and retrieves user information.
  */
 class DataSource {
-
-    val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
 
     inner class LoggingInterceptor : Interceptor {
@@ -45,21 +44,19 @@ class DataSource {
                 .build()
             val call: Call = client.newCall(request)
             val response = call.execute()
-//            val type = Types.newParameterizedType( AppVersionModel::class.java,List::class.java,AppVersion::class.java)
-            val jsonAdapter = moshi.adapter<LoginModel>(LoginModel::class.java)
             return if (response.isSuccessful) {
-                val appVersionModel = jsonAdapter.fromJson(response.body!!.string())
-                Back.Success(appVersionModel!!)
-            } else {
-                val smJsonAdapter = moshi.adapter(SubmitBackModel::class.java)
 
+                val model = GsonUtils.fromJson(response.body!!.string(), LoginModel::class.java)
+                Back.Success(model!!)
+            } else {
                 Back.Error(
-                    smJsonAdapter.fromJson(
-                        response.body!!.string()
+                    GsonUtils.fromJson(
+                        response.body!!.string(), SubmitBackModel::class.java
                     )!!
                 )
             }
         } catch (e: Throwable) {
+            e.printStackTrace()
             return getErrorSubmitBack(e)
         }
     }
@@ -82,23 +79,85 @@ class DataSource {
             val call: Call = client.newCall(request)
             val response = call.execute()
 //            val type = Types.newParameterizedType( AppVersionModel::class.java,List::class.java,AppVersion::class.java)
-            val jsonAdapter = moshi.adapter<AppVersionModel>(AppVersionModel::class.java)
             return if (response.isSuccessful) {
-                val appVersionModel = jsonAdapter.fromJson(response.body!!.string())
+                val appVersionModel =
+                    GsonUtils.fromJson(response.body!!.string(), AppVersionModel::class.java)
                 Back.Success(appVersionModel!!)
             } else {
-                val smJsonAdapter = moshi.adapter(SubmitBackModel::class.java)
 
                 Back.Error(
-                    smJsonAdapter.fromJson(
-                        response.body!!.string()
-                    )!!
+                    GsonUtils.fromJson(
+                        response.body!!.string(), SubmitBackModel::class.java
+                    )
                 )
             }
         } catch (e: Exception) {
             e.printStackTrace()
             return getErrorSubmitBack(e)
         }
+    }
+
+    fun register(
+        userCode: String, userName: String?, password: String,
+        telphone: String?,
+        note: String?,
+        sex: Int?,
+        age: String?,
+        address: String?,
+        minsalary: String?,
+        maxsalary: String?
+    ): Back<SubmitBackModel> {
+        try {
+            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+            val formBodyBulider = FormBody.Builder()
+            formBodyBulider
+                .add("usercode", userCode)
+                .add("password", password)
+            if (userName != null && userName.isNotEmpty()) {
+                formBodyBulider.add("userName", userName)
+            }
+            if (telphone != null && telphone.isNotEmpty()) {
+                formBodyBulider.add("telphone", telphone)
+            }
+            if (note != null && note.isNotEmpty()) {
+                formBodyBulider.add("note", note)
+            }
+            if (sex != null) {
+                formBodyBulider.add("sex", sex.toString())
+            }
+            if (age != null && age.isNotEmpty()) {
+                formBodyBulider.add("age", age.toString())
+            }
+            if (address != null && address.isNotEmpty()) {
+                formBodyBulider.add("address", address)
+            }
+            if (minsalary != null && minsalary.isNotEmpty()) {
+                formBodyBulider.add("minsalary", minsalary)
+            }
+            if (maxsalary != null && maxsalary.isNotEmpty()) {
+                formBodyBulider.add("maxsalary", maxsalary)
+            }
+            val request: Request = Request.Builder()
+                .url(REST.register)
+                .post(formBodyBulider.build())
+                .build()
+            val call: Call = client.newCall(request)
+            val response = call.execute()
+//            val type = Types.newParameterizedType( AppVersionModel::class.java,List::class.java,AppVersion::class.java)
+            return if (response.isSuccessful) {
+                val model =
+                    GsonUtils.fromJson(response.body!!.string(), SubmitBackModel::class.java)
+                Back.Success(model)
+            } else {
+                val model =
+                    GsonUtils.fromJson(response.body!!.string(), SubmitBackModel::class.java)
+                Back.Error(model)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return getErrorSubmitBack(e)
+        }
+
     }
 
     private fun getErrorSubmitBack(e: Throwable): Back.Error {
@@ -109,4 +168,6 @@ class DataSource {
         )
         return Back.Error(submitBackModel)
     }
+
+
 }

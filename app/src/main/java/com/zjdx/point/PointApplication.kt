@@ -1,11 +1,14 @@
 package com.zjdx.point
 
 import android.app.Application
+import androidx.multidex.MultiDexApplication
+import com.blankj.utilcode.util.Utils
 import com.zjdx.point.db.MyDataBase
 import com.zjdx.point.data.repository.LocationRepository
+import com.zjdx.point.data.repository.RegisterRepository
 import com.zjdx.point.data.repository.TravelRepository
 
-class PointApplication : Application() {
+class PointApplication : MultiDexApplication() {
 
 
     val database by lazy { MyDataBase.getDatabase(this) }
@@ -16,8 +19,10 @@ class PointApplication : Application() {
             database.locationDao()
         )
     }
+    val registerRepository by lazy { RegisterRepository() }
 
     override fun onCreate() {
         super.onCreate()
+        Utils.init(this)
     }
 }

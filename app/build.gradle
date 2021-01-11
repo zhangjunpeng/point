@@ -146,13 +146,17 @@ dependencies {
     //eventbus
     implementation 'org.greenrobot:eventbus:3.2.0'
 
-    //moshi
-    implementation "com.squareup.moshi:moshi:1.11.0"
-    implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
+//    //moshi
+//    implementation "com.squareup.moshi:moshi:1.11.0"
+//    implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
 
     //coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
+
+
+    implementation 'com.blankj:utilcodex:1.29.0'
+
 
     //leakcanary
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'

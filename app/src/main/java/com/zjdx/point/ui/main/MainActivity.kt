@@ -12,14 +12,17 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.work.*
+import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityMainBinding
 import com.zjdx.point.event.UpdateMsgEvent
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.history.HistoryTravelActivity
+import com.zjdx.point.ui.login.LoginActivity
 import com.zjdx.point.ui.travel.TravelActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
 import com.zjdx.point.utils.DownloadUtils
+import com.zjdx.point.utils.SPUtils
 import com.zjdx.point.work.UploadLocationsWork
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -91,6 +94,11 @@ class MainActivity : BaseActivity() {
         }
         binding.beginUploadMainAc.setOnClickListener {
             addUploadWork()
+        }
+        binding.logOutMainAc.setOnClickListener {
+            SPUtils.getInstance(this).put(NameSpace.UID, "")
+            SPUtils.getInstance(this).put(NameSpace.ISLOGIN, false)
+            startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 

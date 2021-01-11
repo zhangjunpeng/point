@@ -6,5 +6,7 @@ class REST {
         val upload = BaseUrl + "historicalTrack/insertHistoricalTrack"
         val appVersion = BaseUrl + "historicalTrack/selectMaxAppVersion"
         val login= BaseUrl+"login/loginSubmit"
+        val register= BaseUrl+"sysUser/addUser"
+
     }
 }

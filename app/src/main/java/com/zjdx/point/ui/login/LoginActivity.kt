@@ -1,6 +1,7 @@
 package com.zjdx.point.ui.login
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -13,12 +14,18 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
+
+import com.zjdx.point.NameSpace
 import com.zjdx.point.R
 import com.zjdx.point.data.bean.SysUser
 import com.zjdx.point.databinding.ActivityLoginBinding
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.main.MainActivity
 import com.zjdx.point.ui.register.RegisterActivity
+import com.zjdx.point.utils.SPUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 class LoginActivity : BaseActivity() {
@@ -28,6 +35,7 @@ class LoginActivity : BaseActivity() {
 
 
     override fun initRootView() {
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
@@ -72,11 +80,24 @@ class LoginActivity : BaseActivity() {
             if (loginResult.sysUser != null) {
                 updateUiWithUser(loginResult.sysUser)
             }
-            setResult(Activity.RESULT_OK)
 
-            //Complete and destroy login activity once successful
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            if (loginResult.code == 0) {
+
+                SPUtils.getInstance(this).put(NameSpace.ISLOGIN, true)
+                SPUtils.getInstance(this).put(NameSpace.UID, it.sysUser.usercode)
+
+                //Complete and destroy login activity once successful
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            } else {
+                ToastUtils.showLong(it.msg)
+            }
+
+        })
+
+        loginViewModel.errorModel.observe(this, {
+            dismissProgressDialog()
+
         })
 
         username.afterTextChanged {
@@ -94,16 +115,6 @@ class LoginActivity : BaseActivity() {
                 )
             }
 
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_DONE ->
-                        loginViewModel.login(
-                            username.text.toString(),
-                            password.text.toString()
-                        )
-                }
-                false
-            }
 
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
@@ -116,7 +127,7 @@ class LoginActivity : BaseActivity() {
 
     private fun updateUiWithUser(model: SysUser) {
         val welcome = getString(R.string.welcome)
-        val displayName = model.username
+        val displayName = model.usercode
         Toast.makeText(
             applicationContext,
             "$welcome $displayName",
@@ -127,6 +138,8 @@ class LoginActivity : BaseActivity() {
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
+
+
 }
 
 /**

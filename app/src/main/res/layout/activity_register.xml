@@ -36,7 +36,7 @@
                 android:text="用户名："
                 />
             <EditText
-                android:id="@+id/username_register_ac"
+                android:id="@+id/usercode_register_ac"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -57,7 +57,7 @@
                 android:text="真实姓名："
                 />
             <EditText
-                android:id="@+id/_register_ac"
+                android:id="@+id/username_register_ac"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -140,14 +140,33 @@
                 android:gravity="right|center_vertical"
                 android:text="性别："
                 />
-            <EditText
+
+            <RadioGroup
                 android:id="@+id/sex_register_ac"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/border_edit"
                 android:layout_margin="5dp"
-                />
+                android:orientation="horizontal"
+                >
+                <RadioButton
+                    android:id="@+id/man_register_ac"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="男"
+                    />
+                <RadioButton
+                    android:id="@+id/womanregister_ac"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="女"
+                    />
+
+            </RadioGroup>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -168,6 +187,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/border_edit"
                 android:layout_margin="5dp"
+                android:inputType="number"
                 />
         </LinearLayout>
         <LinearLayout

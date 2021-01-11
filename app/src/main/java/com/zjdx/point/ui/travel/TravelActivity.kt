@@ -17,6 +17,7 @@ import com.amap.api.location.AMapLocationListener
 import com.amap.api.maps2d.AMap
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.*
+import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
 import com.zjdx.point.R
 import com.zjdx.point.databinding.ActivityTravelBinding
@@ -25,6 +26,7 @@ import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.event.TravelEvent
 import com.zjdx.point.event.UpdateMapEvent
 import com.zjdx.point.ui.base.BaseActivity
+import com.zjdx.point.utils.SPUtils
 import com.zjdx.point.utils.Utils
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -83,7 +85,10 @@ class TravelActivity : BaseActivity() {
     val startListener = View.OnClickListener {
         startTime = Date().time
         travelRecord =
-            TravelRecord(createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime))
+            TravelRecord(
+                travelUser = SPUtils.getInstance(this).getString(NameSpace.UID),
+                createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime)
+            )
         travelViewModel.repository.insertTravelRecord(travelRecord!!)
         startLoactionService()
         binding.endTravel.text = "结束出行"
@@ -155,14 +160,13 @@ class TravelActivity : BaseActivity() {
 
 
 //                    val mCameraUpdate = CameraUpdateFactory.newCameraPosition(
-//                        CameraPosition(
+//                        CameraPosition.Builder().target(
 //                            LatLng(
 //                                amapLocation.latitude,
 //                                amapLocation.longitude,
-//                            ), 18f, 0f, 0f
-//                        )
+//                            )
+//                        ).build()
 //                    )
-//
 //                    map.moveCamera(mCameraUpdate)
 
 
@@ -241,15 +245,14 @@ class TravelActivity : BaseActivity() {
 
         val myLocationStyle: MyLocationStyle = MyLocationStyle()
         //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW)
-        myLocationStyle.interval(1000) //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
 
-        map.setMyLocationStyle(myLocationStyle) //设置定位蓝点的Style
+        myLocationStyle.interval(1000) //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
 
 
         //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
         map.isMyLocationEnabled = true
-        map.setMyLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW)
+        map.uiSettings.isMyLocationButtonEnabled = true
+        map.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW))
         map.setOnMapLoadedListener {
             map.moveCamera(CameraUpdateFactory.zoomTo(18f))
         }
@@ -305,7 +308,7 @@ class TravelActivity : BaseActivity() {
         binding.endTravel.setOnClickListener(startListener)
         binding.titleBarTravelAc.leftIvTitleBar.setOnClickListener {
             finish()
-            if (travelRecord!=null) {
+            if (travelRecord != null) {
                 val travelEvent = TravelEvent()
                 travelEvent.travelRecord = travelRecord!!
                 EventBus.getDefault().postSticky(travelEvent)
@@ -320,7 +323,7 @@ class TravelActivity : BaseActivity() {
         travelViewModel.getLocationsById(event.tid)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onResumeTravel(travelEvent: TravelEvent) {
         travelRecord = travelEvent.travelRecord
         binding.endTravel.text = "结束出行"

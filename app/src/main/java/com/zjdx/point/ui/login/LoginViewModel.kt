@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.zjdx.point.R
 import com.zjdx.point.data.bean.Back
 import com.zjdx.point.data.bean.LoginModel
+import com.zjdx.point.data.bean.SubmitBackModel
 import com.zjdx.point.data.repository.LoginRepository
 import kotlinx.coroutines.launch
 
@@ -20,6 +21,9 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginModel>()
     val loginResult: LiveData<LoginModel> = _loginResult
 
+    val errorModel=MutableLiveData<SubmitBackModel>()
+
+
     fun login(username: String, password: String) {
         // can be launched in a separate asynchronous job
         viewModelScope.launch {
@@ -28,8 +32,8 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
             if (result is Back.Success) {
                 _loginResult.value =
                     result.data
-            } else {
-                _loginResult.value = null
+            } else  if (result is Back.Error){
+                errorModel.value = result.error
             }
         }
     }
