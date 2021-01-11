@@ -46,6 +46,9 @@
             android:name=".services.LocationService"
             android:enabled="true"
             android:exported="true" />
+        <service android:name="com.amap.api.location.APSService"/>
+
+
 
         <activity android:name=".ui.history.HistoryLocationActivity" />
         <activity android:name=".ui.history.HistoryTravelActivity" />
