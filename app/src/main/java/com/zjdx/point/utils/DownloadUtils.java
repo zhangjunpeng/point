@@ -18,6 +18,8 @@ import com.zjdx.point.data.bean.AppVersionModel;
 import java.io.File;
 import java.io.IOException;
 
+import static com.blankj.utilcode.util.ActivityUtils.startActivity;
+
 public class DownloadUtils {
 
 
@@ -108,7 +110,15 @@ public class DownloadUtils {
                     break;
                 //下载失败
                 case DownloadManager.STATUS_FAILED:
+
                     Toast.makeText(mContext, "下载失败", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent();
+                    intent.setAction("android.intent.action.VIEW");
+                    Uri content_url = Uri.parse(this.model.getList().get(0).getDownloadurl());
+                    intent.setData(content_url);
+                    startActivity(intent);
+
                     cursor.close();
                     mContext.unregisterReceiver(receiver);
                     break;
