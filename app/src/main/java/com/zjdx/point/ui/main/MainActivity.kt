@@ -7,11 +7,13 @@ import android.graphics.Point
 import android.text.Html
 import android.util.Log
 import android.view.Gravity
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.*
 import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
@@ -22,6 +24,7 @@ import com.zjdx.point.ui.history.HistoryTravelActivity
 import com.zjdx.point.ui.login.LoginActivity
 import com.zjdx.point.ui.travel.TravelActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
+import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.DownloadUtils
 import com.zjdx.point.utils.SPUtils
 import com.zjdx.point.work.PointWorkManager
@@ -31,6 +34,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
+import java.util.*
 
 @RuntimePermissions
 class MainActivity : BaseActivity() {
@@ -53,12 +57,10 @@ class MainActivity : BaseActivity() {
 
     override fun initViewMoedl() {
         mainViewModel.travelCountNum.observe(this, {
-            binding.countnumMainAc.text =
-                Html.fromHtml("当前出行数据共 <font color='blue'>${it}</font> 条")
+            updateMainInfo()
         })
         mainViewModel.travelNotUploadNum.observe(this, {
-            binding.countNotUploadNumMainAc.text =
-                Html.fromHtml("未上传 <font color='red'>${it}</font> 条")
+            updateMainInfo()
         })
         mainViewModel.appVersionModelLiveData.observe(this, {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
@@ -75,6 +77,19 @@ class MainActivity : BaseActivity() {
                 .create()
             alertDialog.show()
         })
+        binding.recyclerMain.layoutManager = LinearLayoutManager(this)
+        binding.recyclerMain.adapter =
+            MainRecylerAdapter(this, mainViewModel.uploadMsgLiveData.value!!)
+        mainViewModel.uploadMsgLiveData.observe(this, {
+            binding.recyclerMain.adapter!!.notifyDataSetChanged()
+        })
+    }
+
+    private fun updateMainInfo() {
+        val hasUploadNum =
+            mainViewModel.travelCountNum.value!! - mainViewModel.travelNotUploadNum.value!!
+        binding.countnumMainAc.text =
+            Html.fromHtml("已成功上传<font color='blue'>${hasUploadNum}</font>/${mainViewModel.travelCountNum.value!!}条数据")
     }
 
     override fun initData() {
@@ -121,6 +136,9 @@ class MainActivity : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun getUpdateMsgEvent(event: UpdateMsgEvent) {
+        val msgList = mainViewModel.uploadMsgLiveData.value!!
+        msgList.add(DateUtil.dateFormat.format(Date().time) + ":"+event.msg)
+        mainViewModel.uploadMsgLiveData.value = msgList
         mainViewModel.findTravelNum()
     }
 

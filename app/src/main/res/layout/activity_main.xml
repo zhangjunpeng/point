@@ -65,12 +65,6 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp" />
 
-            <TextView
-                android:id="@+id/count_not_upload_num_main_ac"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp" />
 
 
             <androidx.recyclerview.widget.RecyclerView

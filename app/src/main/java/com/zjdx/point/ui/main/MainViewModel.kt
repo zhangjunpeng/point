@@ -21,6 +21,10 @@ class MainViewModel(val repository: TravelRepository) : ViewModel() {
     val appVersionModelLiveData = MutableLiveData<AppVersionModel>()
     val submitBackModelLiveData = MutableLiveData<SubmitBackModel>()
 
+    val uploadMsgLiveData = MutableLiveData<ArrayList<String>>().apply {
+        this.value = ArrayList()
+    }
+
     fun findTravelNum() {
         travelCountNum.value = repository.getCount()
         travelNotUploadNum.value = repository.getCountNotUpload()
@@ -30,7 +34,7 @@ class MainViewModel(val repository: TravelRepository) : ViewModel() {
     @WorkerThread
     fun getAppVersion() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 val back = repository.getAppVersion()
                 if (back is Back.Success) {
                     appVersionModelLiveData.postValue(back.data)

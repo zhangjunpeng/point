@@ -28,6 +28,7 @@ import com.zjdx.point.event.UpdateMapEvent
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.utils.SPUtils
 import com.zjdx.point.utils.Utils
+import com.zjdx.point.work.PointWorkManager
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -71,6 +72,7 @@ class TravelActivity : BaseActivity() {
             mLocationClient.disableBackgroundLocation(true)
             mLocationClient.stopLocation()
             dismissAbnormalDialog()
+            PointWorkManager.instance.addUploadWork(this)
             finish()
 
         }
