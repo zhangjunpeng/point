@@ -13,23 +13,28 @@ class PointWorkManager {
         }
     }
 
-    fun addUploadWork(context: Context):WorkRequest{
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresCharging(true)
-            .build()
+    fun addUploadWork(context: Context):WorkRequest?{
+        try {
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
 
-        val uploadWorkRequest = OneTimeWorkRequestBuilder<UploadLocationsWork>()
-            .setConstraints(constraints)
-            .build()
+            val uploadWorkRequest = OneTimeWorkRequestBuilder<UploadLocationsWork>()
+                .setConstraints(constraints)
+                .build()
 //        WorkManager.getInstance(this).enqueue(uploadWorkRequest)
 
-        WorkManager.getInstance(context).enqueueUniqueWork(
-            NameSpace.UploadWorkName,
-            ExistingWorkPolicy.APPEND,
-            uploadWorkRequest
-        )
-        return uploadWorkRequest
+            WorkManager.getInstance(context).enqueueUniqueWork(
+                NameSpace.UploadWorkName,
+                ExistingWorkPolicy.REPLACE,
+                uploadWorkRequest
+            )
+            return uploadWorkRequest
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+        return null
+
 
     }
 

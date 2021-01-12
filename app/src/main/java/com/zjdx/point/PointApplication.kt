@@ -1,12 +1,14 @@
 package com.zjdx.point
 
-import android.app.Application
+import android.content.Context
+import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.blankj.utilcode.util.Utils
-import com.zjdx.point.db.MyDataBase
 import com.zjdx.point.data.repository.LocationRepository
 import com.zjdx.point.data.repository.RegisterRepository
 import com.zjdx.point.data.repository.TravelRepository
+import com.zjdx.point.db.MyDataBase
+
 
 class PointApplication : MultiDexApplication() {
 
@@ -24,5 +26,10 @@ class PointApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         Utils.init(this)
+    }
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
     }
 }

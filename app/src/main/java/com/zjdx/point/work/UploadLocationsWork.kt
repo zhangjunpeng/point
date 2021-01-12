@@ -46,6 +46,7 @@ class UploadLocationsWork(
         return Result.Success()
     }
 
+    @Synchronized
     private fun findAndUpload() {
         travelRecord = repository.findHasNotUpload()
 
@@ -97,7 +98,7 @@ class UploadLocationsWork(
 
         val back = postTravel(jsonObject.toString())
         if (back is Back.Success) {
-           sendMsgEvent("成功：上传点位${locationList.size}个")
+            sendMsgEvent("成功：上传点位${locationList.size}个")
             for (loca in locationList) {
                 loca.isUpload = 1
             }
@@ -124,18 +125,18 @@ class UploadLocationsWork(
 
     }
 
-    fun sendMsgEvent(msg:String){
-        val event=UpdateMsgEvent()
-        event.msg=msg
+    fun sendMsgEvent(msg: String) {
+        val event = UpdateMsgEvent()
+        event.msg = msg
         EventBus.getDefault().post(event)
     }
 
 
-    fun postTravel(travelInfo: String): Back<SubmitBackModel> {
+   fun postTravel(travelInfo: String): Back<SubmitBackModel> {
         try {
             val mediaType = "application/json; charset=utf-8".toMediaType()
 
-            val client = OkHttpClient()
+            val client = OkHttpClient.Builder().build()
 
             val requestBody = travelInfo.toRequestBody(mediaType)
 
@@ -167,6 +168,7 @@ class UploadLocationsWork(
                 return Back.Error(submitBackBean)
             }
         } catch (e: java.lang.Exception) {
+            e.printStackTrace()
             return Back.Error(
                 SubmitBackModel(
                     code = 600,

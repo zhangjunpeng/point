@@ -80,9 +80,9 @@ class MainActivity : BaseActivity() {
         binding.recyclerMain.layoutManager = LinearLayoutManager(this)
         binding.recyclerMain.adapter =
             MainRecylerAdapter(this, mainViewModel.uploadMsgLiveData.value!!)
-        mainViewModel.uploadMsgLiveData.observe(this, {
-            binding.recyclerMain.adapter!!.notifyDataSetChanged()
-        })
+//        mainViewModel.uploadMsgLiveData.observe(this, {
+//            binding.recyclerMain.adapter!!.notifyDataSetChanged()
+//        })
     }
 
     private fun updateMainInfo() {
@@ -124,22 +124,22 @@ class MainActivity : BaseActivity() {
 
     fun addUploadWork() {
         val request = PointWorkManager.instance.addUploadWork(this)
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
-            .observe(this) { workInfo ->
-                Log.i("workInfo", workInfo!!.state.toString())
-                if (workInfo?.state == WorkInfo.State.SUCCEEDED) {
-                    mainViewModel.findTravelNum()
-                }
-            }
+//        WorkManager.getInstance(this).getWorkInfoByIdLiveData(request!!.id)
+//            .observe(this) { workInfo ->
+//                Log.i("workInfo", workInfo!!.state.toString())
+//                if (workInfo?.state == WorkInfo.State.SUCCEEDED) {
+//                    mainViewModel.findTravelNum()
+//                }
+//            }
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun getUpdateMsgEvent(event: UpdateMsgEvent) {
-        val msgList = mainViewModel.uploadMsgLiveData.value!!
-        msgList.add(DateUtil.dateFormat.format(Date().time) + ":"+event.msg)
-        mainViewModel.uploadMsgLiveData.value = msgList
+        mainViewModel.uploadMsgLiveData.value!!.add(DateUtil.dateFormat.format(Date().time) + ":" + event.msg)
+        binding.recyclerMain.adapter!!.notifyDataSetChanged()
         mainViewModel.findTravelNum()
+
     }
 
     @NeedsPermission(
