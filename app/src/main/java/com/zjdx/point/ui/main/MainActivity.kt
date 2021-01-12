@@ -3,6 +3,7 @@ package com.zjdx.point.ui.main
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Point
 import android.text.Html
 import android.util.Log
 import android.view.Gravity
@@ -23,6 +24,7 @@ import com.zjdx.point.ui.travel.TravelActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
 import com.zjdx.point.utils.DownloadUtils
 import com.zjdx.point.utils.SPUtils
+import com.zjdx.point.work.PointWorkManager
 import com.zjdx.point.work.UploadLocationsWork
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -92,9 +94,7 @@ class MainActivity : BaseActivity() {
         binding.leftIvMainAc.setOnClickListener {
             binding.root.openDrawer(Gravity.LEFT)
         }
-        binding.beginUploadMainAc.setOnClickListener {
-            addUploadWork()
-        }
+
         binding.logOutMainAc.setOnClickListener {
             SPUtils.getInstance(this).put(NameSpace.UID, "")
             SPUtils.getInstance(this).put(NameSpace.ISLOGIN, false)
@@ -108,17 +108,8 @@ class MainActivity : BaseActivity() {
     }
 
     fun addUploadWork() {
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresCharging(true)
-            .build()
-
-        val uploadWorkRequest = OneTimeWorkRequestBuilder<UploadLocationsWork>()
-            .setConstraints(constraints)
-            .build()
-        WorkManager.getInstance(this).enqueue(uploadWorkRequest)
-
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(uploadWorkRequest.id)
+        val request = PointWorkManager.instance.addUploadWork(this)
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
             .observe(this) { workInfo ->
                 Log.i("workInfo", workInfo!!.state.toString())
                 if (workInfo?.state == WorkInfo.State.SUCCEEDED) {

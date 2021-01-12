@@ -27,35 +27,41 @@ class UploadLocationsWork(
 ) :
     Worker(context, workerParams) {
 
-    private var travelRecord: TravelRecord?=null
-    private lateinit var locations: MutableList<Location>
     val database by lazy { MyDataBase.getDatabase(context) }
 
     val repository = TravelRepository(database.travelRecordDao(), database.locationDao())
+
+    var travelRecord: TravelRecord? = null
 
     @SuppressLint("RestrictedApi")
     override fun doWork(): Result {
 
         // Do the work here--in this case, upload the images.
-
-        travelRecord = repository.findHasNotUpload()
-        travelRecord?.let {
-            locations = repository.getLocationsHasNotUpload(travelRecord!!.id)
-            UploadLocation()
-        }
+        findAndUpload()
         return Result.Success()
     }
 
+    private fun findAndUpload() {
+        travelRecord = repository.findHasNotUpload()
 
-    private fun UploadLocation(): Result {
+        while (travelRecord != null) {
+            travelRecord?.let {
+                val locations = repository.getLocationsHasNotUpload(travelRecord!!.id)
+                UploadLocation(locations as ArrayList<Location>, travelRecord!!)
+            }
+            travelRecord = repository.findHasNotUpload()
+        }
+    }
 
 
+    private fun UploadLocation(
+        locationList: ArrayList<Location>,
+        travelRecord: TravelRecord
+    ) {
         val jsonObject = JSONObject()
-
-
         val paramArray = JSONArray()
-        if (locations.isNotEmpty()) {
-            locations.forEach { loca ->
+        if (locationList.isNotEmpty()) {
+            locationList.forEach { loca ->
                 val locationObj = JSONObject()
 
                 locationObj.put("longitude", loca.lng)
@@ -70,7 +76,7 @@ class UploadLocationsWork(
             }
         }
         val travelObj = JSONObject()
-        travelObj.put("traveltypes", travelRecord!!.travelTypes)
+        travelObj.put("traveltypes", travelRecord.travelTypes)
         travelObj.put("traveluser", travelRecord!!.travelUser)
         travelObj.put("travelid", travelRecord!!.id)
         travelObj.put(
@@ -84,34 +90,29 @@ class UploadLocationsWork(
         val back = postTravel(jsonObject.toString())
         if (back is Back.Success) {
             EventBus.getDefault().post(UpdateMsgEvent())
-            for (loca in locations) {
+            for (loca in locationList) {
                 loca.isUpload = 1
             }
-            repository.updateLocations(locations)
+            repository.updateLocations(locationList)
+        }
 
 
-            if (checkHasMoreLocationNotUpload(travelRecord!!.id)) {
-                UploadLocation()
-            } else {
-                travelRecord!!.isUpload = 1
-                repository.insertTravelRecord(travelRecord!!)
+        val locations = repository.getLocationsHasNotUpload(travelRecord.id)
+        if (locations.isNullOrEmpty()) {
+            travelRecord.isUpload = 1
+            repository.insertTravelRecord(travelRecord)
 
-                travelRecord = repository.findHasNotUpload()
-                travelRecord?.let {
-                    locations = repository.getLocationsHasNotUpload(travelRecord!!.id)
-                    UploadLocation()
-                }
-            }
-
+        } else {
+            UploadLocation(locations as ArrayList<Location>, travelRecord)
 
         }
 
 
-        return Result.success()
+
     }
 
     private fun checkHasMoreLocationNotUpload(id: String): Boolean {
-        locations = repository.getLocationsHasNotUpload(id)
+        val locations = repository.getLocationsHasNotUpload(id)
         if (locations.isNullOrEmpty()) {
             return false
         }

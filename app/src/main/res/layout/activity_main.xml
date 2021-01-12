@@ -72,34 +72,14 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp" />
 
-            <TextView
-                android:id="@+id/tips_main_ac"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:text="点位数据已全部上传完成"
 
-                android:visibility="gone" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp">
 
-
-            <ProgressBar
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:visibility="gone"
-
-                />
-
-            <Button
-                android:id="@+id/begin_upload_main_ac"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:text="立即上传"
-                android:visibility="gone" />
+            </androidx.recyclerview.widget.RecyclerView>
 
         </LinearLayout>
 
