@@ -57,7 +57,6 @@ class TravelActivity : BaseActivity() {
 
     val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
-    var isFirst = true
 
     init {
         cancelListener = View.OnClickListener {
