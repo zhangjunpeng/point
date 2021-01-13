@@ -35,6 +35,8 @@ class UploadLocationsWork(
 
     var travelRecord: TravelRecord? = null
 
+    var index=0
+
     @SuppressLint("RestrictedApi")
     override fun doWork(): Result {
 
@@ -51,7 +53,11 @@ class UploadLocationsWork(
         travelRecord = repository.findHasNotUpload()
 
         while (travelRecord != null) {
+
             travelRecord?.let {
+                index++
+                sendMsgEvent("开始上传第${index}条出行数据")
+
                 val locations = repository.getLocationsHasNotUpload(travelRecord!!.id)
                 UploadLocation(locations as ArrayList<Location>, travelRecord!!)
             }
@@ -65,7 +71,6 @@ class UploadLocationsWork(
         locationList: ArrayList<Location>,
         travelRecord: TravelRecord
     ) {
-        sendMsgEvent("开始上传travelid=${travelRecord.id}")
 
         val jsonObject = JSONObject()
         val paramArray = JSONArray()
@@ -116,7 +121,7 @@ class UploadLocationsWork(
         if (locations.isNullOrEmpty()) {
             travelRecord.isUpload = 1
             repository.insertTravelRecord(travelRecord)
-            sendMsgEvent("成功：id=${travelRecord.id}上传成功")
+            sendMsgEvent("成功：第${index}条出行数据上传成功")
         } else {
             UploadLocation(locations as ArrayList<Location>, travelRecord)
 
