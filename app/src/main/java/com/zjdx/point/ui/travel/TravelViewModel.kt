@@ -14,11 +14,14 @@ class TravelViewModel(val repository: TravelRepository) : ViewModel() {
     val allLication = MutableLiveData<MutableList<Location>>()
 
 
-
-    fun getLocationsById(tid:String){
+    fun getLocationsById(tid: String) {
         viewModelScope.launch {
-            allLication.value= repository.getLocationListById(tid)
+            allLication.value = repository.getLocationListById(tid)
         }
+    }
+
+    fun getTravelRecordById(tid: String): TravelRecord {
+        return repository.getTravelRecordById(tid)
     }
 
 
@@ -31,7 +34,7 @@ class TravelViewModel(val repository: TravelRepository) : ViewModel() {
         repository.insertTravelRecord(travelRecord)
     }
 
-    fun deleteTravelRecord(travelRecord: TravelRecord){
+    fun deleteTravelRecord(travelRecord: TravelRecord) {
         repository.deteleTravel(travelRecord)
     }
 

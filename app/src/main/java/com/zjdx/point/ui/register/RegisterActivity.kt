@@ -1,19 +1,15 @@
 package com.zjdx.point.ui.register
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import com.blankj.utilcode.util.SPUtils
 import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityRegisterBinding
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.main.MainActivity
-import com.zjdx.point.ui.travel.TravelViewModel
-import com.zjdx.point.ui.travel.TravelViewModelFactory
-import com.zjdx.point.utils.SPUtils
 
 class RegisterActivity : BaseActivity() {
     lateinit var binding: ActivityRegisterBinding
@@ -74,8 +70,8 @@ class RegisterActivity : BaseActivity() {
             dismissProgressDialog()
             if (it.code == 0) {
 
-                SPUtils.getInstance(this).put(NameSpace.ISLOGIN, true)
-                SPUtils.getInstance(this)
+                SPUtils.getInstance().put(NameSpace.ISLOGIN, true)
+                SPUtils.getInstance()
                     .put(NameSpace.UID, binding.usercodeRegisterAc.editableText.toString())
                 Toast.makeText(this, "注册成功", Toast.LENGTH_LONG).show()
                 startActivity(Intent(this, MainActivity::class.java))

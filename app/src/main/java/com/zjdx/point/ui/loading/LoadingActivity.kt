@@ -7,11 +7,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.widget.RelativeLayout
+import com.blankj.utilcode.util.SPUtils
 import com.zjdx.point.NameSpace
 import com.zjdx.point.R
 import com.zjdx.point.ui.login.LoginActivity
 import com.zjdx.point.ui.main.MainActivity
-import com.zjdx.point.utils.SPUtils
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -79,7 +79,7 @@ class LoadingActivity : AppCompatActivity() {
     }
 
     private fun startAc() {
-        isLogin = SPUtils.getInstance(this).getBoolean(NameSpace.ISLOGIN)
+        isLogin = SPUtils.getInstance().getBoolean(NameSpace.ISLOGIN)
 
         val intent = if (isLogin) {
             Intent(this, MainActivity::class.java)

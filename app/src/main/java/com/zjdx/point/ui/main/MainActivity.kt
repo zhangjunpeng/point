@@ -2,19 +2,14 @@ package com.zjdx.point.ui.main
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Point
 import android.text.Html
-import android.util.Log
 import android.view.Gravity
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.*
+import com.blankj.utilcode.util.SPUtils
 import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityMainBinding
@@ -26,9 +21,7 @@ import com.zjdx.point.ui.travel.TravelActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
 import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.DownloadUtils
-import com.zjdx.point.utils.SPUtils
 import com.zjdx.point.work.PointWorkManager
-import com.zjdx.point.work.UploadLocationsWork
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -94,7 +87,9 @@ class MainActivity : BaseActivity() {
 
     override fun initData() {
         mainViewModel.findTravelNum()
-        addUploadWork()
+        if (!SPUtils.getInstance().getBoolean(NameSpace.ISRECORDING)){
+            addUploadWork()
+        }
         mainViewModel.getAppVersion()
     }
 
@@ -111,8 +106,8 @@ class MainActivity : BaseActivity() {
         }
 
         binding.logOutMainAc.setOnClickListener {
-            SPUtils.getInstance(this).put(NameSpace.UID, "")
-            SPUtils.getInstance(this).put(NameSpace.ISLOGIN, false)
+            SPUtils.getInstance().put(NameSpace.UID, "")
+            SPUtils.getInstance().put(NameSpace.ISLOGIN, false)
             startActivity(Intent(this, LoginActivity::class.java))
         }
     }

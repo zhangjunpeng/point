@@ -31,6 +31,11 @@ class TravelRepository(
     }
 
     @WorkerThread
+    fun getTravelRecordById(tid: String): TravelRecord  {
+       return travelRecordDao.getTravelRecordById(tid)
+    }
+
+    @WorkerThread
     fun insertTravelRecord(travelRecord: TravelRecord) {
 
         travelRecordDao.insertTravelRecord(travelRecord)

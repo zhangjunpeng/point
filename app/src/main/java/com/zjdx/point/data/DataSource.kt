@@ -2,12 +2,9 @@ package com.zjdx.point.data
 
 
 import com.blankj.utilcode.util.GsonUtils
-import com.zjdx.point.NameSpace
 import com.zjdx.point.config.REST
 import com.zjdx.point.data.bean.*
-import com.zjdx.point.utils.SPUtils
 import okhttp3.*
-import java.util.*
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.

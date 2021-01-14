@@ -1,19 +1,15 @@
 package com.zjdx.point.ui.login
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import android.os.Bundle
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
+import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
 
 import com.zjdx.point.NameSpace
@@ -23,9 +19,6 @@ import com.zjdx.point.databinding.ActivityLoginBinding
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.main.MainActivity
 import com.zjdx.point.ui.register.RegisterActivity
-import com.zjdx.point.utils.SPUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 
 class LoginActivity : BaseActivity() {
@@ -83,8 +76,8 @@ class LoginActivity : BaseActivity() {
 
             if (loginResult.code == 0) {
 
-                SPUtils.getInstance(this).put(NameSpace.ISLOGIN, true)
-                SPUtils.getInstance(this).put(NameSpace.UID, it.sysUser.usercode)
+                SPUtils.getInstance().put(NameSpace.ISLOGIN, true)
+                SPUtils.getInstance().put(NameSpace.UID, it.sysUser.usercode)
 
                 //Complete and destroy login activity once successful
                 startActivity(Intent(this, MainActivity::class.java))

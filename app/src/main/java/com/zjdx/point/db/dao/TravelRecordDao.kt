@@ -17,6 +17,9 @@ interface TravelRecordDao {
     @Query("Select * from TravelRecord where is_upload= 0 limit 1")
     fun findHasNotUpload(): TravelRecord
 
+    @Query("Select * from TravelRecord where id = :tid limit 1")
+    fun getTravelRecordById(tid:String): TravelRecord
+
     @Query("Select count(*) from TravelRecord ")
     fun getCount(): Int
 

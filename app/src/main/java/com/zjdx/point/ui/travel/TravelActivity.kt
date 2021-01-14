@@ -17,6 +17,7 @@ import com.amap.api.location.AMapLocationListener
 import com.amap.api.maps2d.AMap
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.*
+import com.blankj.utilcode.util.SPUtils
 import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
 import com.zjdx.point.R
@@ -26,7 +27,6 @@ import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.event.TravelEvent
 import com.zjdx.point.event.UpdateMapEvent
 import com.zjdx.point.ui.base.BaseActivity
-import com.zjdx.point.utils.SPUtils
 import com.zjdx.point.utils.Utils
 import com.zjdx.point.work.PointWorkManager
 import org.greenrobot.eventbus.EventBus
@@ -72,6 +72,10 @@ class TravelActivity : BaseActivity() {
             mLocationClient.stopLocation()
             dismissAbnormalDialog()
             PointWorkManager.instance.addUploadWork(this)
+
+            SPUtils.getInstance().put(NameSpace.ISRECORDING,false)
+            SPUtils.getInstance().put(NameSpace.RECORDINGID,"")
+
             finish()
 
         }
@@ -87,13 +91,16 @@ class TravelActivity : BaseActivity() {
         startTime = Date().time
         travelRecord =
             TravelRecord(
-                travelUser = SPUtils.getInstance(this).getString(NameSpace.UID),
+                travelUser = SPUtils.getInstance().getString(NameSpace.UID),
                 createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime)
             )
         travelViewModel.repository.insertTravelRecord(travelRecord!!)
         startLoactionService()
         binding.endTravel.text = "结束出行"
         binding.endTravel.setOnClickListener(endListener)
+        SPUtils.getInstance().put(NameSpace.ISRECORDING,true)
+        SPUtils.getInstance().put(NameSpace.RECORDINGID,travelRecord!!.id)
+
     }
     val endListener = View.OnClickListener {
         endTime = Date().time
@@ -229,6 +236,19 @@ class TravelActivity : BaseActivity() {
 //        serviceIntent = Intent(this, LocationService::class.java)
 //        startService(serviceIntent)
         initLocationService()
+
+        checkIsRecording()
+    }
+
+    private fun checkIsRecording() {
+        if (SPUtils.getInstance().getBoolean(NameSpace.ISRECORDING,false)){
+            val id=SPUtils.getInstance().getString(NameSpace.RECORDINGID)
+            travelRecord=travelViewModel.getTravelRecordById(id)
+            startLoactionService()
+            binding.endTravel.text = "结束出行"
+            binding.endTravel.setOnClickListener(endListener)
+        }
+
     }
 
 
