@@ -8,13 +8,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityHistoryTravelBinding
 import com.zjdx.point.ui.base.BaseActivity
+import com.zjdx.point.ui.base.BaseListViewModel
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
+import com.zjdx.point.utils.PopWindowUtil
 
 class HistoryTravelActivity : BaseActivity() {
 
     lateinit var binding: ActivityHistoryTravelBinding
 
     val historyTravelViewModel: HistoryTravelViewModel by viewModels<HistoryTravelViewModel> {
+        ViewModelFactory((application as PointApplication).travelRepository)
+    }
+
+    val baseListViewModel: BaseListViewModel by viewModels<BaseListViewModel> {
         ViewModelFactory((application as PointApplication).travelRepository)
     }
 
@@ -29,6 +35,9 @@ class HistoryTravelActivity : BaseActivity() {
                 HistoryRecylerAdapter(this, historyTravelViewModel.allRecordLiveData.value!!)
             binding.swipeHistoryAc.isRefreshing = false
         })
+        baseListViewModel.qualityListSreenLiveData.observe(this,{
+
+        })
     }
 
     override fun initView() {
@@ -39,12 +48,27 @@ class HistoryTravelActivity : BaseActivity() {
         binding.recyclerHistoryAc.layoutManager =
             LinearLayoutManager(this)
 
+        binding.fabHistory.setOnClickListener {
+            showSreenPopWindow(binding.root)
+        }
         binding.swipeHistoryAc.setOnRefreshListener {
             initData()
         }
     }
 
+    override fun initPopWindow() {
+        sreenPopWindow =
+            PopWindowUtil.instance.createMergePopWindow(
+                this,
+                baseListViewModel
+            )
+    }
+
     override fun initData() {
+        var baseListSreen=baseListViewModel.qualityListSreenLiveData.value
+        if (baseListSreen!=null){
+
+        }
         historyTravelViewModel.allRecordLiveData.value = historyTravelViewModel.getAllTravelRecord()
     }
 

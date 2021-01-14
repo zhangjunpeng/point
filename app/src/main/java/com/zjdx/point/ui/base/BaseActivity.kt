@@ -2,9 +2,11 @@ package com.zjdx.point.ui.base
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
+import android.widget.PopupWindow
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.zjdx.point.R
@@ -19,14 +21,17 @@ open class BaseActivity : AppCompatActivity() {
 
     lateinit var abnormalDialog: Dialog
 
-    val typeList = arrayListOf<String>("骑行", "步行", "开车", "其他")
+    var sreenPopWindow: PopupWindow? = null
 
+
+    val typeList = arrayListOf<String>("骑行", "步行", "开车", "其他")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initRootView()
+        initPopWindow()
         initView()
         initViewMoedl()
         initData()
@@ -46,6 +51,10 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     open fun initData() {
+    }
+
+    open fun initPopWindow() {
+
     }
 
     lateinit var progressDialog: Dialog
@@ -88,7 +97,7 @@ open class BaseActivity : AppCompatActivity() {
 
 
     fun showAbnormalDialog(msg: String, type: Int) {
-        abnormalDialog = createAbnormalDialog(msg,type)
+        abnormalDialog = createAbnormalDialog(msg, type)
 
         if (!abnormalDialog.isShowing) {
             abnormalDialog.show()
@@ -101,24 +110,37 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    lateinit var dialogBinding:DialogAbnormalBaseWorkAcBinding
+    fun showSreenPopWindow(view: View) {
+        // 在点击之后设置popupwindow的销毁
+        if (sreenPopWindow!!.isShowing) {
+            sreenPopWindow!!.dismiss()
+        }
+
+        // 设置popupWindow的显示位置，此处是在手机屏幕底部且水平居中的位置
+        sreenPopWindow!!.showAtLocation(
+            view, Gravity.BOTTOM, 0, 0
+        )
+
+    }
+
+    lateinit var dialogBinding: DialogAbnormalBaseWorkAcBinding
 
     open fun createAbnormalDialog(msg: String, type: Int): Dialog {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialogBinding=DialogAbnormalBaseWorkAcBinding.inflate(LayoutInflater.from(this))
+        dialogBinding = DialogAbnormalBaseWorkAcBinding.inflate(LayoutInflater.from(this))
         dialog.setContentView(dialogBinding.root)
 
         dialogBinding.titleDialogAbnormalBaseWorkAc.text = msg
 
 
-        if (type==1){
+        if (type == 1) {
             dialogBinding.cancelDialogAbnormalBaseWorkAc.setOnClickListener { dismissAbnormalDialog() }
             dialogBinding.submitDialogAbnormalBaseWorkAc.setOnClickListener(saveListener)
-        }else{
-            dialogBinding.cancelDialogAbnormalBaseWorkAc.text="停止记录"
-            dialogBinding.submitDialogAbnormalBaseWorkAc.text="继续记录"
-            dialogBinding.submitDialogAbnormalBaseWorkAc.setOnClickListener{
+        } else {
+            dialogBinding.cancelDialogAbnormalBaseWorkAc.text = "停止记录"
+            dialogBinding.submitDialogAbnormalBaseWorkAc.text = "继续记录"
+            dialogBinding.submitDialogAbnormalBaseWorkAc.setOnClickListener {
                 dialog.dismiss()
             }
             dialogBinding.cancelDialogAbnormalBaseWorkAc.setOnClickListener(cancelListener)

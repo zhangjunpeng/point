@@ -157,6 +157,10 @@ dependencies {
 
     implementation 'com.blankj:utilcodex:1.29.0'
 
+    //PickerView
+    implementation 'com.contrarywind:Android-PickerView:4.1.9'
+
+
 
     //leakcanary
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
