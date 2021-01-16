@@ -11,7 +11,7 @@ class HistoryTravelViewModel(private val repository: TravelRepository) : ViewMod
         this.value = ArrayList<TravelRecord>()
     }
 
-    fun getAllTravelRecord(): List<TravelRecord> {
-        return repository.getAll()
+    fun getAllTravelRecord(uid:String,startTime:Long,endTime:Long): List<TravelRecord> {
+        return repository.getAll(uid, startTime, endTime)
     }
 }

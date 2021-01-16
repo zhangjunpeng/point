@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.SPUtils
+import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityHistoryTravelBinding
 import com.zjdx.point.ui.base.BaseActivity
@@ -35,8 +37,8 @@ class HistoryTravelActivity : BaseActivity() {
                 HistoryRecylerAdapter(this, historyTravelViewModel.allRecordLiveData.value!!)
             binding.swipeHistoryAc.isRefreshing = false
         })
-        baseListViewModel.qualityListSreenLiveData.observe(this,{
-
+        baseListViewModel.qualityListSreenLiveData.observe(this, {
+            refeashData()
         })
     }
 
@@ -52,7 +54,7 @@ class HistoryTravelActivity : BaseActivity() {
             showSreenPopWindow(binding.root)
         }
         binding.swipeHistoryAc.setOnRefreshListener {
-            initData()
+            refeashData()
         }
     }
 
@@ -64,12 +66,13 @@ class HistoryTravelActivity : BaseActivity() {
             )
     }
 
-    override fun initData() {
-        var baseListSreen=baseListViewModel.qualityListSreenLiveData.value
-        if (baseListSreen!=null){
-
-        }
-        historyTravelViewModel.allRecordLiveData.value = historyTravelViewModel.getAllTravelRecord()
+    fun refeashData() {
+        var baseListSreen = baseListViewModel.qualityListSreenLiveData.value
+        historyTravelViewModel.allRecordLiveData.value = historyTravelViewModel.getAllTravelRecord(
+            SPUtils.getInstance().getString(NameSpace.UID),
+            baseListSreen!!.start_time,
+            baseListSreen!!.end_time
+        )
     }
 
 

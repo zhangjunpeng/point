@@ -6,6 +6,8 @@ import com.zjdx.point.db.model.BaseListSreen
 
 open class BaseListViewModel() : ViewModel() {
 
-    var qualityListSreenLiveData = MutableLiveData<BaseListSreen>()
+    var qualityListSreenLiveData = MutableLiveData<BaseListSreen>().apply {
+        this.value=BaseListSreen()
+    }
 
 }

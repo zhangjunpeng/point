@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TravelRecordDao {
-    @Query("Select * from TravelRecord order by create_time")
-    fun getAll(): List<TravelRecord>
+    @Query("Select * from TravelRecord where travel_user=:uid and start_time>=:startTime and start_time<=:endTime order by create_time")
+    fun getAll(uid:String,startTime:Long,endTime:Long): List<TravelRecord>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTravelRecord(vararg travelRecord: TravelRecord)

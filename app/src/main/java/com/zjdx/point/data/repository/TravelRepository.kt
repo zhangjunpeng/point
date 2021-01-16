@@ -19,8 +19,8 @@ class TravelRepository(
     val dataSource = DataSource()
 
     @WorkerThread
-    fun getAll(): List<TravelRecord> {
-        return travelRecordDao.getAll()
+    fun getAll(uid:String,startTime:Long,endTime:Long): List<TravelRecord> {
+        return travelRecordDao.getAll(uid, startTime, endTime)
     }
 
 
