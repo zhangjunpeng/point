@@ -16,6 +16,7 @@ class RegisterViewModel(val repository: RegisterRepository) : ViewModel() {
     val registerModel = MutableLiveData<SubmitBackModel>()
 
 
+    @Synchronized
     fun registerUser(
         userCode: String, userName: String?, password: String,
         telphone: String?,
