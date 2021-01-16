@@ -65,7 +65,6 @@ class TravelActivity : BaseActivity() {
         }
         saveListener = View.OnClickListener {
 
-            travelRecord!!.startTime = startTime
             travelRecord!!.endTime = endTime
             travelViewModel.repository.updateTravelRecord(travelRecord!!)
             mLocationClient.disableBackgroundLocation(true)
@@ -92,8 +91,10 @@ class TravelActivity : BaseActivity() {
         travelRecord =
             TravelRecord(
                 travelUser = SPUtils.getInstance().getString(NameSpace.UID),
-                createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime)
+                createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime),
+                startTime = startTime
             )
+
         travelViewModel.repository.insertTravelRecord(travelRecord!!)
         startLoactionService()
         binding.endTravel.text = "结束出行"
