@@ -3,10 +3,14 @@ package com.zjdx.point.work
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import androidx.annotation.WorkerThread
+import androidx.work.CoroutineWorker
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.SPUtils
+import com.zjdx.point.NameSpace
 import com.zjdx.point.data.bean.Back
 import com.zjdx.point.data.bean.SubmitBackModel
 import com.zjdx.point.config.REST
@@ -15,6 +19,9 @@ import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.data.repository.TravelRepository
 import com.zjdx.point.event.UpdateMsgEvent
+import com.zjdx.point.utils.DateUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -26,48 +33,63 @@ import java.util.*
 class UploadLocationsWork(
     val context: Context,
     workerParams: WorkerParameters
-) :
-    Worker(context, workerParams) {
+) : CoroutineWorker(context, workerParams) {
 
     val database by lazy { MyDataBase.getDatabase(context) }
 
     val repository = TravelRepository(database.travelRecordDao(), database.locationDao())
 
-    var travelRecord: TravelRecord? = null
+    var location: Location? = null
 
-    var index=0
+    var index = 0
 
-    @SuppressLint("RestrictedApi")
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
 
         // Do the work here--in this case, upload the images.
+
         LogUtils.i("开始uploadwork")
         sendMsgEvent("开始上传任务")
         findAndUpload()
         sendMsgEvent("结束上传任务")
-        return Result.Success()
+
+        return Result.success()
     }
 
     @Synchronized
-    private fun findAndUpload() {
-        travelRecord = repository.findHasNotUpload()
+    private suspend fun findAndUpload() {
+        location = repository.queryOneHasNotUploadByTid()
 
-        while (travelRecord != null) {
+        while (location != null) {
+            val travelRecord = repository.getTravelRecordById(location!!.tId)
 
-            travelRecord?.let {
-                index++
-                sendMsgEvent("开始上传第${index}条出行数据")
+            if (travelRecord == null) {
+                sendMsgEvent("发现无效数据，正在清理。。")
 
-                val locations = repository.getLocationsHasNotUpload(travelRecord!!.id)
-                UploadLocation(locations as ArrayList<Location>, travelRecord!!)
+                val locations = repository.getLocationListById(location!!.tId)
+                repository.deteleLocation(locations)
+                sendMsgEvent("清理完成")
+
+            } else {
+                withContext(Dispatchers.IO) {
+                    travelRecord.let {
+                        index++
+                        sendMsgEvent("开始上传第${index}条出行数据")
+                        val allLocations = repository.getAllListHasNotUploadByTid(travelRecord!!.id)
+                        sendMsgEvent("本次出行共记录点位${allLocations.size}个")
+                        val locations = repository.getLocationsHasNotUpload(travelRecord!!.id)
+                        UploadLocation(locations as ArrayList<Location>, travelRecord!!)
+                    }
+                }
+
             }
-            travelRecord = repository.findHasNotUpload()
+
+            location = repository.queryOneHasNotUploadByTid()
         }
         sendMsgEvent("无更多未上传出行数据！")
     }
 
 
-    private fun UploadLocation(
+    suspend fun UploadLocation(
         locationList: ArrayList<Location>,
         travelRecord: TravelRecord
     ) {
@@ -137,7 +159,7 @@ class UploadLocationsWork(
     }
 
 
-   fun postTravel(travelInfo: String): Back<SubmitBackModel> {
+    fun postTravel(travelInfo: String): Back<SubmitBackModel> {
         try {
             val mediaType = "application/json; charset=utf-8".toMediaType()
 

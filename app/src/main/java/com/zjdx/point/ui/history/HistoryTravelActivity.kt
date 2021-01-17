@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.SPUtils
 import com.zjdx.point.NameSpace
@@ -13,6 +14,7 @@ import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.base.BaseListViewModel
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
 import com.zjdx.point.utils.PopWindowUtil
+import kotlinx.coroutines.launch
 
 class HistoryTravelActivity : BaseActivity() {
 
@@ -33,6 +35,7 @@ class HistoryTravelActivity : BaseActivity() {
 
     override fun initViewMoedl() {
         historyTravelViewModel.allRecordLiveData.observe(this, {
+            dismissProgressDialog()
             binding.recyclerHistoryAc.adapter =
                 HistoryRecylerAdapter(this, historyTravelViewModel.allRecordLiveData.value!!)
             binding.swipeHistoryAc.isRefreshing = false
@@ -67,8 +70,9 @@ class HistoryTravelActivity : BaseActivity() {
     }
 
     fun refeashData() {
-        var baseListSreen = baseListViewModel.qualityListSreenLiveData.value
-        historyTravelViewModel.allRecordLiveData.value = historyTravelViewModel.getAllTravelRecord(
+        showProgressDialog()
+        val baseListSreen = baseListViewModel.qualityListSreenLiveData.value
+        historyTravelViewModel.getAllTravelRecord(
             SPUtils.getInstance().getString(NameSpace.UID),
             baseListSreen!!.start_time,
             baseListSreen!!.end_time

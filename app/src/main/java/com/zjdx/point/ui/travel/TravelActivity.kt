@@ -60,7 +60,13 @@ class TravelActivity : BaseActivity() {
 
     init {
         cancelListener = View.OnClickListener {
+//            val locations=travelViewModel.repository.getLocationListById(travelRecord!!.id)
+//            travelViewModel.repository.deteleLocation(locations)
             travelViewModel.deleteTravelRecord(travelRecord!!)
+            mLocationClient.disableBackgroundLocation(true)
+            mLocationClient.stopLocation()
+            SPUtils.getInstance().put(NameSpace.ISRECORDING,false)
+            SPUtils.getInstance().put(NameSpace.RECORDINGID,"")
             finish()
         }
         saveListener = View.OnClickListener {

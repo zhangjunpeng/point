@@ -19,20 +19,32 @@ class TravelRepository(
     val dataSource = DataSource()
 
     @WorkerThread
-    fun getAll(uid:String,startTime:Long,endTime:Long): List<TravelRecord> {
-        return travelRecordDao.getAll(uid, startTime, endTime)
-    }
-
-
-    suspend fun getLocationListById(tid: String): MutableList<Location> {
-        return withContext(Dispatchers.IO){
-            locationDao.queryByTid(tid).toMutableList()
+    suspend fun getAll(uid: String, startTime: Long, endTime: Long): List<TravelRecord> {
+        return withContext(Dispatchers.IO) {
+            travelRecordDao.getAll(uid, startTime, endTime)
         }
     }
 
     @WorkerThread
-    fun getTravelRecordById(tid: String): TravelRecord  {
-       return travelRecordDao.getTravelRecordById(tid)
+     fun getLocationListById(tid: String): MutableList<Location> {
+        return locationDao.queryByTid(tid).toMutableList()
+
+    }
+
+    @WorkerThread
+    fun queryOneHasNotUploadByTid(): Location {
+        return locationDao.queryOneHasNotUploadByTid()
+    }
+
+    @WorkerThread
+     fun getLastLocationById(tid: String): Location {
+        return locationDao.getLastLocationById(tid)
+
+    }
+
+    @WorkerThread
+    fun getTravelRecordById(tid: String): TravelRecord {
+        return travelRecordDao.getTravelRecordById(tid)
     }
 
     @WorkerThread
@@ -65,6 +77,7 @@ class TravelRepository(
     fun updateLocations(locations: List<Location>) {
         locationDao.updateLocations(locations)
     }
+
     @WorkerThread
     fun updateTravelRecord(travelRecord: TravelRecord) {
         travelRecordDao.updateTravelRecrod(travelRecord)
@@ -76,9 +89,21 @@ class TravelRepository(
     }
 
     @WorkerThread
-    fun deteleTravel(travelRecords: TravelRecord){
+    fun getAllListHasNotUploadByTid(tid: String): MutableList<Location> {
+        return locationDao.queryAllListHasNotUploadByTid(tid).toMutableList()
+
+    }
+
+    @WorkerThread
+    fun deteleTravel(travelRecords: TravelRecord) {
         travelRecordDao.deleteTravelRecrod(travelRecords)
     }
+
+    @WorkerThread
+    fun deteleLocation(Locations: List<Location>) {
+        locationDao.deleteLocations(Locations)
+    }
+
 
     suspend fun getAppVersion(): Back<AppVersionModel> {
         return dataSource.getAppVersion()

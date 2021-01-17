@@ -7,13 +7,16 @@ import android.view.Gravity
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.*
+import com.amap.api.location.AMapLocationClient
 import com.blankj.utilcode.util.SPUtils
 import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityMainBinding
 import com.zjdx.point.event.UpdateMsgEvent
+import com.zjdx.point.services.KeepLifeService
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.history.HistoryTravelActivity
 import com.zjdx.point.ui.login.LoginActivity
@@ -22,12 +25,14 @@ import com.zjdx.point.ui.viewmodel.ViewModelFactory
 import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.DownloadUtils
 import com.zjdx.point.work.PointWorkManager
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 import java.util.*
+
 
 @RuntimePermissions
 class MainActivity : BaseActivity() {
@@ -46,6 +51,9 @@ class MainActivity : BaseActivity() {
         EventBus.getDefault().register(this)
 //        initLocationService()
         initLocationServiceWithPermissionCheck()
+
+        startService(Intent(this, KeepLifeService::class.java))
+
     }
 
     override fun initViewMoedl() {
@@ -86,9 +94,23 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initData() {
+
         mainViewModel.findTravelNum()
-        if (!SPUtils.getInstance().getBoolean(NameSpace.ISRECORDING)){
+        if (SPUtils.getInstance().getBoolean(NameSpace.ISRECORDING)) {
+            AMapLocationClient(applicationContext).apply {
+                disableBackgroundLocation(true)
+                stopLocation()
+                onDestroy()
+            }
+
+            lifecycleScope.launch {
+
+                mainViewModel.checkHasNOEndTime()
+                addUploadWork()
+            }
+        } else {
             addUploadWork()
+
         }
         mainViewModel.getAppVersion()
     }
