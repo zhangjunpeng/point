@@ -33,7 +33,7 @@ import java.util.*
 class UploadLocationsWork(
     val context: Context,
     workerParams: WorkerParameters
-) : CoroutineWorker(context, workerParams) {
+) : Worker(context, workerParams) {
 
     val database by lazy { MyDataBase.getDatabase(context) }
 
@@ -43,7 +43,7 @@ class UploadLocationsWork(
 
     var index = 0
 
-    override suspend fun doWork(): Result {
+    override fun doWork(): Result {
 
         // Do the work here--in this case, upload the images.
 
@@ -56,7 +56,7 @@ class UploadLocationsWork(
     }
 
     @Synchronized
-    private suspend fun findAndUpload() {
+    private fun findAndUpload() {
         location = repository.queryOneHasNotUploadByTid()
 
         while (location != null) {
@@ -73,15 +73,13 @@ class UploadLocationsWork(
                 sendMsgEvent("清理完成")
 
             } else {
-                withContext(Dispatchers.IO) {
-                    travelRecord.let {
-                        index++
-                        sendMsgEvent("开始上传第${index}条出行数据")
-                        val allLocations = repository.getAllListHasNotUploadByTid(travelRecord!!.id)
-                        sendMsgEvent("本次出行共记录点位${allLocations.size}个")
-                        val locations = repository.getLocationsHasNotUpload(travelRecord!!.id)
-                        UploadLocation(locations as ArrayList<Location>, travelRecord!!)
-                    }
+                travelRecord.let {
+                    index++
+                    sendMsgEvent("开始上传第${index}条出行数据")
+                    val allLocations = repository.getAllListHasNotUploadByTid(travelRecord!!.id)
+                    sendMsgEvent("本次出行共记录点位${allLocations.size}个")
+                    val locations = repository.getLocationsHasNotUpload(travelRecord!!.id)
+                    UploadLocation(locations as ArrayList<Location>, travelRecord!!)
                 }
 
             }
@@ -92,7 +90,7 @@ class UploadLocationsWork(
     }
 
 
-    suspend fun UploadLocation(
+    fun UploadLocation(
         locationList: ArrayList<Location>,
         travelRecord: TravelRecord
     ) {
