@@ -29,6 +29,7 @@ import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.event.TravelEvent
 import com.zjdx.point.event.UpdateMapEvent
 import com.zjdx.point.event.UpdateMsgEvent
+import com.zjdx.point.services.KeepLifeService
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.main.MainActivity
 import com.zjdx.point.utils.Utils
@@ -52,9 +53,11 @@ class TravelActivity : BaseActivity() {
 
     var startTime: Long = 0
     var endTime: Long = 0
+    companion object{
+        var mLocationClient: AMapLocationClient?=null
+    }
 
 
-    lateinit var mLocationClient: AMapLocationClient
 
     val TAG = "TravlelActivity"
     var travelRecord: TravelRecord? = null
@@ -67,8 +70,8 @@ class TravelActivity : BaseActivity() {
 //            val locations=travelViewModel.repository.getLocationListById(travelRecord!!.id)
 //            travelViewModel.repository.deteleLocation(locations)
             travelViewModel.deleteTravelRecord(travelRecord!!)
-            mLocationClient.disableBackgroundLocation(true)
-            mLocationClient.stopLocation()
+            mLocationClient!!.disableBackgroundLocation(true)
+            mLocationClient!!.stopLocation()
             SPUtils.getInstance().put(NameSpace.ISRECORDING, false)
             SPUtils.getInstance().put(NameSpace.RECORDINGID, "")
             finish()
@@ -97,8 +100,8 @@ class TravelActivity : BaseActivity() {
             event.msg = "记录完成，开始上传"
             EventBus.getDefault().post(event)
         }
-        mLocationClient.disableBackgroundLocation(true)
-        mLocationClient.stopLocation()
+        mLocationClient!!.disableBackgroundLocation(true)
+        mLocationClient!!.stopLocation()
 
         SPUtils.getInstance().put(NameSpace.ISRECORDING, false)
         SPUtils.getInstance().put(NameSpace.RECORDINGID, "")
@@ -120,6 +123,7 @@ class TravelActivity : BaseActivity() {
 
         travelViewModel.repository.insertTravelRecord(travelRecord!!)
         startLoactionService()
+        startService(Intent(applicationContext,KeepLifeService::class.java))
         binding.endTravel.text = "结束出行"
         binding.endTravel.setOnClickListener(endListener)
         SPUtils.getInstance().put(NameSpace.ISRECORDING, true)
@@ -325,12 +329,12 @@ class TravelActivity : BaseActivity() {
 
 //        mLocationOption.isGpsFirst = true
 
-        mLocationClient.setLocationOption(mLocationOption)
+        mLocationClient!!.setLocationOption(mLocationOption)
 
         //设置场景模式后最好调用一次stop，再调用start以保证场景模式生效
-        mLocationClient.stopLocation()
+        mLocationClient!!.stopLocation()
 
-        mLocationClient.setLocationListener(mAMapLocationListener)
+        mLocationClient!!.setLocationListener(mAMapLocationListener)
 
     }
 
@@ -338,8 +342,8 @@ class TravelActivity : BaseActivity() {
     fun startLoactionService() {
 
         //启动后台定位，第一个参数为通知栏ID，建议整个APP使用一个
-        mLocationClient.enableBackgroundLocation(2001, buildNotification())
-        mLocationClient.startLocation()
+        mLocationClient!!.enableBackgroundLocation(2001, buildNotification())
+        mLocationClient!!.startLocation()
 
     }
 
@@ -402,7 +406,7 @@ class TravelActivity : BaseActivity() {
         binding.mapviewTarvelAc.onDestroy()
         //关闭后台定位，参数为true时会移除通知栏，为false时不会移除通知栏，但是可以手动移除
         saveTravelRecord()
-        mLocationClient.onDestroy()
+        mLocationClient!!.onDestroy()
 
         EventBus.getDefault().unregister(this)
 

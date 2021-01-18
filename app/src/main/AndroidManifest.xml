@@ -46,9 +46,11 @@
             android:name=".services.LocationService"
             android:enabled="true"
             android:exported="true" />
-        <service
-            android:name="com.amap.api.location.APSService"
-            android:foregroundServiceType="location" />
+        <service android:name="com.amap.api.location.APSService" android:foregroundServiceType="location"/>
+
+        <service android:name=".services.KeepLifeService"
+            android:process=":keepLife"
+            />
 
 
         <activity android:name=".ui.history.HistoryLocationActivity" />
