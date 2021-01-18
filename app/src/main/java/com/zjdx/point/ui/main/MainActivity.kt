@@ -24,6 +24,7 @@ import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.DownloadUtils
 import com.zjdx.point.work.PointWorkManager
 import kotlinx.coroutines.launch
+import okhttp3.internal.format
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -98,11 +99,37 @@ class MainActivity : BaseActivity() {
             addUploadWork()
 
         } else {
-            val event = UpdateMsgEvent()
-            event.msg = "当前出行记录中。。"
-            EventBus.getDefault().post(event)
+            sendMsg("检测到未正常退出数据记录，正在处理。")
+
+            val travelRecord = mainViewModel.repository.getTravelRecordById(
+                SPUtils.getInstance().getString(NameSpace.RECORDINGID)
+            )
+            travelRecord?.let {
+                val location = mainViewModel.repository.getLastLocationById(it.id)
+                it.endTime = DateUtil.dateFormat.parse(location.creatTime).time
+                if (it.endTime - it.startTime > 60 * 1000) {
+                    mainViewModel.repository.updateTravelRecord(it)
+                } else {
+                    sendMsg("记录时间少于60秒，已删除数据")
+                    val locas = mainViewModel.repository.getLocationListById(it.id)
+                    mainViewModel.repository.deteleLocation(locas)
+                    mainViewModel.repository.deteleTravel(it)
+                }
+            }
+            SPUtils.getInstance().put(NameSpace.ISRECORDING, false)
+            SPUtils.getInstance().put(NameSpace.RECORDINGID, "")
+            addUploadWork()
+
         }
+
         mainViewModel.getAppVersion()
+    }
+
+
+    private fun sendMsg(msg: String) {
+        val event = UpdateMsgEvent()
+        event.msg = msg
+        EventBus.getDefault().post(event)
     }
 
     override fun initView() {

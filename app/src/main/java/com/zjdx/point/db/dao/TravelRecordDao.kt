@@ -31,4 +31,7 @@ interface TravelRecordDao {
 
     @Update
     fun updateTravelRecrod(travelRecord: TravelRecord)
+
+    @Query("Select * from TravelRecord  where start_time= 0 or end_time=0")
+     fun getTravelRecordHasEmptyStart(): List<TravelRecord>
 }

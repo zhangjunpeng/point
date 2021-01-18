@@ -49,10 +49,41 @@ class UploadLocationsWork(
 
         LogUtils.i("开始uploadwork")
         sendMsgEvent("开始上传任务")
+        checkTravel()
         findAndUpload()
         sendMsgEvent("结束上传任务")
 
         return Result.success()
+    }
+
+    private fun checkTravel() {
+        val travelRecords=repository.getTravelRecordHasEmptyStart()
+        if (travelRecords!=null&& travelRecords.isNotEmpty()){
+            for (item in travelRecords){
+                if (item.startTime==0L){
+                    val loca=repository.getFirsttLocationById(item.id)
+                    if (loca==null){
+                        repository.deteleTravel(item)
+                        continue
+                    }else{
+                        item.startTime=DateUtil.dateFormat.parse(loca.creatTime).time
+                    }
+                }else if (item.endTime==0L){
+                    val loca=repository.getLastLocationById(item.id)
+                    if (loca==null){
+                        repository.deteleTravel(item)
+                        continue
+                    }else{
+                        item.endTime=DateUtil.dateFormat.parse(loca.creatTime).time
+                    }
+                }
+                if (item.endTime-item.startTime>60*1000){
+                    repository.updateTravelRecord(item)
+                }else{
+                    repository.deteleTravel(item)
+                }
+            }
+        }
     }
 
     @Synchronized
@@ -206,5 +237,42 @@ class UploadLocationsWork(
                 )
             )
         }
+    }
+
+
+    suspend fun checkHasNOEndTime() {
+        withContext(Dispatchers.IO) {
+            val travelRecord = repository.getTravelRecordById(
+                SPUtils.getInstance().getString(NameSpace.RECORDINGID)
+            )
+            val laction = repository.getLastLocationById(
+                SPUtils.getInstance().getString(NameSpace.RECORDINGID)
+            )
+            if (travelRecord == null) {
+                repository.deteleLocation(
+                    repository.getLocationListById(
+                        SPUtils.getInstance().getString(NameSpace.RECORDINGID)
+                    )
+                )
+            } else {
+
+                travelRecord.endTime = DateUtil.dateFormat.parse(laction.creatTime).time
+                if (travelRecord.endTime - travelRecord.startTime < 60 * 1000) {
+                    val locations = repository.getLocationListById(travelRecord.id)
+                    repository.deteleLocation(locations)
+                    repository.deteleTravel(travelRecord)
+                    sendMsgEvent("已成功清理无效数据")
+
+                } else {
+                    repository.updateTravelRecord(travelRecord)
+                    sendMsgEvent("已成功处理上次出行数据")
+                }
+            }
+
+            SPUtils.getInstance().put(NameSpace.ISRECORDING, false)
+            SPUtils.getInstance().put(NameSpace.RECORDINGID, "")
+
+        }
+
     }
 }

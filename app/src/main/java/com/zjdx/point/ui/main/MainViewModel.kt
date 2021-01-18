@@ -57,41 +57,7 @@ class MainViewModel(val repository: TravelRepository) : ViewModel() {
     }
 
 
-    suspend fun checkHasNOEndTime() {
-        withContext(Dispatchers.IO) {
-            val travelRecord = repository.getTravelRecordById(
-                SPUtils.getInstance().getString(NameSpace.RECORDINGID)
-            )
-            val laction = repository.getLastLocationById(
-                SPUtils.getInstance().getString(NameSpace.RECORDINGID)
-            )
-            if (travelRecord == null) {
-                repository.deteleLocation(
-                    repository.getLocationListById(
-                        SPUtils.getInstance().getString(NameSpace.RECORDINGID)
-                    )
-                )
-            } else {
 
-                travelRecord.endTime = DateUtil.dateFormat.parse(laction.creatTime).time
-                if (travelRecord.endTime - travelRecord.startTime < 60 * 1000) {
-                    val locations = repository.getLocationListById(travelRecord.id)
-                    repository.deteleLocation(locations)
-                    repository.deteleTravel(travelRecord)
-                    sendMsgEvent("已成功清理无效数据")
-
-                } else {
-                    repository.updateTravelRecord(travelRecord)
-                    sendMsgEvent("已成功处理上次出行数据")
-                }
-            }
-
-            SPUtils.getInstance().put(NameSpace.ISRECORDING, false)
-            SPUtils.getInstance().put(NameSpace.RECORDINGID, "")
-
-        }
-
-    }
 
 
     fun sendMsgEvent(msg: String) {

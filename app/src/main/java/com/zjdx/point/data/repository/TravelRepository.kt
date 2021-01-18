@@ -41,10 +41,19 @@ class TravelRepository(
         return locationDao.getLastLocationById(tid)
 
     }
+    @WorkerThread
+    fun getFirsttLocationById(tid: String): Location {
+        return locationDao.getFirsttLocationById(tid)
+
+    }
 
     @WorkerThread
     fun getTravelRecordById(tid: String): TravelRecord {
         return travelRecordDao.getTravelRecordById(tid)
+    }
+    @WorkerThread
+    fun getTravelRecordHasEmptyStart():  List<TravelRecord> {
+        return travelRecordDao.getTravelRecordHasEmptyStart()
     }
 
     @WorkerThread

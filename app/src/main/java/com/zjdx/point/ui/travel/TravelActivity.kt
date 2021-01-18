@@ -74,6 +74,8 @@ class TravelActivity : BaseActivity() {
             mLocationClient!!.stopLocation()
             SPUtils.getInstance().put(NameSpace.ISRECORDING, false)
             SPUtils.getInstance().put(NameSpace.RECORDINGID, "")
+            startActivity(Intent(this, MainActivity::class.java))
+
             finish()
         }
         saveListener = View.OnClickListener {
@@ -123,7 +125,8 @@ class TravelActivity : BaseActivity() {
 
         travelViewModel.repository.insertTravelRecord(travelRecord!!)
         startLoactionService()
-        startService(Intent(applicationContext,KeepLifeService::class.java))
+//        startService(Intent(applicationContext,KeepLifeService::class.java))
+
         binding.endTravel.text = "结束出行"
         binding.endTravel.setOnClickListener(endListener)
         SPUtils.getInstance().put(NameSpace.ISRECORDING, true)

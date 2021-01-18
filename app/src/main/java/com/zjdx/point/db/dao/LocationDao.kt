@@ -16,6 +16,9 @@ interface LocationDao {
     @Query("Select * from Location where t_id = :tId order by creat_time desc limit 1")
     fun getLastLocationById(tId: String): Location
 
+    @Query("Select * from Location where t_id = :tId order by creat_time limit 1")
+    fun getFirsttLocationById(tId: String): Location
+
     @Query("Select * from Location where t_id = :tId and is_upload=0 order by creat_time desc limit 1000")
     fun queryListHasNotUploadByTid(tId: String): Array<Location>
 
