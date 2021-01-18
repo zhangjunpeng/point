@@ -32,7 +32,7 @@
         <activity android:name=".ui.account.AccountActivity" />
         <activity
             android:name=".ui.login.LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_login">
 
         </activity>
         <activity android:name=".ui.loading.LoadingActivity">
@@ -46,21 +46,22 @@
             android:name=".services.LocationService"
             android:enabled="true"
             android:exported="true" />
-        <service android:name="com.amap.api.location.APSService" android:foregroundServiceType="location"/>
-
-        <service android:name=".services.KeepLifeService"
-            android:process=":keepLife"
-            />
+        <service
+            android:name="com.amap.api.location.APSService"
+            android:foregroundServiceType="location" />
 
 
         <activity android:name=".ui.history.HistoryLocationActivity" />
         <activity android:name=".ui.history.HistoryTravelActivity" />
-        <activity android:name=".ui.travel.TravelActivity" />
+        <activity
+            android:name=".ui.travel.TravelActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".ui.base.BaseActivity"
             android:label="@string/title_activity_base"
             android:theme="@style/Theme.Point.NoActionBar" />
-        <activity android:name=".ui.main.MainActivity">
+        <activity android:name=".ui.main.MainActivity"
+            >
 
         </activity>
 

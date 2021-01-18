@@ -4,4 +4,5 @@ class UpdateMsgEvent {
 
     var msg: String = ""
 
+    var isBeginUpload=false
 }

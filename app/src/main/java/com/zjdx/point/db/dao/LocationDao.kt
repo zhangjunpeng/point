@@ -25,6 +25,9 @@ interface LocationDao {
     @Query("Select * from Location where t_id = :tId and is_upload=0")
     fun queryAllListHasNotUploadByTid(tId: String): Array<Location>
 
+//    @Query("Delete * from Location where t_id= :tid")
+//    fun deleteLocationsByTid(tId: String)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertLocation(location: Location)
 

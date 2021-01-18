@@ -10,13 +10,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.*
-import com.amap.api.location.AMapLocationClient
 import com.blankj.utilcode.util.SPUtils
 import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityMainBinding
 import com.zjdx.point.event.UpdateMsgEvent
-import com.zjdx.point.services.KeepLifeService
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.history.HistoryTravelActivity
 import com.zjdx.point.ui.login.LoginActivity
@@ -52,7 +50,6 @@ class MainActivity : BaseActivity() {
 //        initLocationService()
         initLocationServiceWithPermissionCheck()
 
-        startService(Intent(this, KeepLifeService::class.java))
 
     }
 
@@ -91,26 +88,19 @@ class MainActivity : BaseActivity() {
             mainViewModel.travelCountNum.value!! - mainViewModel.travelNotUploadNum.value!!
         binding.countnumMainAc.text =
             Html.fromHtml("已成功上传<font color='blue'>${hasUploadNum}</font>/${mainViewModel.travelCountNum.value!!}条数据")
+
     }
 
     override fun initData() {
 
-        mainViewModel.findTravelNum()
-        if (SPUtils.getInstance().getBoolean(NameSpace.ISRECORDING)) {
-            AMapLocationClient(applicationContext).apply {
-                disableBackgroundLocation(true)
-                stopLocation()
-                onDestroy()
-            }
-
-            lifecycleScope.launch {
-
-                mainViewModel.checkHasNOEndTime()
-                addUploadWork()
-            }
-        } else {
+        if (!SPUtils.getInstance().getBoolean(NameSpace.ISRECORDING)) {
+            mainViewModel.findTravelNum()
             addUploadWork()
 
+        } else {
+            val event = UpdateMsgEvent()
+            event.msg = "当前出行记录中。。"
+            EventBus.getDefault().post(event)
         }
         mainViewModel.getAppVersion()
     }
@@ -118,6 +108,7 @@ class MainActivity : BaseActivity() {
     override fun initView() {
         binding.travelMainAc.setOnClickListener {
             startActivity(Intent(this, TravelActivity::class.java))
+            finish()
         }
         binding.historyMainAc.setOnClickListener {
             startActivity(Intent(this, HistoryTravelActivity::class.java))
@@ -131,12 +122,13 @@ class MainActivity : BaseActivity() {
             SPUtils.getInstance().put(NameSpace.UID, "")
             SPUtils.getInstance().put(NameSpace.ISLOGIN, false)
             startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+
         }
     }
 
     override fun onRestart() {
         super.onRestart()
-        mainViewModel.findTravelNum()
     }
 
     fun addUploadWork() {
@@ -156,6 +148,10 @@ class MainActivity : BaseActivity() {
         mainViewModel.uploadMsgLiveData.value!!.add(DateUtil.dateFormat.format(Date().time) + ":" + event.msg)
         binding.recyclerMain.adapter!!.notifyDataSetChanged()
         mainViewModel.findTravelNum()
+
+        if (event.isBeginUpload) {
+            addUploadWork()
+        }
 
     }
 

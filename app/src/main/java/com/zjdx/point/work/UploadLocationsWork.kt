@@ -66,7 +66,10 @@ class UploadLocationsWork(
                 sendMsgEvent("发现无效数据，正在清理。。")
 
                 val locations = repository.getLocationListById(location!!.tId)
-                repository.deteleLocation(locations)
+                for (loca in locations) {
+                    loca.isUpload = 1
+                }
+                repository.updateLocations(locations)
                 sendMsgEvent("清理完成")
 
             } else {

@@ -5,6 +5,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -17,6 +18,7 @@ import com.amap.api.location.AMapLocationListener
 import com.amap.api.maps2d.AMap
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.*
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SPUtils
 import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
@@ -26,7 +28,9 @@ import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.event.TravelEvent
 import com.zjdx.point.event.UpdateMapEvent
+import com.zjdx.point.event.UpdateMsgEvent
 import com.zjdx.point.ui.base.BaseActivity
+import com.zjdx.point.ui.main.MainActivity
 import com.zjdx.point.utils.Utils
 import com.zjdx.point.work.PointWorkManager
 import org.greenrobot.eventbus.EventBus
@@ -65,32 +69,45 @@ class TravelActivity : BaseActivity() {
             travelViewModel.deleteTravelRecord(travelRecord!!)
             mLocationClient.disableBackgroundLocation(true)
             mLocationClient.stopLocation()
-            SPUtils.getInstance().put(NameSpace.ISRECORDING,false)
-            SPUtils.getInstance().put(NameSpace.RECORDINGID,"")
+            SPUtils.getInstance().put(NameSpace.ISRECORDING, false)
+            SPUtils.getInstance().put(NameSpace.RECORDINGID, "")
             finish()
         }
         saveListener = View.OnClickListener {
 
+            dismissAbnormalDialog()
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
+    }
+
+    private fun saveTravelRecord() {
+        if (endTime == 0L) {
+            endTime = Date().time
+        }
+        if (endTime - startTime < 60 * 1000) {
+            val locations = travelViewModel.repository.getLocationListById(travelRecord!!.id)
+            travelViewModel.repository.deteleLocation(locations)
+            travelViewModel.repository.deteleTravel(travelRecord!!)
+        } else {
             travelRecord!!.endTime = endTime
             travelViewModel.repository.updateTravelRecord(travelRecord!!)
-            mLocationClient.disableBackgroundLocation(true)
-            mLocationClient.stopLocation()
-            dismissAbnormalDialog()
-            PointWorkManager.instance.addUploadWork(this)
-
-            SPUtils.getInstance().put(NameSpace.ISRECORDING,false)
-            SPUtils.getInstance().put(NameSpace.RECORDINGID,"")
-
-            finish()
-
+            val event = UpdateMsgEvent()
+            event.isBeginUpload=true
+            event.msg = "记录完成，开始上传"
+            EventBus.getDefault().post(event)
         }
+        mLocationClient.disableBackgroundLocation(true)
+        mLocationClient.stopLocation()
+
+        SPUtils.getInstance().put(NameSpace.ISRECORDING, false)
+        SPUtils.getInstance().put(NameSpace.RECORDINGID, "")
     }
 
 
     private val travelViewModel: TravelViewModel by viewModels<TravelViewModel> {
         TravelViewModelFactory((application as PointApplication).travelRepository)
     }
-
 
     val startListener = View.OnClickListener {
         startTime = Date().time
@@ -105,8 +122,8 @@ class TravelActivity : BaseActivity() {
         startLoactionService()
         binding.endTravel.text = "结束出行"
         binding.endTravel.setOnClickListener(endListener)
-        SPUtils.getInstance().put(NameSpace.ISRECORDING,true)
-        SPUtils.getInstance().put(NameSpace.RECORDINGID,travelRecord!!.id)
+        SPUtils.getInstance().put(NameSpace.ISRECORDING, true)
+        SPUtils.getInstance().put(NameSpace.RECORDINGID, travelRecord!!.id)
 
     }
     val endListener = View.OnClickListener {
@@ -248,9 +265,9 @@ class TravelActivity : BaseActivity() {
     }
 
     private fun checkIsRecording() {
-        if (SPUtils.getInstance().getBoolean(NameSpace.ISRECORDING,false)){
-            val id=SPUtils.getInstance().getString(NameSpace.RECORDINGID)
-            travelRecord=travelViewModel.getTravelRecordById(id)
+        if (SPUtils.getInstance().getBoolean(NameSpace.ISRECORDING, false)) {
+            val id = SPUtils.getInstance().getString(NameSpace.RECORDINGID)
+            travelRecord = travelViewModel.getTravelRecordById(id)
             startLoactionService()
             binding.endTravel.text = "结束出行"
             binding.endTravel.setOnClickListener(endListener)
@@ -290,7 +307,7 @@ class TravelActivity : BaseActivity() {
 
     fun initLocationService() {
 
-        mLocationClient = AMapLocationClient(applicationContext)
+        mLocationClient = AMapLocationClient(this)
 
         val mLocationOption = AMapLocationClientOption()
         /**
@@ -335,15 +352,20 @@ class TravelActivity : BaseActivity() {
         binding.endTravel.text = "开始出行"
         binding.endTravel.setOnClickListener(startListener)
         binding.titleBarTravelAc.leftIvTitleBar.setOnClickListener {
-            finish()
             if (travelRecord != null) {
                 val travelEvent = TravelEvent()
                 travelEvent.travelRecord = travelRecord!!
                 EventBus.getDefault().postSticky(travelEvent)
             }
+
+            startActivity(Intent(this, MainActivity::class.java))
         }
         binding.titleBarTravelAc.rightIvTitleBar.visibility = View.INVISIBLE
 
+    }
+
+    override fun onBackPressed() {
+        startActivity(Intent(this, MainActivity::class.java))
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -376,13 +398,19 @@ class TravelActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         //在activity执行onDestroy时执行mMapView.onDestroy()，销毁地图
-        EventBus.getDefault().unregister(this)
         binding.mapviewTarvelAc.onDestroy()
         //关闭后台定位，参数为true时会移除通知栏，为false时不会移除通知栏，但是可以手动移除
+        saveTravelRecord()
+        mLocationClient.onDestroy()
 
-//        stopService(serviceIntent)
+        EventBus.getDefault().unregister(this)
+
+        LogUtils.i("onDestroy")
+
+        super.onDestroy()
+
+
     }
 
 
