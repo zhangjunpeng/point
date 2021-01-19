@@ -39,6 +39,7 @@ class MainActivity : BaseActivity() {
     val TAG = "LocationService"
     lateinit var binding: ActivityMainBinding
 
+    var upload = true
 
     val mainViewModel: MainViewModel by viewModels<MainViewModel> {
         ViewModelFactory((application as PointApplication).travelRepository)
@@ -50,7 +51,7 @@ class MainActivity : BaseActivity() {
         EventBus.getDefault().register(this)
 //        initLocationService()
         initLocationServiceWithPermissionCheck()
-
+        upload = intent!!.getBooleanExtra("upload", true)
 
     }
 
@@ -99,6 +100,10 @@ class MainActivity : BaseActivity() {
             addUploadWork()
 
         } else {
+            if (!upload) {
+                Toast.makeText(this, "后台记录数据中。。", Toast.LENGTH_LONG).show()
+                return
+            }
             sendMsg("检测到未正常退出数据记录，正在处理。")
 
             val travelRecord = mainViewModel.repository.getTravelRecordById(
@@ -175,12 +180,8 @@ class MainActivity : BaseActivity() {
         mainViewModel.uploadMsgLiveData.value!!.add(DateUtil.dateFormat.format(Date().time) + ":" + event.msg)
         binding.recyclerMain.adapter!!.notifyDataSetChanged()
         mainViewModel.findTravelNum()
-
-        if (event.isBeginUpload) {
-            addUploadWork()
-        }
-
     }
+
 
     @NeedsPermission(
         Manifest.permission.ACCESS_COARSE_LOCATION,

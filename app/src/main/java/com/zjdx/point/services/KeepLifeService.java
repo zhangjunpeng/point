@@ -140,8 +140,7 @@ public class KeepLifeService extends IntentService {
             travelRecord.setEndTime(endTime);
             repository.updateTravelRecord(travelRecord);
             UpdateMsgEvent event = new UpdateMsgEvent();
-            event.setBeginUpload(true);
-            event.setMsg("记录完成，开始上传");
+            event.setMsg("记录保存完成。");
             EventBus.getDefault().post(event);
         }
         if (TravelActivity.Companion.getMLocationClient() != null) {

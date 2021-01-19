@@ -28,12 +28,9 @@ import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.event.TravelEvent
 import com.zjdx.point.event.UpdateMapEvent
-import com.zjdx.point.event.UpdateMsgEvent
-import com.zjdx.point.services.KeepLifeService
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.main.MainActivity
 import com.zjdx.point.utils.Utils
-import com.zjdx.point.work.PointWorkManager
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -53,10 +50,10 @@ class TravelActivity : BaseActivity() {
 
     var startTime: Long = 0
     var endTime: Long = 0
-    companion object{
-        var mLocationClient: AMapLocationClient?=null
-    }
 
+    companion object {
+        var mLocationClient: AMapLocationClient? = null
+    }
 
 
     val TAG = "TravlelActivity"
@@ -74,16 +71,21 @@ class TravelActivity : BaseActivity() {
             mLocationClient!!.stopLocation()
             SPUtils.getInstance().put(NameSpace.ISRECORDING, false)
             SPUtils.getInstance().put(NameSpace.RECORDINGID, "")
-            startActivity(Intent(this, MainActivity::class.java))
-
+            startMain(true)
             finish()
         }
         saveListener = View.OnClickListener {
 
             dismissAbnormalDialog()
-            startActivity(Intent(this, MainActivity::class.java))
+            startMain(true)
             finish()
         }
+    }
+
+    private fun startMain(upload: Boolean) {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("upload", upload)
+        startActivity(intent)
     }
 
     private fun saveTravelRecord() {
@@ -97,10 +99,10 @@ class TravelActivity : BaseActivity() {
         } else {
             travelRecord!!.endTime = endTime
             travelViewModel.repository.updateTravelRecord(travelRecord!!)
-            val event = UpdateMsgEvent()
-            event.isBeginUpload=true
-            event.msg = "记录完成，开始上传"
-            EventBus.getDefault().post(event)
+//            val event = UpdateMsgEvent()
+//            event.isBeginUpload=true
+//            event.msg = "记录完成，开始上传"
+//            EventBus.getDefault().post(event)
         }
         mLocationClient!!.disableBackgroundLocation(true)
         mLocationClient!!.stopLocation()
@@ -359,20 +361,14 @@ class TravelActivity : BaseActivity() {
         binding.endTravel.text = "开始出行"
         binding.endTravel.setOnClickListener(startListener)
         binding.titleBarTravelAc.leftIvTitleBar.setOnClickListener {
-            if (travelRecord != null) {
-                val travelEvent = TravelEvent()
-                travelEvent.travelRecord = travelRecord!!
-                EventBus.getDefault().postSticky(travelEvent)
-            }
-
-            startActivity(Intent(this, MainActivity::class.java))
+           startMain(false)
         }
         binding.titleBarTravelAc.rightIvTitleBar.visibility = View.INVISIBLE
 
     }
 
     override fun onBackPressed() {
-        startActivity(Intent(this, MainActivity::class.java))
+        startMain(false)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
