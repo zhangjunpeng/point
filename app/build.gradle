@@ -2,7 +2,16 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'bugly'
+
 }
+
+bugly {
+    appId = '90cff47ede' // 注册时分配的App ID
+    appKey = '42889ffb-d974-4924-972c-98d2e678c64c' // 注册时分配的App Key
+    upload = true
+}
+
 
 android {
     signingConfigs {
