@@ -64,8 +64,8 @@ class TravelActivity : BaseActivity() {
 
     init {
         cancelListener = View.OnClickListener {
-//            val locations=travelViewModel.repository.getLocationListById(travelRecord!!.id)
-//            travelViewModel.repository.deteleLocation(locations)
+            val locations=travelViewModel.repository.getLocationListById(travelRecord!!.id)
+            travelViewModel.repository.deteleLocation(locations)
             travelViewModel.deleteTravelRecord(travelRecord!!)
             mLocationClient!!.disableBackgroundLocation(true)
             mLocationClient!!.stopLocation()
@@ -271,6 +271,7 @@ class TravelActivity : BaseActivity() {
         initLocationService()
 
         checkIsRecording()
+
     }
 
     private fun checkIsRecording() {

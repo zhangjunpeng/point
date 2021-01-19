@@ -26,8 +26,19 @@ class TravelRepository(
     }
 
     @WorkerThread
+    fun getAllTravel(uid: String, startTime: Long, endTime: Long): List<TravelRecord> {
+        return travelRecordDao.getAll(uid, startTime, endTime)
+    }
+
+    @WorkerThread
      fun getLocationListById(tid: String): MutableList<Location> {
         return locationDao.queryByTid(tid).toMutableList()
+
+    }
+
+    @WorkerThread
+    fun getLocationListGroupByTId(): MutableList<Location> {
+        return locationDao.getLocationListGroupByTId().toMutableList()
 
     }
 

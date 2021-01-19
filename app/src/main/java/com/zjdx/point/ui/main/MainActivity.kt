@@ -111,13 +111,17 @@ class MainActivity : BaseActivity() {
             )
             travelRecord?.let {
                 val location = mainViewModel.repository.getLastLocationById(it.id)
+                if (location==null){
+                    mainViewModel.repository.deteleTravel(travelRecord)
+                    return@let
+                }
                 it.endTime = DateUtil.dateFormat.parse(location.creatTime).time
                 if (it.endTime - it.startTime > 60 * 1000) {
                     mainViewModel.repository.updateTravelRecord(it)
                 } else {
                     sendMsg("记录时间少于60秒，已删除数据")
                     val locas = mainViewModel.repository.getLocationListById(it.id)
-                    mainViewModel.repository.deteleLocation(locas)
+//                    mainViewModel.repository.deteleLocation(locas)
                     mainViewModel.repository.deteleTravel(it)
                 }
             }

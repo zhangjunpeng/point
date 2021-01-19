@@ -39,4 +39,6 @@ interface LocationDao {
 
     @Delete
     fun deleteLocations(locations: List<Location>)
+    @Query("Select * from Location group by t_id")
+     fun getLocationListGroupByTId():  Array<Location>
 }
