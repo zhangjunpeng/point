@@ -19,6 +19,7 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
 
+
     <application
         android:name=".PointApplication"
         android:allowBackup="true"
@@ -47,11 +48,6 @@
             android:enabled="true"
             android:exported="true" />
         <service android:name="com.amap.api.location.APSService" android:foregroundServiceType="location"/>
-
-        <service android:name=".services.KeepLifeService"
-            android:process=":keepLife"
-            />
-
 
         <activity android:name=".ui.history.HistoryLocationActivity" />
         <activity android:name=".ui.history.HistoryTravelActivity" />

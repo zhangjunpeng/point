@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.blankj.utilcode.util.Utils
+import com.tencent.bugly.crashreport.CrashReport
 import com.zjdx.point.data.repository.LocationRepository
 import com.zjdx.point.data.repository.RegisterRepository
 import com.zjdx.point.data.repository.TravelRepository
@@ -25,6 +26,8 @@ class PointApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        CrashReport.initCrashReport(applicationContext, "42889ffb-d974-4924-972c-98d2e678c64c", true)
+
         Utils.init(this)
     }
 
