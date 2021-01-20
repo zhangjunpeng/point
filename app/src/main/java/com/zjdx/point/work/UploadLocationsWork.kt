@@ -51,7 +51,7 @@ class UploadLocationsWork(
         sendMsgEvent("开始上传任务")
 //        backTravel()
         checkTravel()
-        checkTravelTime()
+//        checkTravelTime()
 
         findAndUpload()
         sendMsgEvent("结束上传任务")

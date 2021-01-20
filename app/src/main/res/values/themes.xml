@@ -17,6 +17,7 @@
     <style name="Theme.Point.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:screenOrientation">portrait</item>
     </style>
 
     <style name="ThemeOverlay.Point.FullscreenContainer" parent="">
