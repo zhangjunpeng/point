@@ -2,6 +2,7 @@ package com.zjdx.point.data
 
 
 import com.blankj.utilcode.util.GsonUtils
+import com.blankj.utilcode.util.LogUtils
 import com.zjdx.point.config.REST
 import com.zjdx.point.data.bean.*
 import okhttp3.*
@@ -156,6 +157,107 @@ class DataSource {
         }
 
     }
+
+
+    fun editUserInfo(
+        id: String,
+        userCode: String, userName: String?,
+        telphone: String?,
+        note: String?,
+        sex: Int?,
+        age: String?,
+        address: String?,
+        minsalary: String?,
+        maxsalary: String?
+    ): Back<SubmitBackModel> {
+        try {
+            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+            val formBodyBulider = FormBody.Builder()
+            formBodyBulider
+                .add("id", id)
+                .add("usercode", userCode)
+            if (userName != null && userName.isNotEmpty()) {
+                formBodyBulider.add("username", userName)
+            }
+            if (telphone != null && telphone.isNotEmpty()) {
+                formBodyBulider.add("telphone", telphone)
+            }
+            if (note != null && note.isNotEmpty()) {
+                formBodyBulider.add("note", note)
+            }
+            if (sex != null) {
+                formBodyBulider.add("sex", sex.toString())
+            }
+            if (age != null && age.isNotEmpty()) {
+                formBodyBulider.add("age", age.toString())
+            }
+            if (address != null && address.isNotEmpty()) {
+                formBodyBulider.add("address", address)
+            }
+            if (minsalary != null && minsalary.isNotEmpty()) {
+                formBodyBulider.add("minsalary", minsalary)
+            }
+            if (maxsalary != null && maxsalary.isNotEmpty()) {
+                formBodyBulider.add("maxsalary", maxsalary)
+            }
+            val request: Request = Request.Builder()
+                .url(REST.editUserInfo)
+                .post(formBodyBulider.build())
+                .build()
+            val call: Call = client.newCall(request)
+            val response = call.execute()
+//            val type = Types.newParameterizedType( AppVersionModel::class.java,List::class.java,AppVersion::class.java)
+            return if (response.isSuccessful) {
+                val data = response.body!!.string()
+                LogUtils.i(data)
+                val model =
+                    GsonUtils.fromJson(data, SubmitBackModel::class.java)
+                Back.Success(model)
+            } else {
+                val data = response.body!!.string()
+                LogUtils.i(data)
+                val model =
+                    GsonUtils.fromJson(data, SubmitBackModel::class.java)
+                Back.Error(model)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return getErrorSubmitBack(e)
+        }
+
+    }
+
+    fun getUserInfo(userCode: String): Back<UserInfoModel> {
+        try {
+            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+            val formBodyBulider = FormBody.Builder().add("userCode", userCode)
+            val formBody = formBodyBulider.build()
+            val request: Request = Request.Builder()
+                .url(REST.userInfo)
+                .post(formBody)
+                .build()
+            val call: Call = client.newCall(request)
+            val response = call.execute()
+//            val type = Types.newParameterizedType( AppVersionModel::class.java,List::class.java,AppVersion::class.java)
+            return if (response.isSuccessful) {
+                val data = response.body!!.string()
+                LogUtils.i(data)
+                val sysUser =
+                    GsonUtils.fromJson(data, UserInfoModel::class.java)
+                Back.Success(sysUser!!)
+            } else {
+                Back.Error(
+                    GsonUtils.fromJson(
+                        response.body!!.string(), SubmitBackModel::class.java
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return getErrorSubmitBack(e)
+        }
+    }
+
 
     private fun getErrorSubmitBack(e: Throwable): Back.Error {
         val submitBackModel = SubmitBackModel(

@@ -16,8 +16,10 @@ import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityMainBinding
 import com.zjdx.point.event.UpdateMsgEvent
 import com.zjdx.point.ui.base.BaseActivity
+import com.zjdx.point.ui.edit.EditUserInfoActivity
 import com.zjdx.point.ui.history.HistoryTravelActivity
 import com.zjdx.point.ui.login.LoginActivity
+import com.zjdx.point.ui.setting.SettingActivity
 import com.zjdx.point.ui.travel.TravelActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
 import com.zjdx.point.utils.DateUtil
@@ -142,25 +144,24 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initView() {
+        binding.ziliaoMainAc.setOnClickListener {
+            startActivity(Intent(this, EditUserInfoActivity::class.java))
+        }
+        binding.settingMainAc.setOnClickListener {
+            startActivity(Intent(this, SettingActivity::class.java))
+        }
         binding.travelMainAc.setOnClickListener {
             startActivity(Intent(this, TravelActivity::class.java))
             finish()
         }
         binding.historyMainAc.setOnClickListener {
             startActivity(Intent(this, HistoryTravelActivity::class.java))
-
         }
         binding.leftIvMainAc.setOnClickListener {
             binding.root.openDrawer(Gravity.LEFT)
         }
 
-        binding.logOutMainAc.setOnClickListener {
-            SPUtils.getInstance().put(NameSpace.UID, "")
-            SPUtils.getInstance().put(NameSpace.ISLOGIN, false)
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
 
-        }
     }
 
     override fun onRestart() {

@@ -8,5 +8,8 @@ class REST {
         val login= BaseUrl+"login/loginSubmit"
         val register= BaseUrl+"sysUser/addUser"
 
+        val userInfo= BaseUrl+"sysUser/getUserByCodeOrId"
+        val editUserInfo= BaseUrl+"sysUser/modifyUser"
+
     }
 }

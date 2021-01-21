@@ -169,6 +169,7 @@
             android:id="@+id/log_out_main_ac"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <ImageView

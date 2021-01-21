@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
 
@@ -19,6 +20,7 @@ import com.zjdx.point.databinding.ActivityLoginBinding
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.main.MainActivity
 import com.zjdx.point.ui.register.RegisterActivity
+import kotlin.system.exitProcess
 
 
 class LoginActivity : BaseActivity() {
@@ -132,6 +134,10 @@ class LoginActivity : BaseActivity() {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
 
+
+    override fun onBackPressed() {
+        AppUtils.exitApp()
+    }
 
 }
 

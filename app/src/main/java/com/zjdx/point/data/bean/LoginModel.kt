@@ -24,3 +24,4 @@ data class SysUser(
     val usercode: String,
     var username: String?
 )
+
