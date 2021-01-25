@@ -34,4 +34,7 @@ interface TravelRecordDao {
 
     @Query("Select * from TravelRecord  where start_time= 0 or end_time=0")
      fun getTravelRecordHasEmptyStart(): List<TravelRecord>
+
+    @Query("Select * from TravelRecord  where travel_user=:uid and is_upload=0")
+    fun getTravelRecordHasNotUpload(uid: String): List<TravelRecord>
 }

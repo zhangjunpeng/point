@@ -62,6 +62,11 @@ class TravelRepository(
     fun getTravelRecordById(tid: String): TravelRecord {
         return travelRecordDao.getTravelRecordById(tid)
     }
+
+    @WorkerThread
+    fun getTravelRecordHasNotUpload(uid: String): List<TravelRecord> {
+        return travelRecordDao.getTravelRecordHasNotUpload(uid)
+    }
     @WorkerThread
     fun getTravelRecordHasEmptyStart():  List<TravelRecord> {
         return travelRecordDao.getTravelRecordHasEmptyStart()

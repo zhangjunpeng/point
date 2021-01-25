@@ -54,6 +54,8 @@ class UploadLocationsWork(
 //        checkTravelTime()
 
         findAndUpload()
+
+        checkTravelHasNOTUpload()
         sendMsgEvent("结束上传任务")
 
         return Result.success()
@@ -140,6 +142,26 @@ class UploadLocationsWork(
         }
     }
 
+
+    private fun checkTravelHasNOTUpload() {
+        val travelRecords =
+            repository.getTravelRecordHasNotUpload(SPUtils.getInstance().getString(NameSpace.UID))
+
+        if (travelRecords != null && travelRecords.isNotEmpty()) {
+            for (record in travelRecords) {
+                val locationList = repository.getAllListHasNotUploadByTid(record.id)
+                if (locationList != null) {
+                    if (locationList.isEmpty()) {
+                        record.isUpload = 1
+                    }
+                } else {
+                    record.isUpload = 1
+                }
+                repository.updateTravelRecord(record)
+            }
+        }
+
+    }
 
     @Synchronized
     private fun findAndUpload() {
