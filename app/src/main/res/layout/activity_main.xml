@@ -56,8 +56,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/countnum_main_ac"
@@ -66,40 +65,15 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp" />
 
-            <TextView
-                android:id="@+id/count_not_upload_num_main_ac"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp" />
-
-            <TextView
-                android:id="@+id/tips_main_ac"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:visibility="gone"
-
-                android:text="点位数据已全部上传完成" />
 
 
-            <ProgressBar
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:visibility="gone"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp">
 
-                />
-
-            <Button
-                android:id="@+id/begin_upload_main_ac"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:text="立即上传" />
+            </androidx.recyclerview.widget.RecyclerView>
 
         </LinearLayout>
 
@@ -187,6 +161,30 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="14dp"
                 android:text="历史轨迹"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/log_out_main_ac"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="29dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="14dp"
+                android:src="@drawable/logout" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="14dp"
+                android:text="登出"
                 android:textColor="@color/black"
                 android:textSize="15sp" />
         </LinearLayout>

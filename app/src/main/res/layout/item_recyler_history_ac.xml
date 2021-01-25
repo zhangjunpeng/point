@@ -6,15 +6,15 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/time_item_recyler_history_ac"
+        android:id="@+id/starttime_item_recyler_history_ac"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="14dp"
         android:gravity="center_vertical"
-        android:layout_weight="2" />
+        android:layout_weight="1" />
 
     <TextView
-        android:id="@+id/traveltype_item_recyler_history_ac"
+        android:id="@+id/endtime_item_recyler_history_ac"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical"

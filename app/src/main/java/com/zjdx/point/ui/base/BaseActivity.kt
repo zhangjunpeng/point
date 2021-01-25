@@ -2,54 +2,36 @@ package com.zjdx.point.ui.base
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
-import android.widget.*
+import android.widget.PopupWindow
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.zjdx.point.R
-import com.zjdx.point.bean.SubmitBackBean
+import com.zjdx.point.data.bean.SubmitBackModel
+import com.zjdx.point.databinding.DialogAbnormalBaseWorkAcBinding
 
 open class BaseActivity : AppCompatActivity() {
 
 
-    var clickListener: View.OnClickListener = View.OnClickListener { }
-    lateinit var linear: LinearLayout
-    lateinit var editText: EditText
-    private var spinner: Spinner? = null
+    lateinit var saveListener: View.OnClickListener
+    lateinit var cancelListener: View.OnClickListener
 
     lateinit var abnormalDialog: Dialog
 
+    var sreenPopWindow: PopupWindow? = null
+
+
     val typeList = arrayListOf<String>("骑行", "步行", "开车", "其他")
 
-    var qixingType = typeList[0]
-
-    open var itemSelectedListener = object : AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(
-            parent: AdapterView<*>?,
-            view: View?,
-            position: Int,
-            id: Long
-        ) {
-            if (position == 3) {
-                linear.visibility = View.VISIBLE
-
-            } else {
-                linear.visibility = View.GONE
-                qixingType = typeList[position]
-            }
-        }
-
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-
-        }
-
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initRootView()
+        initPopWindow()
         initView()
         initViewMoedl()
         initData()
@@ -71,6 +53,10 @@ open class BaseActivity : AppCompatActivity() {
     open fun initData() {
     }
 
+    open fun initPopWindow() {
+
+    }
+
     lateinit var progressDialog: Dialog
     fun showProgressDialog() {
         if (!this::progressDialog.isInitialized) {
@@ -83,7 +69,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun dismissProgressDialog() {
-        if (progressDialog != null && progressDialog.isShowing) {
+        if (this::progressDialog.isInitialized && progressDialog.isShowing) {
             progressDialog.dismiss()
         }
     }
@@ -96,12 +82,12 @@ open class BaseActivity : AppCompatActivity() {
         return dialog
     }
 
-    fun showAlerDialog(submitBackBean: SubmitBackBean) {
+    fun showAlerDialog(submitBackModel: SubmitBackModel) {
         val alertDialog = AlertDialog.Builder(this)
-            .setMessage(submitBackBean.msg)
+            .setMessage(submitBackModel.msg)
             .setPositiveButton("确定") { dialog, which ->
                 dialog.dismiss()
-                if (submitBackBean.code == 200) {
+                if (submitBackModel.code == 200) {
                     finish()
                 }
             }
@@ -110,10 +96,8 @@ open class BaseActivity : AppCompatActivity() {
     }
 
 
-    fun showAbnormalDialog(msg: String = "出行方式") {
-        if (!this::abnormalDialog.isInitialized) {
-            abnormalDialog = createAbnormalDialog(msg)
-        }
+    fun showAbnormalDialog(msg: String, type: Int) {
+        abnormalDialog = createAbnormalDialog(msg, type)
 
         if (!abnormalDialog.isShowing) {
             abnormalDialog.show()
@@ -126,29 +110,41 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    open fun createAbnormalDialog(msg: String): Dialog {
+    fun showSreenPopWindow(view: View) {
+        // 在点击之后设置popupwindow的销毁
+        if (sreenPopWindow!!.isShowing) {
+            sreenPopWindow!!.dismiss()
+        }
+
+        // 设置popupWindow的显示位置，此处是在手机屏幕底部且水平居中的位置
+        sreenPopWindow!!.showAtLocation(
+            view, Gravity.BOTTOM, 0, 0
+        )
+
+    }
+
+    lateinit var dialogBinding: DialogAbnormalBaseWorkAcBinding
+
+    open fun createAbnormalDialog(msg: String, type: Int): Dialog {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.dialog_abnormal_base_work_ac)
-        spinner = dialog.findViewById<Spinner>(R.id.spinner_dialog_abnormal_base_work_ac)
-        linear = dialog.findViewById<LinearLayout>(R.id.Linear_other_dialog_abnormal_base_work_ac)
-        editText = dialog.findViewById(R.id.other_dialog_abnormal_base_work_ac)
+        dialogBinding = DialogAbnormalBaseWorkAcBinding.inflate(LayoutInflater.from(this))
+        dialog.setContentView(dialogBinding.root)
 
-//        val adapter=ArrayAdapter(this,android.R.layout.simple_spinner_item)
-        val adapter = ArrayAdapter<String>(
-            this,
-            R.layout.item_spinner_base_work,
-            R.id.tv_item_spinner_base_work,
-            typeList
-        )
-        spinner!!.adapter = adapter
-        spinner!!.onItemSelectedListener = itemSelectedListener
-        dialog.findViewById<TextView>(R.id.cancel_dialog_abnormal_base_work_ac)
-            .setOnClickListener { dismissAbnormalDialog() }
-        dialog.findViewById<TextView>(R.id.submit_dialog_abnormal_base_work_ac)
-            .setOnClickListener(clickListener)
-        val titleText = dialog.findViewById<TextView>(R.id.title_dialog_abnormal_base_work_ac)
-        titleText.text = msg
+        dialogBinding.titleDialogAbnormalBaseWorkAc.text = msg
+
+
+        if (type == 1) {
+            dialogBinding.cancelDialogAbnormalBaseWorkAc.setOnClickListener { dismissAbnormalDialog() }
+            dialogBinding.submitDialogAbnormalBaseWorkAc.setOnClickListener(saveListener)
+        } else {
+            dialogBinding.cancelDialogAbnormalBaseWorkAc.text = "停止记录"
+            dialogBinding.submitDialogAbnormalBaseWorkAc.text = "继续记录"
+            dialogBinding.submitDialogAbnormalBaseWorkAc.setOnClickListener {
+                dialog.dismiss()
+            }
+            dialogBinding.cancelDialogAbnormalBaseWorkAc.setOnClickListener(cancelListener)
+        }
 
         dialog.setCanceledOnTouchOutside(false)
         return dialog

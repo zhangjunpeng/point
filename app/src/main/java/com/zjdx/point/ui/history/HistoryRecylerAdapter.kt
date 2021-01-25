@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.zjdx.point.databinding.ItemRecylerHistoryAcBinding
 import com.zjdx.point.db.model.TravelRecord
+import com.zjdx.point.utils.DateUtil
 
 class HistoryRecylerAdapter(val context: Context, val travelRecordList: List<TravelRecord>) :
     RecyclerView.Adapter<HistoryRecylerAdapter.ViewHolder>() {
@@ -25,8 +26,8 @@ class HistoryRecylerAdapter(val context: Context, val travelRecordList: List<Tra
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         travelRecordList[position].run {
-            binding.timeItemRecylerHistoryAc.text = createTime
-            binding.traveltypeItemRecylerHistoryAc.text = travelTypes
+            binding.starttimeItemRecylerHistoryAc.text = if (startTime.toInt()!=0){DateUtil.dateFormat.format(startTime)}else{"无"}
+            binding.endtimeItemRecylerHistoryAc.text = if (endTime.toInt()!=0){DateUtil.dateFormat.format(endTime)}else{"无"}
             binding.isuploadItemRecylerHistoryAc.text = if (isUpload == 0) {
                 "否"
             } else {
@@ -35,8 +36,8 @@ class HistoryRecylerAdapter(val context: Context, val travelRecordList: List<Tra
         }
 
         binding.checkLocationsItemRecylerHistoryAc.setOnClickListener {
-            val intent=Intent(context,HistoryLocationActivity::class.java)
-            intent.putExtra("tid",travelRecordList[position].id)
+            val intent = Intent(context, HistoryLocationActivity::class.java)
+            intent.putExtra("tid", travelRecordList[position].id)
             context.startActivity(intent)
         }
 

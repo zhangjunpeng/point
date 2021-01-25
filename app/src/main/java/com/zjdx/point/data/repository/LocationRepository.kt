@@ -1,11 +1,10 @@
-package com.zjdx.point.repository
+package com.zjdx.point.data.repository
 
 import androidx.annotation.WorkerThread
 import com.zjdx.point.db.dao.LocationDao
 import com.zjdx.point.db.model.Location
-import kotlinx.coroutines.flow.Flow
 
-class LocationRepository(private val mLocationDao: LocationDao) :Repository(){
+class LocationRepository(private val mLocationDao: LocationDao){
 
     @WorkerThread
     fun getlocations(): Array<Location> {

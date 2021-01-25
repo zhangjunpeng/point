@@ -2,8 +2,8 @@ package com.zjdx.point.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.zjdx.point.ui.data.LoginDataSource
-import com.zjdx.point.ui.data.LoginRepository
+import com.zjdx.point.data.DataSource
+import com.zjdx.point.data.repository.LoginRepository
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.
@@ -16,7 +16,7 @@ class LoginViewModelFactory : ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             return LoginViewModel(
                 loginRepository = LoginRepository(
-                    dataSource = LoginDataSource()
+                    dataSource = DataSource()
                 )
             ) as T
         }

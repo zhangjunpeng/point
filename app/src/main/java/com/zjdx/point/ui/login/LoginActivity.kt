@@ -1,20 +1,26 @@
 package com.zjdx.point.ui.login
 
-import android.app.Activity
+import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import android.os.Bundle
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
+import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ToastUtils
+
+import com.zjdx.point.NameSpace
 import com.zjdx.point.R
+import com.zjdx.point.data.bean.SysUser
 import com.zjdx.point.databinding.ActivityLoginBinding
 import com.zjdx.point.ui.base.BaseActivity
+import com.zjdx.point.ui.main.MainActivity
+import com.zjdx.point.ui.register.RegisterActivity
+import kotlin.system.exitProcess
 
 
 class LoginActivity : BaseActivity() {
@@ -24,19 +30,25 @@ class LoginActivity : BaseActivity() {
 
 
     override fun initRootView() {
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
 
     override fun initView() {
-
+        binding.titleBarLoginAc.leftIvTitleBar.visibility = View.GONE
+        binding.titleBarLoginAc.rightIvTitleBar.visibility = View.GONE
+        binding.titleBarLoginAc.middleTvTitleBar.text = "登录注册"
+        binding.registerLoginAc.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
     }
 
     override fun initViewMoedl() {
 
         val username = binding.username
         val password = binding.password
-        val login = binding.login
+        val login = binding.loginLoginAc
         val loading = binding.loading
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
@@ -60,16 +72,27 @@ class LoginActivity : BaseActivity() {
             val loginResult = it ?: return@Observer
 
             loading.visibility = View.GONE
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
+            if (loginResult.sysUser != null) {
+                updateUiWithUser(loginResult.sysUser)
             }
-            if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
-            }
-            setResult(Activity.RESULT_OK)
 
-            //Complete and destroy login activity once successful
-            finish()
+            if (loginResult.code == 0) {
+
+                SPUtils.getInstance().put(NameSpace.ISLOGIN, true)
+                SPUtils.getInstance().put(NameSpace.UID, it.sysUser.usercode)
+
+                //Complete and destroy login activity once successful
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            } else {
+                ToastUtils.showLong(it.msg)
+            }
+
+        })
+
+        loginViewModel.errorModel.observe(this, {
+            dismissProgressDialog()
+
         })
 
         username.afterTextChanged {
@@ -87,16 +110,6 @@ class LoginActivity : BaseActivity() {
                 )
             }
 
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_DONE ->
-                        loginViewModel.login(
-                            username.text.toString(),
-                            password.text.toString()
-                        )
-                }
-                false
-            }
 
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
@@ -107,9 +120,9 @@ class LoginActivity : BaseActivity() {
     }
 
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
+    private fun updateUiWithUser(model: SysUser) {
         val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
+        val displayName = model.usercode
         Toast.makeText(
             applicationContext,
             "$welcome $displayName",
@@ -120,6 +133,12 @@ class LoginActivity : BaseActivity() {
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
+
+
+    override fun onBackPressed() {
+        AppUtils.exitApp()
+    }
+
 }
 
 /**
@@ -130,6 +149,7 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
         override fun afterTextChanged(editable: Editable?) {
             afterTextChanged.invoke(editable.toString())
         }
+
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}

@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- 如果设置了target >= 28 如果需要启动后台定位则必须声明这个权限 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 定位权限，Android 10 新增后台定位权限 -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:name=".PointApplication"
@@ -25,25 +26,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Point">
-        <activity android:name=".ui.register.RegisterActivity"></activity>
-        <activity android:name=".ui.account.AccountActivity" />
+        <activity android:name=".ui.setting.SettingActivity"></activity>
+        <activity android:name=".ui.edit.EditUserInfoActivity" />
+        <activity
+            android:name=".ui.register.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.account.AccountActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.LoginActivity"
-            android:label="@string/title_activity_login" />
-
-        <service
-            android:name=".services.LocationService"
-            android:enabled="true"
-            android:exported="true" />
-
-        <activity android:name=".ui.history.HistoryLocationActivity" />
-        <activity android:name=".ui.history.HistoryTravelActivity" />
-        <activity android:name=".ui.travel.TravelActivity" />
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.base.BaseActivity"
-            android:label="@string/title_activity_base"
-            android:theme="@style/Theme.Point.NoActionBar" />
-        <activity android:name=".ui.main.MainActivity">
+            android:name=".ui.loading.LoadingActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,7 +48,41 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.amap.api.location.APSService" />
+        <service
+            android:name=".services.LocationService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name="com.amap.api.location.APSService"
+            android:foregroundServiceType="location" />
+
+        <activity
+            android:name=".ui.history.HistoryLocationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.history.HistoryTravelActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.travel.TravelActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.base.BaseActivity"
+            android:label="@string/title_activity_base"
+            android:theme="@style/Theme.Point.NoActionBar" />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:screenOrientation="portrait" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.zjdx.point.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
