@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.SPUtils
 import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
+import com.zjdx.point.R
 import com.zjdx.point.databinding.ActivityHistoryTravelBinding
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.base.BaseListViewModel
@@ -48,12 +49,13 @@ class HistoryTravelActivity : BaseActivity() {
     override fun initView() {
         binding.titleBarHistory.middleTvTitleBar.text = "历史出行"
         binding.titleBarHistory.leftIvTitleBar.setOnClickListener { finish() }
-        binding.titleBarHistory.rightIvTitleBar.visibility = View.INVISIBLE
-
+        binding.titleBarHistory.rightIvTitleBar.visibility = View.VISIBLE
+        binding.titleBarHistory.rightIvTitleBar.setImageResource(R.drawable.shaixuan)
+        binding.titleBarHistory.rightIvTitleBar.setPadding(0,10,0,10)
         binding.recyclerHistoryAc.layoutManager =
             LinearLayoutManager(this)
 
-        binding.fabHistory.setOnClickListener {
+        binding.titleBarHistory.rightIvTitleBar.setOnClickListener {
             showSreenPopWindow(binding.root)
         }
         binding.swipeHistoryAc.setOnRefreshListener {

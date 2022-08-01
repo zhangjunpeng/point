@@ -4,10 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zjdx.point.db.model.Location
-import com.zjdx.point.data.repository.TravelRepository
+import com.zjdx.point.data.repository.DataBaseRepository
 import kotlinx.coroutines.launch
 
-class HistoryLocationViewModel(private val repository: TravelRepository) : ViewModel() {
+class HistoryLocationViewModel(private val repository: DataBaseRepository) : ViewModel() {
 
     val locationListLiveData = MutableLiveData<ArrayList<Location>>().apply {
         this.value = ArrayList()

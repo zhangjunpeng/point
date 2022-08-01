@@ -3,12 +3,10 @@ package com.zjdx.point.ui.travel
 import androidx.lifecycle.*
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
-import com.zjdx.point.data.repository.TravelRepository
-import kotlinx.coroutines.Dispatchers
+import com.zjdx.point.data.repository.DataBaseRepository
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class TravelViewModel(val repository: TravelRepository) : ViewModel() {
+class TravelViewModel(val repository: DataBaseRepository) : ViewModel() {
 
 
     val allLication = MutableLiveData<MutableList<Location>>()
@@ -41,7 +39,7 @@ class TravelViewModel(val repository: TravelRepository) : ViewModel() {
 
 }
 
-class TravelViewModelFactory(private val repository: TravelRepository) :
+class TravelViewModelFactory(private val repository: DataBaseRepository) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TravelViewModel::class.java)) {

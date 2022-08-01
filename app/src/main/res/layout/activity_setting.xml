@@ -20,6 +20,20 @@
         android:layout_marginTop="50dp"
         android:text="1111"
         android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/rollbackdata_setting_ac"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/blue_button_border"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="50dp"
+        android:text="恢复数据"
+        />
     <TextView
         android:id="@+id/logout_setting_ac"
         android:layout_width="match_parent"

@@ -1,10 +1,7 @@
 package com.zjdx.point.work
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
-import androidx.annotation.WorkerThread
-import androidx.work.CoroutineWorker
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -17,11 +14,9 @@ import com.zjdx.point.config.REST
 import com.zjdx.point.db.MyDataBase
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
-import com.zjdx.point.data.repository.TravelRepository
+import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.event.UpdateMsgEvent
 import com.zjdx.point.utils.DateUtil
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -37,7 +32,7 @@ class UploadLocationsWork(
 
     val database by lazy { MyDataBase.getDatabase(context) }
 
-    val repository = TravelRepository(database.travelRecordDao(), database.locationDao())
+    val repository = DataBaseRepository(database.travelRecordDao(), database.locationDao())
 
     var location: Location? = null
 

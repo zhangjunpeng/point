@@ -13,7 +13,7 @@ class PointWorkManager {
         }
     }
 
-    fun addUploadWork(context: Context):WorkRequest?{
+    fun addUploadWork(context: Context): WorkRequest? {
         try {
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -30,7 +30,28 @@ class PointWorkManager {
                 uploadWorkRequest
             )
             return uploadWorkRequest
-        }catch (e:Exception){
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+
+
+    }
+
+    fun addBackDataWork(context: Context): WorkRequest? {
+        try {
+            val constraints = Constraints.Builder()
+                .build()
+            val rollBackWorkRequest = OneTimeWorkRequestBuilder<RollbackDataWork>()
+                .setConstraints(constraints)
+                .build()
+            WorkManager.getInstance(context).enqueueUniqueWork(
+                NameSpace.BackDatadWorkName,
+                ExistingWorkPolicy.REPLACE,
+                rollBackWorkRequest
+            )
+            return rollBackWorkRequest
+        } catch (e: Exception) {
             e.printStackTrace()
         }
         return null

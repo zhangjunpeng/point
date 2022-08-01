@@ -2,16 +2,9 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'bugly'
+//    id 'bugly'
 
 }
-
-bugly {
-    appId = '90cff47ede' // 注册时分配的App ID
-    appKey = '42889ffb-d974-4924-972c-98d2e678c64c' // 注册时分配的App Key
-    upload = true
-}
-
 
 android {
     signingConfigs {
@@ -22,12 +15,12 @@ android {
             keyPassword '123456'
         }
     }
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.zjdx.point"
         minSdkVersion 16
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 22
         versionName "2.2"
 
@@ -71,79 +64,76 @@ android {
             }
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+
 
     packagingOptions {
         exclude 'META-INF/atomicfu.kotlin_module'
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
+
     buildFeatures {
         viewBinding true
+    }
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            freeCompilerArgs += [
+                    "-Xjvm-default=all",
+            ]
+        }
     }
 }
 
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.10"
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.annotation:annotation:1.4.0'
+    implementation project(path: ':wheelview')
+    implementation project(path: ':pickerview')
+    implementation 'com.tencent.bugly:crashreport_upgrade:1.5.23'
+
 
     // Core library
-    androidTestImplementation 'androidx.test:core:1.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test:core:1.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     // AndroidJUnitRunner and JUnit Rules
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    androidTestImplementation 'androidx.test:rules:1.3.0'
+//    androidTestImplementation 'androidx.test:runner:1.3.0'
+//    androidTestImplementation 'androidx.test:rules:1.3.0'
     // Assertions
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.ext:truth:1.3.0'
+//    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+//    androidTestImplementation 'androidx.test.ext:truth:1.3.0'
 
-
-    def activityVersion = '1.1.0'
     def constraintLayoutVersion = '2.0.2'
-    def coroutines = '1.3.9'
-    def lifecycleVersion = '2.2.0'
-    def materialVersion = '1.2.1'
-    def roomVersion = '2.2.6'
 
-
-
-
-    implementation "androidx.activity:activity-ktx:$activityVersion"
+    implementation "androidx.activity:activity-ktx:1.5.1"
 
     // Dependencies for working with Architecture components
     // You'll probably have to update the version numbers in build.gradle (Project)
 
     // Room components
-    implementation "androidx.room:room-ktx:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
-    androidTestImplementation "androidx.room:room-testing:$roomVersion"
+    implementation "androidx.room:room-ktx:2.4.3"
+    kapt "androidx.room:room-compiler:2.4.3"
+    androidTestImplementation "androidx.room:room-testing:2.4.3"
 
     // Lifecycle components
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
 
     // Kotlin components
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
 
     // UI
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    implementation "com.google.android.material:material:$materialVersion"
+    implementation "com.google.android.material:material:1.6.1"
 
-    def work_version = "2.4.0"
     // Kotlin + coroutines
-    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
     // optional - Test helpers
-    androidTestImplementation "androidx.work:work-testing:$work_version"
+    androidTestImplementation "androidx.work:work-testing:2.7.1"
 
     implementation 'com.squareup.okhttp3:okhttp:4.7.2'
     //高德
@@ -154,8 +144,8 @@ dependencies {
 
 
     //permissionsdispatcher
-    implementation "org.permissionsdispatcher:permissionsdispatcher:4.8.0"
-    kapt "org.permissionsdispatcher:permissionsdispatcher-processor:4.8.0"
+    implementation "com.github.permissions-dispatcher:permissionsdispatcher:4.9.2"
+    kapt "com.github.permissions-dispatcher:permissionsdispatcher-processor:4.9.2"
 
     //eventbus
     implementation 'org.greenrobot:eventbus:3.2.0'
@@ -165,24 +155,10 @@ dependencies {
 //    implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
 
     //coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
 
-
-    implementation 'com.blankj:utilcodex:1.29.0'
-
-    //PickerView
-    implementation 'com.contrarywind:Android-PickerView:4.1.9'
-
-
-
-    //leakcanary
-//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
-
-
-    implementation 'com.tencent.bugly:crashreport:3.3.3' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
-
-
+    implementation 'com.blankj:utilcodex:1.31.0'
 
 }
 
