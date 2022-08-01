@@ -1,2 +1,4 @@
 rootProject.name = "Point"
 include ':app'
+include ':wheelview'
+include ':pickerview'
