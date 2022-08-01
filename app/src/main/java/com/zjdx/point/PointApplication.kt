@@ -1,31 +1,30 @@
 package com.zjdx.point
 
+import android.app.Application
 import android.content.Context
 import android.os.Process
 import android.text.TextUtils
-import androidx.multidex.MultiDex
-import androidx.multidex.MultiDexApplication
 import com.blankj.utilcode.util.Utils
+import com.tencent.bugly.Bugly
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.bugly.crashreport.CrashReport.UserStrategy
 import com.zjdx.point.data.repository.LocationRepository
 import com.zjdx.point.data.repository.RegisterRepository
-import com.zjdx.point.data.repository.TravelRepository
+import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.db.MyDataBase
 import java.io.BufferedReader
 import java.io.FileReader
 import java.io.IOException
 
 
-class PointApplication : MultiDexApplication() {
+class PointApplication : Application() {
 
 
     val database by lazy { MyDataBase.getDatabase(this) }
     val locationRepository by lazy { LocationRepository(database.locationDao()) }
     val travelRepository by lazy {
-        TravelRepository(
-            database.travelRecordDao(),
-            database.locationDao()
+        DataBaseRepository(
+            database.travelRecordDao(), database.locationDao()
         )
     }
     val registerRepository by lazy { RegisterRepository() }
@@ -42,21 +41,19 @@ class PointApplication : MultiDexApplication() {
     private fun initCrash() {
 
 // 获取当前包名
-        val packageName = applicationContext.packageName
+//        val packageName = applicationContext.packageName
 // 获取当前进程名
-        val processName = getProcessName(Process.myPid())
+//        val processName = getProcessName(Process.myPid())
 // 设置是否为上报进程
-        val strategy = UserStrategy(applicationContext)
-        strategy.isUploadProcess = processName == null || processName == packageName
+//        val strategy = UserStrategy(applicationContext)
+//        strategy.isUploadProcess = processName == null || processName == packageName
+//
+//        CrashReport.initCrashReport(applicationContext, "90cff47ede", true, strategy)
+        Bugly.init(applicationContext, "90cff47ede", true)
 
-        CrashReport.initCrashReport(applicationContext, "90cff47ede", true, strategy)
 
     }
 
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
-        MultiDex.install(this)
-    }
 
     /**
      * 获取进程号对应的进程名

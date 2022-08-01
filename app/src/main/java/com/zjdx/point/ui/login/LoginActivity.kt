@@ -36,6 +36,8 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun initView() {
+
+
         binding.titleBarLoginAc.leftIvTitleBar.visibility = View.GONE
         binding.titleBarLoginAc.rightIvTitleBar.visibility = View.GONE
         binding.titleBarLoginAc.middleTvTitleBar.text = "登录注册"

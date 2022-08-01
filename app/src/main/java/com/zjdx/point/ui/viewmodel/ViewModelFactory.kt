@@ -2,13 +2,13 @@ package com.zjdx.point.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.zjdx.point.data.repository.TravelRepository
+import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.ui.base.BaseListViewModel
 import com.zjdx.point.ui.history.HistoryLocationViewModel
 import com.zjdx.point.ui.history.HistoryTravelViewModel
 import com.zjdx.point.ui.main.MainViewModel
 
-class ViewModelFactory(private val repository: TravelRepository) :
+class ViewModelFactory(private val repository: DataBaseRepository) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HistoryTravelViewModel::class.java)) {
@@ -27,6 +27,7 @@ class ViewModelFactory(private val repository: TravelRepository) :
             @Suppress("UNCHECKED_CAST")
             return BaseListViewModel() as T
         }
+
 
         throw IllegalArgumentException("Unknown ViewModel class")
     }

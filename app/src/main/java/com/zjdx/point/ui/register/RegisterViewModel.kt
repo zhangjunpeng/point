@@ -7,8 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.zjdx.point.data.bean.Back
 import com.zjdx.point.data.bean.SubmitBackModel
 import com.zjdx.point.data.repository.RegisterRepository
-import com.zjdx.point.data.repository.TravelRepository
-import com.zjdx.point.ui.travel.TravelViewModel
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(val repository: RegisterRepository) : ViewModel() {

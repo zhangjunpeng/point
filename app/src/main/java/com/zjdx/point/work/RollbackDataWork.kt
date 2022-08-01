@@ -5,7 +5,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.blankj.utilcode.util.SPUtils
 import com.zjdx.point.NameSpace
-import com.zjdx.point.data.repository.TravelRepository
+import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.db.MyDataBase
 import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.event.UpdateMsgEvent
@@ -19,7 +19,7 @@ class RollbackDataWork(
 
     val database by lazy { MyDataBase.getDatabase(context) }
 
-    val repository = TravelRepository(database.travelRecordDao(), database.locationDao())
+    val repository = DataBaseRepository(database.travelRecordDao(), database.locationDao())
 
     override fun doWork(): Result {
         backTravel()

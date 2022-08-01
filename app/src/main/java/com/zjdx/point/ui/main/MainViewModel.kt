@@ -1,29 +1,21 @@
 package com.zjdx.point.ui.main
 
-import android.app.Application
-import android.content.Context
-import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.amap.api.location.AMapLocationClient
-import com.blankj.utilcode.util.SPUtils
-import com.zjdx.point.NameSpace
 import com.zjdx.point.data.bean.AppVersionModel
 import com.zjdx.point.data.bean.Back
 import com.zjdx.point.data.bean.SubmitBackModel
-import com.zjdx.point.data.repository.TravelRepository
+import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.event.UpdateMsgEvent
-import com.zjdx.point.utils.DateUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
-import java.util.*
 import kotlin.collections.ArrayList
 
-class MainViewModel(val repository: TravelRepository) : ViewModel() {
+class MainViewModel(val repository: DataBaseRepository) : ViewModel() {
 
 
     val travelCountNum = MutableLiveData<Int>()

@@ -11,7 +11,7 @@ import com.zjdx.point.db.model.TravelRecord
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class TravelRepository(
+class DataBaseRepository(
     private val travelRecordDao: TravelRecordDao,
     private val locationDao: LocationDao
 ) {
