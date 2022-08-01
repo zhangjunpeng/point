@@ -87,7 +87,8 @@ public class DownloadUtils {
         query.setFilterById(downloadId);
         Cursor cursor = downloadManager.query(query);
         if (cursor.moveToFirst()) {
-            int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+            int value=cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+            int status = cursor.getInt(value);
             switch (status) {
                 //下载暂停
                 case DownloadManager.STATUS_PAUSED:
