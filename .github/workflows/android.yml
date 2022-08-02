@@ -30,4 +30,4 @@ jobs:
       with:
         # Artifact name
         name:upload-apk
-        path:/home/runner/work/point/point/app/release/*.apk
+        path:${{github.workspace}}/app/release/*.apk
