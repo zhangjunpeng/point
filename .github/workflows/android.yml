@@ -30,5 +30,4 @@ jobs:
       with:
         # Artifact name
         name:upload-apk
-        path:${{github.workspace}}/app/build/outputs/apk/tencent/release/*.apk
-        
+        path:/home/runner/work/point/point/app/release/*.apk
