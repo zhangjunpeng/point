@@ -39,6 +39,6 @@ jobs:
         # GitHub secret token
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         # Git tag (for automatic releases)
-        automatic_release_tag: release
+        automatic_release_tag:  ${{ env.ReleaseVersion }}
         # Assets to upload to the release
         files: ${{github.workspace}}/app/build/outputs/apk/release/*.apk
