@@ -58,13 +58,13 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initViewMoedl() {
-        mainViewModel.travelCountNum.observe(this, {
+        mainViewModel.travelCountNum.observe(this) {
             updateMainInfo()
-        })
-        mainViewModel.travelNotUploadNum.observe(this, {
+        }
+        mainViewModel.travelNotUploadNum.observe(this) {
             updateMainInfo()
-        })
-        mainViewModel.appVersionModelLiveData.observe(this, {
+        }
+        mainViewModel.appVersionModelLiveData.observe(this) {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
             val versionCode = packageInfo.versionCode
             if (it.list.isEmpty() || versionCode >= it.list[0].version) {
@@ -78,7 +78,7 @@ class MainActivity : BaseActivity() {
                 }
                 .create()
             alertDialog.show()
-        })
+        }
         binding.recyclerMain.layoutManager = LinearLayoutManager(this)
         binding.recyclerMain.adapter =
             MainRecylerAdapter(this, mainViewModel.uploadMsgLiveData.value!!)

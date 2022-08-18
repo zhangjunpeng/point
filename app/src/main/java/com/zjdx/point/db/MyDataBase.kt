@@ -33,7 +33,7 @@ abstract class MyDataBase : RoomDatabase() {
                     MyDataBase::class.java,
                     "Point"
                 ).allowMainThreadQueries()
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                     .build()
                 INSTANCE = instance
                 // return instance
@@ -70,6 +70,13 @@ abstract class MyDataBase : RoomDatabase() {
             }
         }
 
+
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE TravelRecord ADD COLUMN start_time INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE TravelRecord ADD COLUMN end_time INTEGER NOT NULL DEFAULT 0")
+            }
+        }
 
     }
 

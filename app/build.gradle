@@ -15,12 +15,12 @@ android {
             keyPassword '123456'
         }
     }
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId "com.zjdx.point"
-        minSdkVersion 16
-        targetSdkVersion 31
+        minSdkVersion 21
+        targetSdkVersion 32
         versionCode 22
         versionName "2.2"
 
@@ -39,6 +39,9 @@ android {
         ndk {
             // 设置支持的SO库架构
             abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
+        vectorDrawables {
+            useSupportLibrary true
         }
     }
     sourceSets {
@@ -68,10 +71,14 @@ android {
 
     packagingOptions {
         exclude 'META-INF/atomicfu.kotlin_module'
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
     }
 
     buildFeatures {
         viewBinding true
+        compose true
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
@@ -80,6 +87,17 @@ android {
                     "-Xjvm-default=all",
             ]
         }
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.1.1'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }
 
@@ -93,6 +111,10 @@ dependencies {
     implementation project(path: ':wheelview')
     implementation project(path: ':pickerview')
     implementation 'com.tencent.bugly:crashreport_upgrade:1.5.23'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    implementation 'androidx.compose.material3:material3:1.0.0-alpha11'
 
 
     // Core library
@@ -114,6 +136,7 @@ dependencies {
 
     // Room components
     implementation "androidx.room:room-ktx:2.4.3"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
     kapt "androidx.room:room-compiler:2.4.3"
     androidTestImplementation "androidx.room:room-testing:2.4.3"
 
@@ -159,6 +182,20 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
 
     implementation 'com.blankj:utilcodex:1.31.0'
+
+    ///Jetpack Compose
+    // Integration with activities
+    implementation 'androidx.activity:activity-compose:1.5.1'
+    // Compose Material Design
+    implementation 'androidx.compose.material:material:1.2.0'
+    // Animations
+    implementation 'androidx.compose.animation:animation:1.2.0'
+    // Tooling support (Previews, etc.)
+    implementation 'androidx.compose.ui:ui-tooling:1.2.0'
+    // Integration with ViewModels
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
+    // UI Tests
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.2.0'
 
 }
 
