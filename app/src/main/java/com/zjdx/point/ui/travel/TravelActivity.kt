@@ -1,17 +1,27 @@
 package com.zjdx.point.ui.travel
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.telephony.CellInfoCdma
+import android.telephony.CellInfoGsm
+import android.telephony.NeighboringCellInfo
+import android.telephony.TelephonyManager
+import android.telephony.gsm.GsmCellLocation
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
@@ -34,11 +44,12 @@ import com.zjdx.point.utils.Utils
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.RuntimePermissions
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
-
+@RuntimePermissions
 class TravelActivity : BaseActivity() {
 
     private var marker: Marker? = null
@@ -64,7 +75,7 @@ class TravelActivity : BaseActivity() {
 
     init {
         cancelListener = View.OnClickListener {
-            val locations=travelViewModel.repository.getLocationListById(travelRecord!!.id)
+            val locations = travelViewModel.repository.getLocationListById(travelRecord!!.id)
             travelViewModel.repository.deteleLocation(locations)
             travelViewModel.deleteTravelRecord(travelRecord!!)
             mLocationClient!!.disableBackgroundLocation(true)
@@ -86,6 +97,19 @@ class TravelActivity : BaseActivity() {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("upload", upload)
         startActivity(intent)
+    }
+
+    @NeedsPermission(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_NETWORK_STATE,
+        Manifest.permission.ACCESS_WIFI_STATE,
+        Manifest.permission.CHANGE_WIFI_STATE,
+    )
+    fun requestLocation() {
+        //这里以ACCESS_COARSE_LOCATION为例
+
+        Toast.makeText(this, "成功申请", Toast.LENGTH_LONG)
     }
 
     private fun saveTravelRecord() {
@@ -118,12 +142,11 @@ class TravelActivity : BaseActivity() {
 
     val startListener = View.OnClickListener {
         startTime = Date().time
-        travelRecord =
-            TravelRecord(
-                travelUser = SPUtils.getInstance().getString(NameSpace.UID),
-                createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime),
-                startTime = startTime
-            )
+        travelRecord = TravelRecord(
+            travelUser = SPUtils.getInstance().getString(NameSpace.UID),
+            createTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime),
+            startTime = startTime
+        )
 
         travelViewModel.repository.insertTravelRecord(travelRecord!!)
         startLoactionService()
@@ -152,6 +175,8 @@ class TravelActivity : BaseActivity() {
 
     //声明AMapLocationClient类对象
 
+    @RequiresApi(Build.VERSION_CODES.R)
+    @SuppressLint("MissingPermission")
     val mAMapLocationListener = AMapLocationListener { amapLocation ->
         if (amapLocation != null) {
             Log.i(TAG, "errorCode=" + amapLocation.errorCode)
@@ -182,6 +207,38 @@ class TravelActivity : BaseActivity() {
                             source = "最后位置"
                         }
                     }
+
+                    val mTelephonyManager =
+                        getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                    // 返回值MCC + MNC
+                    val operator = mTelephonyManager.networkOperator
+                    val mcc = Integer.parseInt(operator.substring(0, 3));
+                    val mnc = Integer.parseInt(operator.substring(3));
+                    val cellList = mTelephonyManager.allCellInfo
+                    val cellinfo = cellList.first()
+                    var lac = 0
+                    var cellId = 0
+                    var rssi = 0
+                    if (cellinfo is CellInfoGsm) {
+                        lac = cellinfo.cellIdentity.lac
+                        cellId = cellinfo.cellIdentity.cid
+                        rssi = cellinfo.cellSignalStrength.rssi
+                    }
+                    if (cellinfo is CellInfoCdma) {
+                        lac = cellinfo.cellIdentity.networkId
+                        cellId = cellinfo.cellIdentity.basestationId
+                        rssi = cellinfo.cellSignalStrength.cdmaDbm
+                    }
+
+
+//                    Log.i(TAG, " MCC = " + mcc + "\t MNC = " + mnc + "\t LAC = " + lac + "\t CID = " + cellId)
+
+                    // 中国电信获取LAC、CID的方式
+                    /*CdmaCellLocation location1 = (CdmaCellLocation) mTelephonyManager.getCellLocation();
+                    lac = location1.getNetworkId();
+                    cellId = location1.getBaseStationId();
+                    cellId /= 16;*/
+
                     val loca = Location(
                         tId = travelRecord!!.id,
                         lat = amapLocation.latitude,
@@ -192,7 +249,12 @@ class TravelActivity : BaseActivity() {
                         accuracy = amapLocation.accuracy,
                         source = source,
                         creatTime = format.format(amapLocation.time),
-                        address = amapLocation.address
+                        address = amapLocation.address,
+                        mcc = mcc,
+                        mnc = mnc,
+                        lac = lac,
+                        cid = cellId,
+                        bsss = rssi,
                     )
 
 
@@ -212,8 +274,7 @@ class TravelActivity : BaseActivity() {
 
 
                     Log.i(
-                        TAG,
-                        "source==$source"
+                        TAG, "source==$source"
                     )
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -228,8 +289,7 @@ class TravelActivity : BaseActivity() {
 
     private fun addMakerOnMap(loca: LatLng) {
 
-        marker =
-            map.addMarker(MarkerOptions().position(loca).title("起点").snippet("DefaultMarker"))
+        marker = map.addMarker(MarkerOptions().position(loca).title("起点").snippet("DefaultMarker"))
 
     }
 
@@ -362,7 +422,7 @@ class TravelActivity : BaseActivity() {
         binding.endTravel.text = "开始出行"
         binding.endTravel.setOnClickListener(startListener)
         binding.titleBarTravelAc.leftIvTitleBar.setOnClickListener {
-           startMain(false)
+            startMain(false)
         }
         binding.titleBarTravelAc.rightIvTitleBar.visibility = View.INVISIBLE
 
@@ -435,8 +495,7 @@ class TravelActivity : BaseActivity() {
             val channelId = packageName
             if (!isCreateChannel) {
                 val notificationChannel = NotificationChannel(
-                    channelId,
-                    NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT
+                    channelId, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT
                 )
                 notificationChannel.enableLights(true) //是否在桌面icon右上角展示小圆点
                 notificationChannel.lightColor = Color.BLUE //小圆点颜色
@@ -448,10 +507,8 @@ class TravelActivity : BaseActivity() {
         } else {
             builder = Notification.Builder(applicationContext)
         }
-        builder.setSmallIcon(R.drawable.daohang)
-            .setContentTitle(Utils.getAppName(this))
-            .setContentText("正在后台运行")
-            .setWhen(System.currentTimeMillis())
+        builder.setSmallIcon(R.drawable.daohang).setContentTitle(Utils.getAppName(this))
+            .setContentText("正在后台运行").setWhen(System.currentTimeMillis())
         notification = if (Build.VERSION.SDK_INT >= 16) {
             builder.build()
         } else {

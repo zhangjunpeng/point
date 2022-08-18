@@ -26,30 +26,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Point">
-        <activity
-            android:name=".ui.register.CompleteActivity"
-            android:exported="false"
-            android:label="@string/title_activity_complete"
-            android:theme="@style/Theme.Point">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ui.register.ChangePasswdActivity"
-            android:exported="true"
-            android:label="@string/title_activity_change_passwd"
-            android:theme="@style/Theme.Point">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".ui.setting.SettingActivity"
             android:exported="true" />
@@ -72,7 +49,12 @@
         <activity
             android:name=".ui.loading.LoadingActivity"
             android:exported="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".services.LocationService"
