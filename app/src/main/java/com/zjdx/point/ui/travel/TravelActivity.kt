@@ -11,10 +11,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.telephony.CellInfoCdma
-import android.telephony.CellInfoGsm
-import android.telephony.NeighboringCellInfo
-import android.telephony.TelephonyManager
+import android.telephony.*
 import android.telephony.gsm.GsmCellLocation
 import android.util.Log
 import android.view.View
@@ -175,7 +172,6 @@ class TravelActivity : BaseActivity() {
 
     //声明AMapLocationClient类对象
 
-    @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("MissingPermission")
     val mAMapLocationListener = AMapLocationListener { amapLocation ->
         if (amapLocation != null) {
@@ -222,12 +218,32 @@ class TravelActivity : BaseActivity() {
                     if (cellinfo is CellInfoGsm) {
                         lac = cellinfo.cellIdentity.lac
                         cellId = cellinfo.cellIdentity.cid
-                        rssi = cellinfo.cellSignalStrength.rssi
+                        rssi = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                            cellinfo.cellSignalStrength.rssi
+                        } else {
+                            cellinfo.cellSignalStrength.dbm
+                        }
                     }
                     if (cellinfo is CellInfoCdma) {
                         lac = cellinfo.cellIdentity.networkId
                         cellId = cellinfo.cellIdentity.basestationId
                         rssi = cellinfo.cellSignalStrength.cdmaDbm
+                    }
+                    if (cellinfo is CellInfoLte) {
+                        lac = cellinfo.cellIdentity.pci
+                        cellId = cellinfo.cellIdentity.tac
+                        rssi = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                            cellinfo.cellSignalStrength.rssi
+                        } else {
+                            cellinfo.cellSignalStrength.dbm
+                        }
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        if (cellinfo is CellInfoNr) {
+                            lac = (cellinfo.cellIdentity as CellIdentityNr).pci
+                            cellId = (cellinfo.cellIdentity as CellIdentityNr).tac
+                            rssi = cellinfo.cellSignalStrength.dbm
+                        }
                     }
 
 

@@ -55,6 +55,7 @@ class LocationService : Service() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.R)
     fun initLocationService() {
 
         mLocationClient = AMapLocationClient(applicationContext)

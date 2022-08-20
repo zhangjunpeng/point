@@ -20,4 +20,5 @@
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_change_passwd">ChangePasswdActivity</string>
     <string name="title_activity_complete">CompleteActivity</string>
+    <string name="title_activity_tagging">TaggingActivity</string>
 </resources>
