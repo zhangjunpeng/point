@@ -35,6 +35,7 @@ import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.event.TravelEvent
 import com.zjdx.point.event.UpdateMapEvent
+import com.zjdx.point.ui.DBViewModelFactory
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.main.MainActivity
 import com.zjdx.point.utils.Utils
@@ -134,7 +135,7 @@ class TravelActivity : BaseActivity() {
 
 
     private val travelViewModel: TravelViewModel by viewModels<TravelViewModel> {
-        TravelViewModelFactory((application as PointApplication).travelRepository)
+        DBViewModelFactory((application as PointApplication).travelRepository)
     }
 
     val startListener = View.OnClickListener {
@@ -172,6 +173,7 @@ class TravelActivity : BaseActivity() {
 
     //声明AMapLocationClient类对象
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("MissingPermission")
     val mAMapLocationListener = AMapLocationListener { amapLocation ->
         if (amapLocation != null) {
@@ -336,6 +338,7 @@ class TravelActivity : BaseActivity() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         EventBus.getDefault().register(this)
@@ -391,6 +394,7 @@ class TravelActivity : BaseActivity() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun initLocationService() {
 
         mLocationClient = AMapLocationClient(this)
