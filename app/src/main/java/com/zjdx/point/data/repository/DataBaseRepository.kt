@@ -37,6 +37,12 @@ class DataBaseRepository(
     }
 
     @WorkerThread
+    fun getLocationListByTime(startTime: Long String): MutableList<Location> {
+        return locationDao.queryByTid(tid).toMutableList()
+
+    }
+
+    @WorkerThread
     fun getLocationListGroupByTId(): MutableList<Location> {
         return locationDao.getLocationListGroupByTId().toMutableList()
 

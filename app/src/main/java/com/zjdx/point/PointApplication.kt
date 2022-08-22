@@ -31,8 +31,6 @@ class PointApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-
         initCrash()
 
         Utils.init(this)

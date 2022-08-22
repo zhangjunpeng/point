@@ -20,6 +20,7 @@ import com.zjdx.point.ui.edit.EditUserInfoActivity
 import com.zjdx.point.ui.history.HistoryTravelActivity
 import com.zjdx.point.ui.login.LoginActivity
 import com.zjdx.point.ui.setting.SettingActivity
+import com.zjdx.point.ui.tagging.TaggingActivity
 import com.zjdx.point.ui.travel.TravelActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
 import com.zjdx.point.utils.DateUtil
@@ -153,6 +154,10 @@ class MainActivity : BaseActivity() {
         binding.travelMainAc.setOnClickListener {
             startActivity(Intent(this, TravelActivity::class.java))
             finish()
+        }
+
+        binding.taggingMainAc.setOnClickListener {
+            startActivity(Intent(this, TaggingActivity::class.java))
         }
         binding.historyMainAc.setOnClickListener {
             startActivity(Intent(this, HistoryTravelActivity::class.java))

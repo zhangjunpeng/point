@@ -55,19 +55,17 @@ class PopWindowUtil : View.OnClickListener {
         "Z"
     )
 
-    var mContext: Context? = null
 
-
+var mContext:Context?=null
     fun createMergePopWindow(
         context: Context,
         baseListViewModel: BaseListViewModel
     ): PopupWindow {
-
-        mContext = context
+        mContext=context
         baseSreenInfo = baseListViewModel.qualityListSreenLiveData.value?.copy() ?: BaseListSreen()
 
         val bindingPopwindowMergeBinding =
-            PopwindowUtilBinding.inflate(LayoutInflater.from(mContext))
+            PopwindowUtilBinding.inflate(LayoutInflater.from(context))
 
         val popupWindow = PopupWindow(
             bindingPopwindowMergeBinding.root, ViewGroup.LayoutParams.MATCH_PARENT,
@@ -126,8 +124,37 @@ class PopWindowUtil : View.OnClickListener {
         return popupWindow
     }
 
+    fun showTimePicker( context: Context,
+                        onTimeSelectListener: OnTimeSelectListener){
+        val timePicker= TimePickerBuilder(context, onTimeSelectListener)
+            .setType(booleanArrayOf(true, true, true, true, true, true)) //分别对应年月日时分秒，默认全部显示
+            .setCancelText("取消") //取消按钮文字
+            .setSubmitText("确定") //确认按钮文字
+            //.setContentSize(18) //滚轮文字大小
 
-    private fun getTimePicker(
+            .setContentTextSize(18)
+            .setTitleSize(20) //标题文字大小
+            .setTitleText("日期选择") //标题文字
+            .setOutSideCancelable(false) //点击屏幕，点在控件外部范围时，是否取消显示
+            .isCyclic(true) //是否循环滚动
+            .setTitleColor(Color.BLACK) //标题文字颜色
+            .setTitleBgColor(context.resources!!.getColor(R.color.light_blue_600))
+            .setBgColor(Color.WHITE)
+            .setTextColorCenter(context.resources!!.getColor(R.color.light_blue_600))
+            .setTextColorOut(Color.BLACK)
+            .setSubmitColor(Color.WHITE) //确定按钮文字颜色
+            .setCancelColor(Color.WHITE) //取消按钮文字颜色
+//            .setBgColor(-0xcccccd) //滚轮背景颜色 Night mode //默认是1900-2100年
+//            .setDate(selectedDate) // 如果不设置的话，默认是系统时间*/
+//            .setRangDate(startDate, endDate) //起始终止年月日设定
+            .setLabel("年", "月", "日", "时", "分", "秒")
+            .isDialog(true) //是否显示为对话框样式
+            .build()
+
+        timePicker.show();
+    }
+
+    fun timePicker(
         context: Context,
         onTimeSelectListener: OnTimeSelectListener
     ): TimePickerView {
@@ -143,9 +170,9 @@ class PopWindowUtil : View.OnClickListener {
             .setOutSideCancelable(false) //点击屏幕，点在控件外部范围时，是否取消显示
             .isCyclic(true) //是否循环滚动
             .setTitleColor(Color.BLACK) //标题文字颜色
-            .setTitleBgColor(mContext!!.resources!!.getColor(R.color.light_blue_600))
+            .setTitleBgColor(context.resources!!.getColor(R.color.light_blue_600))
             .setBgColor(Color.WHITE)
-            .setTextColorCenter(mContext!!.resources!!.getColor(R.color.light_blue_600))
+            .setTextColorCenter(context.resources!!.getColor(R.color.light_blue_600))
             .setTextColorOut(Color.BLACK)
             .setSubmitColor(Color.WHITE) //确定按钮文字颜色
             .setCancelColor(Color.WHITE) //取消按钮文字颜色
@@ -161,7 +188,7 @@ class PopWindowUtil : View.OnClickListener {
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.createtime_popwindow -> {
-                val pvTime = getTimePicker(mContext!!) { date, view ->
+                val pvTime = timePicker(mContext!!) { date, view ->
                     if (v is TextView) {
                         v.text = TimeUtils.date2String(date, "yyyy-MM-dd")
                         baseSreenInfo!!.start_time = date.time
@@ -171,7 +198,7 @@ class PopWindowUtil : View.OnClickListener {
                 pvTime.show()
             }
             R.id.endtime_popwindow -> {
-                val pvTime = getTimePicker(mContext!!) { date, view ->
+                val pvTime = timePicker(mContext!!) { date, view ->
                     if (v is TextView) {
                         v.text = TimeUtils.date2String(date, "yyyy-MM-dd")
                         baseSreenInfo!!.end_time = date.time
