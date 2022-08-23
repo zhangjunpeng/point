@@ -15,7 +15,7 @@ class DBViewModelFactory(private val repository: DataBaseRepository) :
         }
         if (modelClass.isAssignableFrom(TaggingViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return TravelViewModel(repository) as T
+            return TaggingViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

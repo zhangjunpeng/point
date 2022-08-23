@@ -7,18 +7,15 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.telephony.*
-import android.telephony.gsm.GsmCellLocation
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
@@ -206,56 +203,56 @@ class TravelActivity : BaseActivity() {
                         }
                     }
 
-                    val mTelephonyManager =
-                        getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-                    // 返回值MCC + MNC
-                    val operator = mTelephonyManager.networkOperator
-                    val mcc = Integer.parseInt(operator.substring(0, 3));
-                    val mnc = Integer.parseInt(operator.substring(3));
-                    val cellList = mTelephonyManager.allCellInfo
-                    val cellinfo = cellList.first()
+
+                    var mcc = 0
+                    var mnc = 0
                     var lac = 0
                     var cellId = 0
                     var rssi = 0
-                    if (cellinfo is CellInfoGsm) {
-                        lac = cellinfo.cellIdentity.lac
-                        cellId = cellinfo.cellIdentity.cid
-                        rssi = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                            cellinfo.cellSignalStrength.rssi
-                        } else {
-                            cellinfo.cellSignalStrength.dbm
+                    try {
+                        val mTelephonyManager =
+                            getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                        // 返回值MCC + MNC
+                        val operator = mTelephonyManager.networkOperator
+                        mcc = Integer.parseInt(operator.substring(0, 3))
+                        mnc = Integer.parseInt(operator.substring(3));
+                        val cellList = mTelephonyManager.allCellInfo
+                        val cellinfo = cellList.first()
+
+                        if (cellinfo is CellInfoGsm) {
+                            lac = cellinfo.cellIdentity.lac
+                            cellId = cellinfo.cellIdentity.cid
+                            rssi = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                cellinfo.cellSignalStrength.rssi
+                            } else {
+                                cellinfo.cellSignalStrength.dbm
+                            }
                         }
-                    }
-                    if (cellinfo is CellInfoCdma) {
-                        lac = cellinfo.cellIdentity.networkId
-                        cellId = cellinfo.cellIdentity.basestationId
-                        rssi = cellinfo.cellSignalStrength.cdmaDbm
-                    }
-                    if (cellinfo is CellInfoLte) {
-                        lac = cellinfo.cellIdentity.pci
-                        cellId = cellinfo.cellIdentity.tac
-                        rssi = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                            cellinfo.cellSignalStrength.rssi
-                        } else {
-                            cellinfo.cellSignalStrength.dbm
+                        if (cellinfo is CellInfoCdma) {
+                            lac = cellinfo.cellIdentity.networkId
+                            cellId = cellinfo.cellIdentity.basestationId
+                            rssi = cellinfo.cellSignalStrength.cdmaDbm
                         }
-                    }
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        if (cellinfo is CellInfoNr) {
-                            lac = (cellinfo.cellIdentity as CellIdentityNr).pci
-                            cellId = (cellinfo.cellIdentity as CellIdentityNr).tac
-                            rssi = cellinfo.cellSignalStrength.dbm
+                        if (cellinfo is CellInfoLte) {
+                            lac = cellinfo.cellIdentity.pci
+                            cellId = cellinfo.cellIdentity.tac
+                            rssi = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                cellinfo.cellSignalStrength.rssi
+                            } else {
+                                cellinfo.cellSignalStrength.dbm
+                            }
                         }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                            if (cellinfo is CellInfoNr) {
+                                lac = (cellinfo.cellIdentity as CellIdentityNr).pci
+                                cellId = (cellinfo.cellIdentity as CellIdentityNr).tac
+                                rssi = cellinfo.cellSignalStrength.dbm
+                            }
+                        }
+                    } catch (e: Exception) {
+
                     }
 
-
-//                    Log.i(TAG, " MCC = " + mcc + "\t MNC = " + mnc + "\t LAC = " + lac + "\t CID = " + cellId)
-
-                    // 中国电信获取LAC、CID的方式
-                    /*CdmaCellLocation location1 = (CdmaCellLocation) mTelephonyManager.getCellLocation();
-                    lac = location1.getNetworkId();
-                    cellId = location1.getBaseStationId();
-                    cellId /= 16;*/
 
                     val loca = Location(
                         tId = travelRecord!!.id,

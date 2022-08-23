@@ -1,40 +1,39 @@
 package com.zjdx.point.ui.tagging
 
-import android.os.Build
+import android.graphics.Color
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.LayoutInflater
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import com.amap.api.location.AMapLocationClient
-import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.maps2d.AMap
 import com.amap.api.maps2d.CameraUpdateFactory
-import com.amap.api.maps2d.model.MyLocationStyle
-import com.amap.api.maps2d.model.Polyline
-import com.amap.api.maps2d.model.PolylineOptions
+import com.amap.api.maps2d.model.*
+import com.blankj.utilcode.util.ToastUtils
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.Legend.LegendForm
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityTaggingBinding
 import com.zjdx.point.ui.DBViewModelFactory
 import com.zjdx.point.ui.base.BaseActivity
-import com.zjdx.point.ui.travel.TravelActivity
-import com.zjdx.point.ui.travel.TravelViewModel
 import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.PopWindowUtil
-import permissions.dispatcher.RuntimePermissions
-import java.text.SimpleDateFormat
 
-class TaggingActivity : BaseActivity() {
+class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
     lateinit var binding: ActivityTaggingBinding
     lateinit var map: AMap
-    var mLocationClient: AMapLocationClient? = null
+    private var marker: Marker? = null
     private var polyline: Polyline? = null
-    private lateinit var options: PolylineOptions
+    private var options: PolylineOptions? = null
     var startTime: Long = 0
     var endTime: Long = 0
-    val simpleDateFormat=SimpleDateFormat()
+
+    private val entries = ArrayList<Entry>()
+
 
     private val taggingViewModel: TaggingViewModel by viewModels<TaggingViewModel> {
         DBViewModelFactory((application as PointApplication).travelRepository)
@@ -44,23 +43,58 @@ class TaggingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding=ActivityTaggingBinding.inflate(LayoutInflater.from(this))
+        binding = ActivityTaggingBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
         binding.mapviewTaggingAc.onCreate(savedInstanceState)
         initMap()
         onInitView()
+        initChart()
+        onInitViewModel()
+
+        //test
+//        renderChart()
     }
 
-    fun onInitView() {
+    private fun initChart() {
+        binding.chart.setOnChartValueSelectedListener(this)
+        binding.chart.setDrawGridBackground(false)
+
+        // no description text
+        binding.chart.description.isEnabled = false
+
+        // enable touch gestures
+        binding.chart.setTouchEnabled(true)
+
+        // enable scaling and dragging
+        binding.chart.isDragEnabled = true
+        binding.chart.setScaleEnabled(true)
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        binding.chart.setPinchZoom(true)
+        binding.chart.setNoDataText("无数据")
+
+        val l: Legend = binding.chart.legend
+
+        // modify the legend ...
+        l.form = LegendForm.LINE
+
+        // don't forget to refresh the drawing
+        binding.chart.invalidate()
+    }
+
+    private fun onInitView() {
         binding.startTime.setOnClickListener {
-            PopWindowUtil.instance.showTimePicker(this){date,view->
-                binding.startTime.text= DateUtil.dateFormat.format(date)
+            PopWindowUtil.instance.showTimePicker(this) { date, view ->
+                binding.startTime.text = DateUtil.dateFormat.format(date)
+                taggingViewModel.startTime.value=date
 
             }
         }
         binding.endTime.setOnClickListener {
-            PopWindowUtil.instance.showTimePicker(this){date,view->
-                binding.endTime.text= DateUtil.dateFormat.format(date)
+            PopWindowUtil.instance.showTimePicker(this) { date, view ->
+                binding.endTime.text = DateUtil.dateFormat.format(date)
+                taggingViewModel.endTime.value=date
+
             }
         }
     }
@@ -83,26 +117,104 @@ class TaggingActivity : BaseActivity() {
     }
 
 
-    fun onInitViewModel(){
-        taggingViewModel.startTime.observe(this){
-
+    private fun onInitViewModel() {
+        taggingViewModel.startTime.observe(this) {
+            if (taggingViewModel.endTime.value == null) {
+                return@observe
+            }
+            taggingViewModel.getLocationsByTime()
         }
-        taggingViewModel.endTime.observe(this){
-
+        taggingViewModel.endTime.observe(this) {
+            if (taggingViewModel.startTime.value == null) {
+                return@observe
+            }
+            taggingViewModel.getLocationsByTime()
         }
+        taggingViewModel.allLication.observe(this) {
+            if (taggingViewModel.allLication.value == null || taggingViewModel.allLication.value!!.size == 0) {
+                ToastUtils.showLong("该时间段内没有数据，请重新选择时间")
+            } else {
+                renderLocation()
+                renderChart()
+            }
+        }
+        taggingViewModel.selectLoaction.observe(this) {
+            if (marker != null) {
+                marker?.remove()
+            }
+            marker = map.addMarker(
+                MarkerOptions().position(LatLng(it.lat, it.lng)).title("起点")
+                    .snippet("DefaultMarker")
+            )
+        }
+    }
+
+    private fun renderChart() {
+
+        entries.clear()
+        for (i in 0 until taggingViewModel.allLication.value!!.size) {
+            //test
+            entries.add(Entry(i.toFloat(), (Math.random() * 100).toFloat()))
+//            entries.add(Entry(i.toFloat(), taggingViewModel.allLication.value!![i].speed))
+        }
+
+//        Collections.sort(entries, EntryXComparator())
+
+        val set1 = LineDataSet(entries, "速度")
+        set1.lineWidth = 1.5f
+        set1.circleRadius = 4f
+
+        // create a data object with the data sets
+        val data = LineData(set1)
+        // set data
+        binding.chart.data = data
+        binding.chart.invalidate()
+    }
+
+    private fun renderLocation() {
+        val latLngList = ArrayList<LatLng>()
+
+        for (i in 0 until taggingViewModel.allLication.value!!.size) {
+            val local = taggingViewModel.allLication.value!![i]
+            latLngList.add(LatLng(local.lat, local.lng))
+        }
+
+        if (polyline == null) {
+            options = PolylineOptions()
+            polyline = map.addPolyline(
+                options!!.addAll(latLngList).width(10f).color(Color.BLUE)
+            )
+        } else {
+            polyline!!.remove()
+            options = PolylineOptions().width(10f).color(Color.BLUE)
+            options!!.addAll(latLngList)
+            polyline = map.addPolyline(options)
+        }
+
+
     }
 
     override fun onPause() {
         super.onPause()
         binding.mapviewTaggingAc.onPause()
     }
+
     override fun onResume() {
         super.onResume()
         binding.mapviewTaggingAc.onResume()
     }
+
     override fun onDestroy() {
         super.onDestroy()
         binding.mapviewTaggingAc.onDestroy()
+    }
+
+    override fun onValueSelected(e: Entry?, h: Highlight?) {
+        val index = entries.indexOf(e)
+        taggingViewModel.selectLoaction.value = taggingViewModel.allLication.value!![index]
+    }
+
+    override fun onNothingSelected() {
     }
 
 }
