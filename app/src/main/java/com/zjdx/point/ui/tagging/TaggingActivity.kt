@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.amap.api.maps2d.AMap
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.*
@@ -97,6 +98,8 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
             }
         }
+        binding.recyler.layoutManager=LinearLayoutManager(this)
+
     }
 
     private fun initMap() {

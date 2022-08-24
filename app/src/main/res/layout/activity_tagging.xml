@@ -17,6 +17,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +41,7 @@
                 android:gravity="center"
                 android:text="选择开始时间"
                 android:layout_marginHorizontal="20dp"
-                android:background="@drawable/border_text"
+                android:background="@drawable/white_radius_text"
                 />
 
             <TextView
@@ -48,12 +52,17 @@
                 android:gravity="center"
                 android:text="选择结束时间"
                 android:layout_marginHorizontal="20dp"
-                android:background="@drawable/border_text"
+                android:background="@drawable/white_radius_text"
 
                 />
 
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/gray"/>
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyler"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -62,34 +71,42 @@
             android:id="@+id/button_layout"
             android:orientation="horizontal"
             android:layout_width="match_parent"
+            android:paddingVertical="5dp"
             android:layout_height="40dp"
+            android:background="#ccc"
             >
-            <Button
+            <TextView
+                android:id="@+id/cancel"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:background="#ccc"
-                android:textColor="@color/white"
+                android:textColor="@color/gray"
+                android:gravity="center"
+                android:background="@drawable/white_radius_text"
                 android:text="取消"
                 android:layout_marginHorizontal="10dp"
                 />
-            <Button
+            <TextView
+                android:id="@+id/save"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:background="#FF039BE5"
+                android:background="@drawable/blue_radius_text"
+                android:gravity="center"
                 android:textColor="@color/white"
-                android:text="取消"
+                android:text="保存"
                 android:layout_marginHorizontal="10dp"
 
                 />
-            <Button
+            <TextView
+                android:id="@+id/upload"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:background="@color/organge"
+                android:background="@drawable/orange_radius_text"
+                android:gravity="center"
                 android:textColor="@color/white"
-                android:text="取消"
+                android:text="保存上传"
                 android:layout_marginHorizontal="10dp"
 
                 />

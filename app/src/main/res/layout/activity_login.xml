@@ -69,7 +69,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:background="@drawable/border_text"
+            android:background="@drawable/white_radius_text"
             android:text="注册"
          />
 
