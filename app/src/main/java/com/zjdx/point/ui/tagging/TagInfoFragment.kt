@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.zjdx.point.R
 import com.zjdx.point.databinding.FragmentTagInfoBinding
 
@@ -33,6 +34,11 @@ class TagInfoFragment : Fragment() {
     ): View? {
         binding=FragmentTagInfoBinding.inflate(inflater)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.recyler.layoutManager=LinearLayoutManager(context)
     }
 
     companion object {

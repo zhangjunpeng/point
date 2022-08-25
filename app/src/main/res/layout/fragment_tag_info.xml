@@ -1,59 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.tagging.TagInfoFragment">
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
 
-        <TextView
+            <TextView
 
-            android:id="@+id/cancel"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="30dp"
-            android:gravity="center"
-            android:text="取消"
-            android:background="@drawable/gray_border_text" />
+                android:id="@+id/cancel"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="30dp"
+                android:background="@drawable/gray_border_text"
+                android:gravity="center"
+                android:text="取消" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/confirm"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="30dp"
+                android:background="@drawable/blue_radius_text"
+                android:gravity="center"
+                android:text="确定" />
+        </LinearLayout>
+
         <View
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            />
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/gray" />
 
-        <TextView
-            android:id="@+id/confirm"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="30dp"
-            android:gravity="center"
-            android:text="确定"
-            android:background="@drawable/blue_radius_text" />
-    </LinearLayout>
-    <View
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="出行目的" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_edit"
+                    android:gravity="center" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_edit"
+                    android:gravity="center"
+
+                    android:hint="描述" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="出发时刻" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="2"
+                android:background="@drawable/border_edit"
+                android:gravity="center"
+                android:text="请选择" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="到达时刻" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="2"
+                android:background="@drawable/border_edit"
+                android:gravity="center"
+                android:text="请选择" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="终点类型" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="2"
+                android:background="@drawable/border_edit"
+                android:gravity="center"
+                android:text="请选择" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="起点类型" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="2"
+                android:background="@drawable/border_edit"
+                android:gravity="center"
+                android:text="请选择" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/gray" />
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/gray"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:text="请按照顺序填写使用的交通方式"
+        android:layout_marginVertical="5dp"
+        android:textColor="#F60707"
         />
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyler"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="30dp"
-            android:gravity="center"
-            android:text="出行目的" />
+        android:layout_height="wrap_content"/>
     </LinearLayout>
 
-
-</LinearLayout>
+</ScrollView>
