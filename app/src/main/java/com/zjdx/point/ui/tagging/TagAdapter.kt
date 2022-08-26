@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.zjdx.point.R
 import com.zjdx.point.databinding.ItemTagRecylerBinding
+import com.zjdx.point.utils.DateUtil
 
 class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -35,8 +36,12 @@ class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
                viewModel.addTag.postValue(true)
            }
        }else if(holder is ViewHolder){
+           val tagRecord=viewModel.notUpTagRecord.value!![position]
             holder.binding.index.text= (position+1).toString()
-           holder.binding.info.text= ""
+
+           val starArr=tagRecord.startTime.split(" ")
+           val entArr=tagRecord.endTime.split(" ")
+           holder.binding.info.text="${tagRecord.destination}   ${starArr[0]}\n起止地点：${tagRecord.startType}-"
        }
     }
 
