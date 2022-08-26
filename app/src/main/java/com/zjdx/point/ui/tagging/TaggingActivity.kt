@@ -17,6 +17,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.zjdx.point.PointApplication
+import com.zjdx.point.R
 import com.zjdx.point.databinding.ActivityTaggingBinding
 import com.zjdx.point.ui.DBViewModelFactory
 import com.zjdx.point.ui.base.BaseActivity
@@ -34,6 +35,9 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
     var endTime: Long = 0
 
     private val entries = ArrayList<Entry>()
+
+
+    val fragment = TagInfoFragment.newInstance()
 
 
     private val taggingViewModel: TaggingViewModel by viewModels<TaggingViewModel> {
@@ -149,6 +153,17 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
                 MarkerOptions().position(LatLng(it.lat, it.lng)).title("起点")
                     .snippet("DefaultMarker")
             )
+        }
+
+        taggingViewModel.notUpTagRecord.observe(this) {
+            binding.recyler.adapter = TagAdapter(this,viewModel = taggingViewModel)
+        }
+        taggingViewModel.addTag.observe(this) {
+            if (it) {
+                supportFragmentManager.beginTransaction().add(R.id.container_recyler, fragment)
+            } else {
+                supportFragmentManager.beginTransaction().hide(fragment)
+            }
         }
     }
 

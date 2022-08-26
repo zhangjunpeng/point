@@ -5,15 +5,18 @@ import com.zjdx.point.data.DataSource
 import com.zjdx.point.data.bean.AppVersionModel
 import com.zjdx.point.data.bean.Back
 import com.zjdx.point.db.dao.LocationDao
+import com.zjdx.point.db.dao.TagRecordDao
 import com.zjdx.point.db.dao.TravelRecordDao
 import com.zjdx.point.db.model.Location
+import com.zjdx.point.db.model.TagRecord
 import com.zjdx.point.db.model.TravelRecord
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class DataBaseRepository(
     private val travelRecordDao: TravelRecordDao,
-    private val locationDao: LocationDao
+    private val locationDao: LocationDao,
+    private val tagRecordDao: TagRecordDao,
 ) {
 
     val dataSource = DataSource()
@@ -24,7 +27,6 @@ class DataBaseRepository(
             travelRecordDao.getAll(uid, startTime, endTime)
         }
     }
-
     @WorkerThread
     fun getAllTravel(uid: String, startTime: Long, endTime: Long): List<TravelRecord> {
         return travelRecordDao.getAll(uid, startTime, endTime)
@@ -39,7 +41,6 @@ class DataBaseRepository(
     @WorkerThread
     fun getLocationListByTime(startTime: String,endTime: String): MutableList<Location> {
         return locationDao.getLastLocationByTime(startTime,endTime).toMutableList()
-
     }
 
     @WorkerThread
@@ -122,7 +123,6 @@ class DataBaseRepository(
     @WorkerThread
     fun getAllListHasNotUploadByTid(tid: String): MutableList<Location> {
         return locationDao.queryAllListHasNotUploadByTid(tid).toMutableList()
-
     }
 
     @WorkerThread
@@ -135,6 +135,15 @@ class DataBaseRepository(
         locationDao.deleteLocations(Locations)
     }
 
+    @WorkerThread
+    fun getNotUpload(): MutableList<TagRecord> {
+        return tagRecordDao.queryAllTagtHasNotUploadByTid().toMutableList()
+    }
+
+    @WorkerThread
+    fun insertTag(tagRecord: TagRecord) {
+        tagRecordDao.insertTagRecord(tagRecord)
+    }
 
     suspend fun getAppVersion(): Back<AppVersionModel> {
         return dataSource.getAppVersion()

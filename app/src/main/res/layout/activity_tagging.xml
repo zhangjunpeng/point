@@ -57,16 +57,25 @@
                 />
 
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@color/gray"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyler"
+            android:background="@color/gray" />
+
+        <LinearLayout
+            android:id="@+id/container_recyler"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            />
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                 />
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/button_layout"
             android:orientation="horizontal"
