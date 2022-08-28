@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.zjdx.point.R
 import com.zjdx.point.databinding.FragmentTagInfoBinding
 
@@ -14,31 +15,29 @@ import com.zjdx.point.databinding.FragmentTagInfoBinding
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [TagInfoFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class TagInfoFragment : Fragment() {
+
+class TagInfoFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentTagInfoBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    private val tarvelModelList=ArrayList<String>().apply {
+        add("")
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding=FragmentTagInfoBinding.inflate(inflater)
+        binding=FragmentTagInfoBinding.inflate(LayoutInflater.from(context))
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.recyler.layoutManager=LinearLayoutManager(context)
+        binding.recyler.adapter=InfoAdapter(requireContext(),tarvelModelList)
     }
 
     companion object {

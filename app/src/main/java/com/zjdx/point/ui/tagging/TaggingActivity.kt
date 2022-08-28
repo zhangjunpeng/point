@@ -16,9 +16,11 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.zjdx.point.PointApplication
-import com.zjdx.point.R
 import com.zjdx.point.databinding.ActivityTaggingBinding
+import com.zjdx.point.databinding.FragmentTagInfoBinding
 import com.zjdx.point.ui.DBViewModelFactory
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.utils.DateUtil
@@ -27,6 +29,9 @@ import com.zjdx.point.utils.PopWindowUtil
 class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
     lateinit var binding: ActivityTaggingBinding
+
+    var tagInfoBinding: FragmentTagInfoBinding? = null
+
     lateinit var map: AMap
     private var marker: Marker? = null
     private var polyline: Polyline? = null
@@ -55,9 +60,15 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         onInitView()
         initChart()
         onInitViewModel()
+        onInitData()
 
         //test
 //        renderChart()
+    }
+
+    private fun onInitData() {
+
+        taggingViewModel.getTagRecordIsNotUpload()
     }
 
     private fun initChart() {
@@ -160,7 +171,11 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         }
         taggingViewModel.addTag.observe(this) {
             if (it) {
-                supportFragmentManager.beginTransaction().add(R.id.container_recyler, fragment)
+//                val bottom = BottomSheetDialogFragment()
+//                tagInfoBinding = FragmentTagInfoBinding.inflate(layoutInflater)
+                fragment.show(supportFragmentManager,null)
+//                bottom.(tagInfoBinding!!.root)
+//                bottom.show()
             } else {
                 supportFragmentManager.beginTransaction().hide(fragment)
             }

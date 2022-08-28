@@ -9,7 +9,7 @@ import com.zjdx.point.db.model.TagRecord
 @Dao
 interface TagRecordDao {
 
-    @Query("Select * from Location where  is_upload=0")
+    @Query("Select * from TagRecord where  isupload=0")
     fun queryAllTagtHasNotUploadByTid(): Array<TagRecord>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

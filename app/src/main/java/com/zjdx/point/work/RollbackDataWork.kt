@@ -19,7 +19,7 @@ class RollbackDataWork(
 
     val database by lazy { MyDataBase.getDatabase(context) }
 
-    val repository = DataBaseRepository(database.travelRecordDao(), database.locationDao())
+    val repository = DataBaseRepository(database.travelRecordDao(), database.locationDao(),database.tagRecordDao())
 
     override fun doWork(): Result {
         backTravel()

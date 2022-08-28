@@ -1,15 +1,12 @@
 package com.zjdx.point.ui.tagging
 
 import android.content.Context
-import android.text.SpannableStringBuilder
-import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.zjdx.point.R
 import com.zjdx.point.databinding.ItemTagRecylerBinding
-import com.zjdx.point.utils.DateUtil
 
 class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -20,7 +17,7 @@ class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
     inner class AddDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == 0) {
+        return if (viewType == 1) {
             val view =
                 LayoutInflater.from(context).inflate(R.layout.item_add_new_travel, parent, false)
             AddDataViewHolder(view)
@@ -36,12 +33,14 @@ class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
                viewModel.addTag.postValue(true)
            }
        }else if(holder is ViewHolder){
-           val tagRecord=viewModel.notUpTagRecord.value!![position]
+           val tagRecord=viewModel.notUpTagRecord.value!![position-1]
             holder.binding.index.text= (position+1).toString()
 
            val starArr=tagRecord.startTime.split(" ")
            val entArr=tagRecord.endTime.split(" ")
-           holder.binding.info.text="${tagRecord.destination}   ${starArr[0]}\n起止地点：${tagRecord.startType}-"
+           holder.binding.info.text =
+               "${tagRecord.destination}   ${starArr[0]}\n起止地点：${tagRecord.startType}-${tagRecord.startType}" +
+                       "\n起止时刻：${starArr[1]}-${entArr[1]}"
        }
     }
 
