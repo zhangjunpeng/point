@@ -34,7 +34,7 @@
         <TextView
             android:id="@+id/cancel_dialog_abnormal_base_work_ac"
             style="@style/TextViewAsButtonInLinear"
-            android:background="@drawable/border_text"
+            android:background="@drawable/white_radius_text"
             android:text="取消"
             android:textColor="@color/black" />
 

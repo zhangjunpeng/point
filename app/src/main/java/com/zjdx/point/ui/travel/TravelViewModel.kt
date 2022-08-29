@@ -38,14 +38,3 @@ class TravelViewModel(val repository: DataBaseRepository) : ViewModel() {
 
 
 }
-
-class TravelViewModelFactory(private val repository: DataBaseRepository) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(TravelViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return TravelViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}

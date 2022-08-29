@@ -1,9 +1,16 @@
 package com.zjdx.point.services
 
+import android.annotation.SuppressLint
 import android.app.Service
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
+import android.telephony.CellInfoCdma
+import android.telephony.CellInfoGsm
+import android.telephony.TelephonyManager
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
@@ -13,8 +20,10 @@ import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.event.UpdateMapEvent
 import org.greenrobot.eventbus.EventBus
+import permissions.dispatcher.RuntimePermissions
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class LocationService : Service() {
     lateinit var mLocationOption: AMapLocationClientOption
@@ -46,6 +55,7 @@ class LocationService : Service() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.R)
     fun initLocationService() {
 
         mLocationClient = AMapLocationClient(applicationContext)
@@ -81,6 +91,8 @@ class LocationService : Service() {
 
     //声明AMapLocationClient类对象
 
+    @RequiresApi(Build.VERSION_CODES.R)
+    @SuppressLint("MissingPermission")
     val mAMapLocationListener = AMapLocationListener { amapLocation ->
         if (amapLocation != null) {
             Log.i("Tag", "errorCode=" + amapLocation.errorCode)
@@ -111,6 +123,29 @@ class LocationService : Service() {
                             source = "最后位置"
                         }
                     }
+
+                    val mTelephonyManager =
+                        getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                    // 返回值MCC + MNC
+                    val operator = mTelephonyManager.networkOperator
+                    val mcc = Integer.parseInt(operator.substring(0, 3));
+                    val mnc = Integer.parseInt(operator.substring(3));
+                    val cellList = mTelephonyManager.allCellInfo
+                    val cellinfo = cellList.first()
+                    var lac = 0
+                    var cellId = 0
+                    var rssi = 0
+                    if (cellinfo is CellInfoGsm) {
+                        lac = cellinfo.cellIdentity.lac
+                        cellId = cellinfo.cellIdentity.cid
+                        rssi = cellinfo.cellSignalStrength.rssi
+                    }
+                    if (cellinfo is CellInfoCdma) {
+                        lac = cellinfo.cellIdentity.networkId
+                        cellId = cellinfo.cellIdentity.basestationId
+                        rssi = cellinfo.cellSignalStrength.cdmaDbm
+                    }
+
                     val loca = Location(
                         tId = travelRecord.id,
                         lat = amapLocation.latitude,
@@ -121,7 +156,12 @@ class LocationService : Service() {
                         accuracy = amapLocation.accuracy,
                         source = source,
                         creatTime = format.format(amapLocation.time),
-                        address = amapLocation.address
+                        address = amapLocation.address,
+                        mcc = mcc,
+                        mnc = mnc,
+                        lac = lac,
+                        cid = cellId,
+                        bsss = rssi,
                     )
 
 

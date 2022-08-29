@@ -20,6 +20,7 @@ import com.zjdx.point.ui.edit.EditUserInfoActivity
 import com.zjdx.point.ui.history.HistoryTravelActivity
 import com.zjdx.point.ui.login.LoginActivity
 import com.zjdx.point.ui.setting.SettingActivity
+import com.zjdx.point.ui.tagging.TaggingActivity
 import com.zjdx.point.ui.travel.TravelActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
 import com.zjdx.point.utils.DateUtil
@@ -35,7 +36,6 @@ import permissions.dispatcher.RuntimePermissions
 import java.util.*
 
 
-@RuntimePermissions
 class MainActivity : BaseActivity() {
 
     val TAG = "LocationService"
@@ -52,19 +52,18 @@ class MainActivity : BaseActivity() {
         setContentView(binding.root)
         EventBus.getDefault().register(this)
 //        initLocationService()
-        initLocationServiceWithPermissionCheck()
         upload = intent!!.getBooleanExtra("upload", true)
 
     }
 
     override fun initViewMoedl() {
-        mainViewModel.travelCountNum.observe(this, {
+        mainViewModel.travelCountNum.observe(this) {
             updateMainInfo()
-        })
-        mainViewModel.travelNotUploadNum.observe(this, {
+        }
+        mainViewModel.travelNotUploadNum.observe(this) {
             updateMainInfo()
-        })
-        mainViewModel.appVersionModelLiveData.observe(this, {
+        }
+        mainViewModel.appVersionModelLiveData.observe(this) {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
             val versionCode = packageInfo.versionCode
             if (it.list.isEmpty() || versionCode >= it.list[0].version) {
@@ -78,7 +77,7 @@ class MainActivity : BaseActivity() {
                 }
                 .create()
             alertDialog.show()
-        })
+        }
         binding.recyclerMain.layoutManager = LinearLayoutManager(this)
         binding.recyclerMain.adapter =
             MainRecylerAdapter(this, mainViewModel.uploadMsgLiveData.value!!)
@@ -154,6 +153,10 @@ class MainActivity : BaseActivity() {
             startActivity(Intent(this, TravelActivity::class.java))
             finish()
         }
+
+        binding.taggingMainAc.setOnClickListener {
+            startActivity(Intent(this, TaggingActivity::class.java))
+        }
         binding.historyMainAc.setOnClickListener {
             startActivity(Intent(this, HistoryTravelActivity::class.java))
         }
@@ -188,23 +191,6 @@ class MainActivity : BaseActivity() {
     }
 
 
-    @NeedsPermission(
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_NETWORK_STATE,
-        Manifest.permission.ACCESS_WIFI_STATE,
-        Manifest.permission.CHANGE_WIFI_STATE,
-        Manifest.permission.READ_PHONE_STATE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
-        Manifest.permission.BLUETOOTH,
-        Manifest.permission.BLUETOOTH_ADMIN,
-        Manifest.permission.ACCESS_BACKGROUND_LOCATION
-    )
-    fun initLocationService() {
-        //这里以ACCESS_COARSE_LOCATION为例
-        Toast.makeText(this, "成功申请", Toast.LENGTH_LONG)
-    }
 
     override fun onDestroy() {
         super.onDestroy()

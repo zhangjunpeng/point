@@ -45,7 +45,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:enabled="false"
-                    android:background="@drawable/border_text" />
+                    android:background="@drawable/white_radius_text" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -63,7 +63,7 @@
                     android:layout_weight="1"
                     android:enabled="false"
                     android:gravity="center"
-                    android:background="@drawable/border_text"
+                    android:background="@drawable/white_radius_text"
 
                     />
             </LinearLayout>
@@ -80,7 +80,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/border_text"
+                    android:background="@drawable/white_radius_text"
                     android:gravity="center"
                     android:text="重置"
                     android:textColor="@color/black" />

@@ -15,14 +15,14 @@ android {
             keyPassword '123456'
         }
     }
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId "com.zjdx.point"
-        minSdkVersion 16
-        targetSdkVersion 31
-        versionCode 22
-        versionName "2.2"
+        minSdkVersion 21
+        targetSdkVersion 32
+        versionCode 30
+        versionName "3.0"
 
         multiDexEnabled true
 
@@ -39,6 +39,9 @@ android {
         ndk {
             // 设置支持的SO库架构
             abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
+        vectorDrawables {
+            useSupportLibrary true
         }
     }
     sourceSets {
@@ -60,7 +63,6 @@ android {
             variant.outputs.all {
                 def date = new Date().format("MMdd-HHmm", TimeZone.getTimeZone("GMT+08"))
                 outputFileName = "Point_${versionName}_${date}.apk"
-//            }
             }
         }
     }
@@ -68,10 +70,14 @@ android {
 
     packagingOptions {
         exclude 'META-INF/atomicfu.kotlin_module'
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
     }
 
     buildFeatures {
         viewBinding true
+        compose true
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
@@ -80,6 +86,17 @@ android {
                     "-Xjvm-default=all",
             ]
         }
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.1.1'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }
 
@@ -93,33 +110,37 @@ dependencies {
     implementation project(path: ':wheelview')
     implementation project(path: ':pickerview')
     implementation 'com.tencent.bugly:crashreport_upgrade:1.5.23'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation "androidx.compose.ui:ui:1.2.1"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.2.1"
+    implementation 'androidx.activity:activity-compose:1.3.1'
+    implementation 'androidx.compose.material:material:1.2.0-beta01'
+    implementation project(path: ':MPChartLib')
 
 
     // Core library
     androidTestImplementation 'androidx.test:core:1.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    // AndroidJUnitRunner and JUnit Rules
-//    androidTestImplementation 'androidx.test:runner:1.3.0'
-//    androidTestImplementation 'androidx.test:rules:1.3.0'
-    // Assertions
-//    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-//    androidTestImplementation 'androidx.test.ext:truth:1.3.0'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
+
 
     def constraintLayoutVersion = '2.0.2'
 
     implementation "androidx.activity:activity-ktx:1.5.1"
 
-    // Dependencies for working with Architecture components
-    // You'll probably have to update the version numbers in build.gradle (Project)
 
     // Room components
     implementation "androidx.room:room-ktx:2.4.3"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     kapt "androidx.room:room-compiler:2.4.3"
     androidTestImplementation "androidx.room:room-testing:2.4.3"
 
     // Lifecycle components
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
+
+    implementation "androidx.fragment:fragment-ktx:1.5.2"
 
     // Kotlin components
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0"
@@ -135,7 +156,7 @@ dependencies {
     // optional - Test helpers
     androidTestImplementation "androidx.work:work-testing:2.7.1"
 
-    implementation 'com.squareup.okhttp3:okhttp:4.7.2'
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
     //高德
     implementation 'com.amap.api:location:5.2.0'
     implementation 'com.amap.api:map2d:6.0.0'
@@ -159,6 +180,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
 
     implementation 'com.blankj:utilcodex:1.31.0'
+
+
 
 }
 

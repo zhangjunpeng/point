@@ -1,23 +1,28 @@
 package com.zjdx.point.db
 
 import android.content.Context
-import androidx.room.*
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.zjdx.point.db.dao.LocationDao
+import com.zjdx.point.db.dao.TagRecordDao
 import com.zjdx.point.db.dao.TravelRecordDao
 import com.zjdx.point.db.model.Location
+import com.zjdx.point.db.model.TagRecord
 import com.zjdx.point.db.model.TravelRecord
 
 @Database(
-    entities = [Location::class, TravelRecord::class],
-    version = 4,
+    entities = [Location::class, TravelRecord::class, TagRecord::class],
+    version = 5,
     exportSchema = true
 )
 abstract class MyDataBase : RoomDatabase() {
     abstract fun locationDao(): LocationDao
     abstract fun travelRecordDao(): TravelRecordDao
 
+    abstract fun tagRecordDao(): TagRecordDao
     companion object {
         // Singleton prevents multiple instances of database opening at the
         // same time.
@@ -33,7 +38,7 @@ abstract class MyDataBase : RoomDatabase() {
                     MyDataBase::class.java,
                     "Point"
                 ).allowMainThreadQueries()
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                     .build()
                 INSTANCE = instance
                 // return instance
@@ -70,6 +75,19 @@ abstract class MyDataBase : RoomDatabase() {
             }
         }
 
+
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE Location ADD COLUMN MCC INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE Location ADD COLUMN MNC INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE Location ADD COLUMN LAC INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE Location ADD COLUMN CID INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE Location ADD COLUMN BSSS INTEGER NOT NULL DEFAULT 0")
+                database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `TagRecord` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `destination` TEXT NOT NULL, `desc` TEXT NOT NULL, `start_time` TEXT NOT NULL, `end_time` TEXT NOT NULL, `start_type` TEXT NOT NULL, `end_type` TEXT NOT NULL, `travel_model` TEXT NOT NULL, `isupload` INTEGER NOT NULL DEFAULT 0)"
+                )
+            }
+        }
 
     }
 

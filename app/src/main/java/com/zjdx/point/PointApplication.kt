@@ -24,15 +24,13 @@ class PointApplication : Application() {
     val locationRepository by lazy { LocationRepository(database.locationDao()) }
     val travelRepository by lazy {
         DataBaseRepository(
-            database.travelRecordDao(), database.locationDao()
+            database.travelRecordDao(), database.locationDao(),database.tagRecordDao()
         )
     }
     val registerRepository by lazy { RegisterRepository() }
 
     override fun onCreate() {
         super.onCreate()
-
-
         initCrash()
 
         Utils.init(this)

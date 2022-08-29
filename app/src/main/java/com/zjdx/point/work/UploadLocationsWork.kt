@@ -32,7 +32,7 @@ class UploadLocationsWork(
 
     val database by lazy { MyDataBase.getDatabase(context) }
 
-    val repository = DataBaseRepository(database.travelRecordDao(), database.locationDao())
+    val repository = DataBaseRepository(database.travelRecordDao(), database.locationDao(),database.tagRecordDao())
 
     var location: Location? = null
 

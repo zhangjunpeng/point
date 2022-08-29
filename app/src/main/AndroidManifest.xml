@@ -26,12 +26,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Point">
-        <activity android:name=".ui.setting.SettingActivity"
+
+        <activity
+            android:name=".ui.tagging.TaggingActivity"
             android:exported="true"
-            />
-        <activity android:name=".ui.edit.EditUserInfoActivity"
-            android:exported="true"
-            />
+            android:label="@string/title_activity_tagging"
+            android:theme="@style/Theme.Point">
+
+        </activity>
+        <activity
+            android:name=".ui.setting.SettingActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.edit.EditUserInfoActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.register.RegisterActivity"
             android:exported="true"
@@ -51,7 +59,6 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -16,6 +16,9 @@ interface LocationDao {
     @Query("Select * from Location where t_id = :tId order by creat_time desc limit 1")
     fun getLastLocationById(tId: String): Location
 
+    @Query("Select * from Location where creat_time between :startTime and :endTime order by creat_time desc")
+    fun getLastLocationByTime(startTime: String,endTime:String):  Array<Location>
+
     @Query("Select * from Location where t_id = :tId order by creat_time limit 1")
     fun getFirsttLocationById(tId: String): Location
 
