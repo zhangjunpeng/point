@@ -103,8 +103,9 @@ class TravelActivity : BaseActivity() {
     )
     fun requestLocation() {
         //这里以ACCESS_COARSE_LOCATION为例
-
         Toast.makeText(this, "成功申请", Toast.LENGTH_LONG)
+        initMap()
+        initLocationService()
     }
 
     private fun saveTravelRecord() {
@@ -277,15 +278,6 @@ class TravelActivity : BaseActivity() {
                     travelViewModel.getLocationsById(travelRecord!!.id)
 
 
-//                    val mCameraUpdate = CameraUpdateFactory.newCameraPosition(
-//                        CameraPosition.Builder().target(
-//                            LatLng(
-//                                amapLocation.latitude,
-//                                amapLocation.longitude,
-//                            )
-//                        ).build()
-//                    )
-//                    map.moveCamera(mCameraUpdate)
 
 
                     Log.i(
@@ -340,11 +332,11 @@ class TravelActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         EventBus.getDefault().register(this)
         binding.mapviewTarvelAc.onCreate(savedInstanceState)
-        initMap()
 
 //        serviceIntent = Intent(this, LocationService::class.java)
 //        startService(serviceIntent)
-        initLocationService()
+
+        requestLocationWithPermissionCheck()
 
         checkIsRecording()
 

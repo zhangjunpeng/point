@@ -22,8 +22,12 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
 
     val selectLoaction = MutableLiveData<Location>()
 
-    val addTag=MutableLiveData<Boolean>().apply {
-        this.value=false
+    val addTag = MutableLiveData<Boolean>().apply {
+        this.value = false
+    }
+
+    val tarvelModelList = ArrayList<String>().apply {
+        add("步行")
     }
 
     fun getLocationsByTime() {
@@ -35,12 +39,17 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
         }
     }
 
+    fun insertTagRecord(tagRecord: TagRecord) {
+        viewModelScope.launch {
+            repository.insertTag(tagRecord)
+            notUpTagRecord.value = repository.getNotUpload()
+        }
+    }
+
 
     fun getTagRecordIsNotUpload() {
         viewModelScope.launch {
-            notUpTagRecord.value = repository.getNotUpload(
-
-            )
+            notUpTagRecord.value = repository.getNotUpload()
         }
     }
 

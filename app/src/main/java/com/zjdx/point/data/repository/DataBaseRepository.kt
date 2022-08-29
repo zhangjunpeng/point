@@ -142,7 +142,7 @@ class DataBaseRepository(
 
     @WorkerThread
     fun insertTag(tagRecord: TagRecord) {
-        tagRecordDao.insertTagRecord(tagRecord)
+        return tagRecordDao.insertTagRecord(tagRecord)
     }
 
     suspend fun getAppVersion(): Back<AppVersionModel> {

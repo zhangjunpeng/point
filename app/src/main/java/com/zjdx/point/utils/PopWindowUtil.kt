@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.text.TextUtils
 import android.view.*
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.bigkoo.pickerview.listener.OnTimeSelectListener
 import com.bigkoo.pickerview.view.TimePickerView
@@ -208,6 +209,23 @@ var mContext:Context?=null
             }
         }
     }
+
+
+    var alertDialog :AlertDialog?=null
+    fun showDelDialog(context: Context, confirm: () -> Unit) {
+        alertDialog = AlertDialog.Builder(context).setMessage("确定删除吗？")
+            .setPositiveButton("确定") { dialog, which ->
+                dialog.dismiss()
+                confirm()
+            }.setNegativeButton("取消") { dialog, which ->
+                dialog.dismiss()
+            }.create()
+        alertDialog!!.show()
+    }
+    fun dissmissDelDialog(){
+        alertDialog?.dismiss()
+    }
+
 
 
 }

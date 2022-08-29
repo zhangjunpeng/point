@@ -9,8 +9,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/white"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -66,6 +68,7 @@
                 android:orientation="vertical">
 
                 <EditText
+                    android:id="@+id/dis"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_margin="5dp"
@@ -74,6 +77,7 @@
                     android:gravity="center" />
 
                 <EditText
+                    android:id="@+id/desc"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_margin="5dp"
@@ -103,6 +107,7 @@
                 android:text="出发时刻" />
 
             <TextView
+                android:id="@+id/start_time"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
@@ -130,33 +135,7 @@
                 android:text="到达时刻" />
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="2"
-                android:background="@drawable/border_edit"
-                android:gravity="center"
-                android:text="请选择" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/gray" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="终点类型" />
-
-            <TextView
+                android:id="@+id/end_time"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
@@ -183,32 +162,63 @@
                 android:gravity="center"
                 android:text="起点类型" />
 
-            <TextView
+            <EditText
+                android:id="@+id/start_type"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="2"
                 android:background="@drawable/border_edit"
                 android:gravity="center"
-                android:text="请选择" />
+                android:hint="请输入" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="@color/gray" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:gravity="center"
-        android:text="请按照顺序填写使用的交通方式"
-        android:layout_marginVertical="5dp"
-        android:textColor="#F60707"
-        />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="终点类型" />
+
+            <EditText
+                android:id="@+id/end_type"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="2"
+                android:background="@drawable/border_edit"
+                android:gravity="center"
+                android:hint="请输入" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/gray" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginVertical="5dp"
+            android:gravity="center"
+            android:text="请按照顺序填写使用的交通方式"
+            android:textColor="#F60707" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
 </ScrollView>

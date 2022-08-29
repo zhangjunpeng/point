@@ -36,7 +36,6 @@ import permissions.dispatcher.RuntimePermissions
 import java.util.*
 
 
-@RuntimePermissions
 class MainActivity : BaseActivity() {
 
     val TAG = "LocationService"
@@ -53,7 +52,6 @@ class MainActivity : BaseActivity() {
         setContentView(binding.root)
         EventBus.getDefault().register(this)
 //        initLocationService()
-        initLocationServiceWithPermissionCheck()
         upload = intent!!.getBooleanExtra("upload", true)
 
     }
@@ -193,23 +191,6 @@ class MainActivity : BaseActivity() {
     }
 
 
-    @NeedsPermission(
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_NETWORK_STATE,
-        Manifest.permission.ACCESS_WIFI_STATE,
-        Manifest.permission.CHANGE_WIFI_STATE,
-        Manifest.permission.READ_PHONE_STATE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
-        Manifest.permission.BLUETOOTH,
-        Manifest.permission.BLUETOOTH_ADMIN,
-        Manifest.permission.ACCESS_BACKGROUND_LOCATION
-    )
-    fun initLocationService() {
-        //这里以ACCESS_COARSE_LOCATION为例
-        Toast.makeText(this, "成功申请", Toast.LENGTH_LONG)
-    }
 
     override fun onDestroy() {
         super.onDestroy()

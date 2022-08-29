@@ -1,5 +1,6 @@
 package com.zjdx.point.ui.tagging
 
+import android.Manifest
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,16 +17,18 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.zjdx.point.PointApplication
+import com.zjdx.point.R
 import com.zjdx.point.databinding.ActivityTaggingBinding
 import com.zjdx.point.databinding.FragmentTagInfoBinding
 import com.zjdx.point.ui.DBViewModelFactory
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.PopWindowUtil
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.RuntimePermissions
 
+@RuntimePermissions
 class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
     lateinit var binding: ActivityTaggingBinding
@@ -56,18 +59,18 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         binding = ActivityTaggingBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
         binding.mapviewTaggingAc.onCreate(savedInstanceState)
-        initMap()
+        initMapWithPermissionCheck()
         onInitView()
         initChart()
         onInitViewModel()
         onInitData()
+
 
         //test
 //        renderChart()
     }
 
     private fun onInitData() {
-
         taggingViewModel.getTagRecordIsNotUpload()
     }
 
@@ -109,15 +112,27 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         binding.endTime.setOnClickListener {
             PopWindowUtil.instance.showTimePicker(this) { date, view ->
                 binding.endTime.text = DateUtil.dateFormat.format(date)
-                taggingViewModel.endTime.value=date
+                taggingViewModel.endTime.value = date
 
             }
         }
-        binding.recyler.layoutManager=LinearLayoutManager(this)
+        binding.recyler.layoutManager = object : LinearLayoutManager(this) {
+            override fun canScrollVertically(): Boolean {
+                return false
+            }
+        }
 
     }
 
-    private fun initMap() {
+
+    @NeedsPermission(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_NETWORK_STATE,
+        Manifest.permission.ACCESS_WIFI_STATE,
+        Manifest.permission.CHANGE_WIFI_STATE,
+    )
+    fun initMap() {
 
         map = binding.mapviewTaggingAc.map
         val myLocationStyle: MyLocationStyle = MyLocationStyle()
@@ -173,9 +188,14 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
             if (it) {
 //                val bottom = BottomSheetDialogFragment()
 //                tagInfoBinding = FragmentTagInfoBinding.inflate(layoutInflater)
-                fragment.show(supportFragmentManager,null)
 //                bottom.(tagInfoBinding!!.root)
 //                bottom.show()
+                supportFragmentManager.beginTransaction().add(R.id.container_recyler, fragment)
+                    .commit()
+
+
+//                fragment.show(supportFragmentManager,null)
+
             } else {
                 supportFragmentManager.beginTransaction().hide(fragment)
             }

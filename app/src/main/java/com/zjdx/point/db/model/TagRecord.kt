@@ -6,24 +6,24 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class TagRecord(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) var id: Int? = null,
 
-    @ColumnInfo(name = "destination") val destination: String,
+    @ColumnInfo(name = "destination") var destination: String = "",
 
-    @ColumnInfo(name = "desc") val desc: String,
+    @ColumnInfo(name = "desc") var desc: String = "",
 
 
-    @ColumnInfo(name = "start_time") val startTime: String,
+    @ColumnInfo(name = "start_time") var startTime: String = "",
 
-    @ColumnInfo(name = "end_time") val endTime: String,
+    @ColumnInfo(name = "end_time") var endTime: String = "",
 
-    @ColumnInfo(name = "start_type") val startType: String,
+    @ColumnInfo(name = "start_type") var startType: String = "",
 
-    @ColumnInfo(name = "end_type") val endType: String,
+    @ColumnInfo(name = "end_type") var endType: String = "",
 
-    @ColumnInfo(name = "travel_model") val travelodel: String,
+    @ColumnInfo(name = "travel_model") var travelodel: String = "",
 
-    @ColumnInfo(name = "isupload", defaultValue = "0") val isupload: Int,
+    @ColumnInfo(name = "isupload", defaultValue = "0") var isupload: Int = 0,
 
 
     )

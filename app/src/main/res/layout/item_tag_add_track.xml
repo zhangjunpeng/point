@@ -18,13 +18,15 @@
         android:layout_weight="2"
         android:orientation="horizontal"
         android:gravity="center" >
-        <TextView
-            android:layout_width="120dp"
+        <Spinner
+            android:id="@+id/model"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:background="@drawable/border_edit"
             android:gravity="center"
-            android:text="请选择" />
+             />
         <ImageView
             android:id="@+id/add"
             android:layout_width="40dp"

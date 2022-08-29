@@ -128,8 +128,6 @@ dependencies {
 
     implementation "androidx.activity:activity-ktx:1.5.1"
 
-    // Dependencies for working with Architecture components
-    // You'll probably have to update the version numbers in build.gradle (Project)
 
     // Room components
     implementation "androidx.room:room-ktx:2.4.3"
@@ -141,6 +139,8 @@ dependencies {
     // Lifecycle components
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
+
+    implementation "androidx.fragment:fragment-ktx:1.5.2"
 
     // Kotlin components
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0"
