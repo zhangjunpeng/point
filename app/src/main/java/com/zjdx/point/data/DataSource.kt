@@ -3,8 +3,12 @@ package com.zjdx.point.data
 
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ToastUtils
+import com.zjdx.point.NameSpace
 import com.zjdx.point.config.REST
 import com.zjdx.point.data.bean.*
+import com.zjdx.point.db.model.TravelRecord
 import okhttp3.*
 
 /**
@@ -28,9 +32,12 @@ class DataSource {
         }
     }
 
+    val client = OkHttpClient.Builder().build()
+
+
     fun login(username: String, password: String): Back<LoginModel> {
         try {
-            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+//            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
             val formBodyBulider = FormBody.Builder()
             val formBody = formBodyBulider
                 .add("userCode", username)
@@ -67,7 +74,7 @@ class DataSource {
 
     fun getAppVersion(): Back<AppVersionModel> {
         try {
-            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+//            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
             val formBodyBulider = FormBody.Builder()
             val formBody = formBodyBulider.build()
             val request: Request = Request.Builder()
@@ -106,7 +113,7 @@ class DataSource {
         maxsalary: String?
     ): Back<SubmitBackModel> {
         try {
-            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+//            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
             val formBodyBulider = FormBody.Builder()
             formBodyBulider
                 .add("usercode", userCode)
@@ -171,7 +178,7 @@ class DataSource {
         maxsalary: String?
     ): Back<SubmitBackModel> {
         try {
-            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+//            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
             val formBodyBulider = FormBody.Builder()
             formBodyBulider
                 .add("id", id)
@@ -229,7 +236,7 @@ class DataSource {
 
     fun getUserInfo(userCode: String): Back<UserInfoModel> {
         try {
-            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+//            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
             val formBodyBulider = FormBody.Builder().add("userCode", userCode)
             val formBody = formBodyBulider.build()
             val request: Request = Request.Builder()
@@ -267,6 +274,40 @@ class DataSource {
         )
         return Back.Error(submitBackModel)
     }
+
+    fun getTravelListByTime(paramMap: Map<String, String>): MutableList<TravelRecord> {
+
+        try {
+            val urlStringBuffer = StringBuffer(REST.hisTravel)
+            if (paramMap.keys.isNotEmpty()) {
+                urlStringBuffer.append("?")
+                paramMap.keys.forEach { t ->
+                    urlStringBuffer.append("$t=${paramMap[t]}&")
+                }
+            }
+            val requestBuilder =
+                Request.Builder()
+            requestBuilder.url(urlStringBuffer.toString())
+
+            val request = requestBuilder.get()
+                .build()
+            val call: Call = client.newCall(request)
+            val response = call.execute()
+            val dataStr = response.body!!.string()
+            return if (response.isSuccessful) {
+                GsonUtils.fromJson(dataStr, Array<TravelRecord>::class.java).toMutableList()
+            } else {
+                ArrayList()
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            return  ArrayList()
+        }
+
+    }
+
+
+
 
 
 }

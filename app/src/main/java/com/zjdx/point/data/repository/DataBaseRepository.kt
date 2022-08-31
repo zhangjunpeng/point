@@ -149,4 +149,8 @@ class DataBaseRepository(
         return dataSource.getAppVersion()
     }
 
+    @WorkerThread
+    suspend fun getTravelList(paramMap: Map<String, String>):MutableList<TravelRecord>{
+        return  dataSource.getTravelListByTime(paramMap)
+    }
 }
