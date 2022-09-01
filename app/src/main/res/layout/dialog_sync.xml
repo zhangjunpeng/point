@@ -63,6 +63,16 @@
         android:textSize="14dp"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/sync_location_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
+        android:gravity="center"
+        android:text=""
+        android:textSize="14dp"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"

@@ -3,13 +3,13 @@ package com.zjdx.point.data
 
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ToastUtils
-import com.zjdx.point.NameSpace
 import com.zjdx.point.config.REST
 import com.zjdx.point.data.bean.*
+import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
 import okhttp3.*
+import java.net.InetSocketAddress
+import java.net.Proxy
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
@@ -17,36 +17,18 @@ import okhttp3.*
 class DataSource {
 
 
-    inner class LoggingInterceptor : Interceptor {
-        override fun intercept(chain: Interceptor.Chain): Response {
-            val request = chain.request()
-            val t1 = System.currentTimeMillis()
-
-            val response = chain.proceed(request)
-            val t2 = System.currentTimeMillis()
-
-            val difference = t2 - t1
-//            LogUtils.i("startTime=${t1}\nendtime=${t2}\nfuncationName=${funName}\ndifference=${difference}")
-
-            return response
-        }
-    }
-
-    val client = OkHttpClient.Builder().build()
+    val client = OkHttpClient.Builder().proxy(
+        Proxy(Proxy.Type.HTTP, InetSocketAddress("192.168.0.164", 9090))
+    ).build()
 
 
     fun login(username: String, password: String): Back<LoginModel> {
         try {
 //            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
             val formBodyBulider = FormBody.Builder()
-            val formBody = formBodyBulider
-                .add("userCode", username)
-                .add("password", password)
-                .build()
-            val request: Request = Request.Builder()
-                .url(REST.login)
-                .post(formBody)
-                .build()
+            val formBody =
+                formBodyBulider.add("userCode", username).add("password", password).build()
+            val request: Request = Request.Builder().url(REST.login).post(formBody).build()
             val call: Call = client.newCall(request)
             val response = call.execute()
             return if (response.isSuccessful) {
@@ -68,7 +50,6 @@ class DataSource {
 
 
     fun logout() {
-        // TODO: revoke authentication
     }
 
 
@@ -275,7 +256,7 @@ class DataSource {
         return Back.Error(submitBackModel)
     }
 
-    fun getTravelListByTime(paramMap: Map<String, String>): MutableList<TravelRecord> {
+    fun getTravelListByTime(paramMap: Map<String, String>): HisTravelModel? {
 
         try {
             val urlStringBuffer = StringBuffer(REST.hisTravel)
@@ -295,13 +276,45 @@ class DataSource {
             val response = call.execute()
             val dataStr = response.body!!.string()
             return if (response.isSuccessful) {
-                GsonUtils.fromJson(dataStr, Array<TravelRecord>::class.java).toMutableList()
+                GsonUtils.fromJson(dataStr, HisTravelModel::class.java)
             } else {
-                ArrayList()
+               null
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
-            return  ArrayList()
+            return  null
+        }
+
+    }
+
+
+    fun getLocationListById(paramMap: Map<String, String>): HisLocationModel? {
+
+        try {
+            val urlStringBuffer = StringBuffer(REST.hisLocation)
+            if (paramMap.keys.isNotEmpty()) {
+                urlStringBuffer.append("?")
+                paramMap.keys.forEach { t ->
+                    urlStringBuffer.append("$t=${paramMap[t]}&")
+                }
+            }
+            val requestBuilder =
+                Request.Builder()
+            requestBuilder.url(urlStringBuffer.toString())
+
+            val request = requestBuilder.get()
+                .build()
+            val call: Call = client.newCall(request)
+            val response = call.execute()
+            val dataStr = response.body!!.string()
+            return if (response.isSuccessful) {
+                GsonUtils.fromJson(dataStr, HisLocationModel::class.java)
+            } else {
+                null
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            return  null
         }
 
     }
