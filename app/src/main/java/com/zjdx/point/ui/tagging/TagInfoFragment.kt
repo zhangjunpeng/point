@@ -36,9 +36,11 @@ class TagInfoFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.recyler.layoutManager = LinearLayoutManager(context)
         binding.recyler.adapter = InfoAdapter(requireContext(), taggingViewModel)
-        taggingViewModel.selectLoaction.observe(this) {
-                startTime = DateUtil.dateFormat.parse(it.creatTime)
-                binding.startTime.text = it.creatTime
+        binding.startTime.setOnClickListener {
+            PopWindowUtil.instance.showTimePicker(requireContext()) { date, view ->
+                startTime = date
+                binding.startTime.text = DateUtil.dateFormat.format(date)
+            }
         }
         binding.endTime.setOnClickListener {
             PopWindowUtil.instance.showTimePicker(requireContext()) { date, view ->
@@ -57,11 +59,11 @@ class TagInfoFragment : BottomSheetDialogFragment() {
                 return@setOnClickListener
             }
             if (startTime == null) {
-                ToastUtils.showLong("请选择在速度轴上选择开始点位")
+                ToastUtils.showLong("请点击选择结束时间")
                 return@setOnClickListener
             }
             if (endTime == null) {
-                ToastUtils.showLong("请选择点击选择结束时间")
+                ToastUtils.showLong("请点击选择结束时间")
                 return@setOnClickListener
 
             }

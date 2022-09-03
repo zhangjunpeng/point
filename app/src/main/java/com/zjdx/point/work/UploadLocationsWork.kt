@@ -223,9 +223,9 @@ class UploadLocationsWork(
             }
         }
         val travelObj = JSONObject()
-        travelObj.put("traveltypes", travelRecord.travelTypes)
-        travelObj.put("traveluser", travelRecord!!.travelUser)
-        travelObj.put("travelid", travelRecord!!.id)
+        travelObj.put("travel_types", travelRecord.travelTypes)
+        travelObj.put("travel_user", travelRecord!!.travelUser)
+        travelObj.put("travel_id", travelRecord!!.id)
         travelObj.put(
             "traveltime",
             travelRecord!!.createTime
@@ -236,7 +236,6 @@ class UploadLocationsWork(
         )
         travelObj.put("start_time",travelRecord.startTime)
         travelObj.put("end_time",travelRecord.endTime)
-
         jsonObject.put("historicalTrack", paramArray)
         jsonObject.put("travelInfo", travelObj)
 
