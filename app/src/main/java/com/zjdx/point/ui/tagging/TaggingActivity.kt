@@ -207,7 +207,7 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         entries.clear()
         for (i in 0 until taggingViewModel.allLication.value!!.size) {
             //test
-            entries.add(Entry(i.toFloat(), (Math.random() * 100).toFloat()))
+            entries.add(Entry(i.toFloat(), taggingViewModel.allLication.value!![i].speed))
 //            entries.add(Entry(i.toFloat(), taggingViewModel.allLication.value!![i].speed))
         }
 

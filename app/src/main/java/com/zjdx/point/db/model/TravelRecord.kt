@@ -27,4 +27,6 @@ data class TravelRecord(
 
     @ColumnInfo(name = "end_time")
     var endTime: Long=0
+
+
 )

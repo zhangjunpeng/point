@@ -36,6 +36,8 @@ interface LocationDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertLocation(location: Location)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertLocationArray(location: ArrayList<Location>)
 
     @Update
     fun updateLocations(locations: List<Location>)

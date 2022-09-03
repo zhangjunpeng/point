@@ -5,7 +5,16 @@ import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
 import com.zjdx.point.config.REST
 import com.zjdx.point.data.bean.*
-import okhttp3.*
+import com.zjdx.point.db.model.Location
+import com.zjdx.point.db.model.TravelRecord
+import com.zjdx.point.utils.DateUtil
+import okhttp3.Call
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
+import java.net.InetSocketAddress
+import java.net.Proxy
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
@@ -13,33 +22,18 @@ import okhttp3.*
 class DataSource {
 
 
-    inner class LoggingInterceptor : Interceptor {
-        override fun intercept(chain: Interceptor.Chain): Response {
-            val request = chain.request()
-            val t1 = System.currentTimeMillis()
+    val client = OkHttpClient.Builder().proxy(
+        Proxy(Proxy.Type.HTTP, InetSocketAddress("192.168.0.164", 9090))
+    ).build()
 
-            val response = chain.proceed(request)
-            val t2 = System.currentTimeMillis()
-
-            val difference = t2 - t1
-//            LogUtils.i("startTime=${t1}\nendtime=${t2}\nfuncationName=${funName}\ndifference=${difference}")
-
-            return response
-        }
-    }
 
     fun login(username: String, password: String): Back<LoginModel> {
         try {
-            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+//            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
             val formBodyBulider = FormBody.Builder()
-            val formBody = formBodyBulider
-                .add("userCode", username)
-                .add("password", password)
-                .build()
-            val request: Request = Request.Builder()
-                .url(REST.login)
-                .post(formBody)
-                .build()
+            val formBody =
+                formBodyBulider.add("userCode", username).add("password", password).build()
+            val request: Request = Request.Builder().url(REST.login).post(formBody).build()
             val call: Call = client.newCall(request)
             val response = call.execute()
             return if (response.isSuccessful) {
@@ -61,18 +55,16 @@ class DataSource {
 
 
     fun logout() {
-        // TODO: revoke authentication
     }
 
 
     fun getAppVersion(): Back<AppVersionModel> {
         try {
-            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
-            val formBodyBulider = FormBody.Builder()
-            val formBody = formBodyBulider.build()
+//            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+
             val request: Request = Request.Builder()
                 .url(REST.appVersion)
-                .post(formBody)
+                .get()
                 .build()
             val call: Call = client.newCall(request)
             val response = call.execute()
@@ -106,7 +98,7 @@ class DataSource {
         maxsalary: String?
     ): Back<SubmitBackModel> {
         try {
-            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+//            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
             val formBodyBulider = FormBody.Builder()
             formBodyBulider
                 .add("usercode", userCode)
@@ -171,7 +163,7 @@ class DataSource {
         maxsalary: String?
     ): Back<SubmitBackModel> {
         try {
-            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+//            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
             val formBodyBulider = FormBody.Builder()
             formBodyBulider
                 .add("id", id)
@@ -229,7 +221,7 @@ class DataSource {
 
     fun getUserInfo(userCode: String): Back<UserInfoModel> {
         try {
-            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+//            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
             val formBodyBulider = FormBody.Builder().add("userCode", userCode)
             val formBody = formBodyBulider.build()
             val request: Request = Request.Builder()
@@ -267,6 +259,181 @@ class DataSource {
         )
         return Back.Error(submitBackModel)
     }
+
+    fun getTravelListByTime(paramMap: Map<String, String>): HisTravelModel? {
+
+        try {
+            val urlStringBuffer = StringBuffer(REST.hisTravel)
+            if (paramMap.keys.isNotEmpty()) {
+                urlStringBuffer.append("?")
+                paramMap.keys.forEach { t ->
+                    urlStringBuffer.append("$t=${paramMap[t]}&")
+                }
+            }
+            val requestBuilder =
+                Request.Builder()
+            requestBuilder.url(urlStringBuffer.toString())
+
+            val request = requestBuilder.get()
+                .build()
+            val call: Call = client.newCall(request)
+            val response = call.execute()
+            val dataStr = response.body!!.string()
+            return if (response.isSuccessful) {
+                val jsonObject = JSONObject(dataStr)
+                val jsonArr = jsonObject.getJSONArray("list")
+                val tempmodel = GsonUtils.fromJson(dataStr, HisTravelModel::class.java)
+
+                val travelRecordList = ArrayList<TravelRecord>()
+                for (index in 0 until jsonArr.length()) {
+                    val jObj = jsonArr.getJSONObject(index)
+                    travelRecordList.add(
+                        TravelRecord(
+                            id = jObj.getString("travel_id"),
+                            createTime = jObj.getString("create_time"),
+                            startTime = DateUtil.dateFormat.parse(jObj.getString("start_time")).time,
+                            endTime = DateUtil.dateFormat.parse(jObj.getString("end_time")).time,
+                            travelTypes = jObj.getString("travel_types"),
+                            travelUser = jObj.getString("travel_user"),
+                            isUpload = 1,
+                        )
+                    )
+                }
+                HisTravelModel(
+                    code = tempmodel.code,
+                    msg = tempmodel.msg,
+                    count = tempmodel.count,
+                    list = travelRecordList
+                )
+
+            } else {
+               null
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            return  null
+        }
+
+    }
+
+
+    fun getLocationListById(paramMap: Map<String, String>): HisLocationModel? {
+
+        try {
+            val urlStringBuffer = StringBuffer(REST.hisLocation)
+            if (paramMap.keys.isNotEmpty()) {
+                urlStringBuffer.append("?")
+                paramMap.keys.forEach { t ->
+                    urlStringBuffer.append("$t=${paramMap[t]}&")
+                }
+            }
+            val requestBuilder =
+                Request.Builder()
+            requestBuilder.url(urlStringBuffer.toString())
+
+            val request = requestBuilder.get()
+                .build()
+            val call: Call = client.newCall(request)
+            val response = call.execute()
+            val dataStr = response.body!!.string()
+            return if (response.isSuccessful) {
+                val jsonObject = JSONObject(dataStr)
+                val jsonArr = jsonObject.getJSONArray("list")
+                val tempmodel = GsonUtils.fromJson(dataStr, HisTravelModel::class.java)
+
+                val travelLocationList = ArrayList<Location>()
+                for (index in 0 until jsonArr.length()) {
+                    val jObj = jsonArr.getJSONObject(index)
+                    travelLocationList.add(
+                        Location(
+                            tId = jObj.getString("travelid"),
+                            isUpload = 1,
+                            lat = when (jObj.getString("latitude") == null) {
+                                true -> 0.0
+                                false -> jObj.getString("latitude").toDouble()
+                            },
+
+                            lng = when (jObj.getString("longitude") == null) {
+                                true -> 0.0
+                                false -> jObj.getString("longitude").toDouble()
+                            },
+
+                            speed = when (jObj.getString("speed") == null) {
+                                true -> 0.0f
+                                false -> jObj.getString("speed").toFloat()
+                            },
+
+
+                            direction = when (jObj.getString("direction") == null) {
+                                true -> ""
+                                false -> jObj.getString("direction")
+                            },
+                            altitude = when (jObj.getString("height") == null) {
+                                true -> 0.0
+                                false -> jObj.getString("height").toDouble()
+                            },
+
+                            accuracy = when (jObj.getString("accuracy") == null) {
+                                true -> 0.0f
+                                false -> jObj.getString("accuracy").toFloat()
+                            },
+
+                            source = when (jObj.getString("source") == null) {
+                                true -> ""
+                                false -> jObj.getString("source")
+                            },
+
+
+                            address = when (jObj.getString("travelposition").toString() ==  "null") {
+                                true -> ""
+                                false -> jObj.getString("travelposition")
+                            },
+                            creatTime = when (jObj.getString("collecttime").toString() ==  "null") {
+                                true -> ""
+                                false -> jObj.getString("collecttime")
+                            },
+
+                            mcc = when (jObj.getString("mcc").toString() == "null") {
+                                true -> 0
+                                false -> jObj.getString("mcc").toInt()
+                            },
+                            mnc = when (jObj.getString("mnc").toString() ==  "null") {
+                                true -> 0
+                                false -> jObj.getString("mnc").toInt()
+                            },
+                            cid = when (jObj.getString("cid").toString() ==  "null") {
+                                true -> 0
+                                false -> jObj.getString("cid").toInt()
+                            },
+                            bsss = when (jObj.getString("bsss").toString() ==  "null") {
+                                true -> 0
+                                false -> jObj.getString("bsss").toInt()
+                            },
+                            lac = when (jObj.getString("lac").toString() ==  "null") {
+                                true -> 0
+                                false -> jObj.getString("lac").toInt()
+                            }
+                        )
+                    )
+                }
+                HisLocationModel(
+                    code = tempmodel.code,
+                    msg = tempmodel.msg,
+                    count = tempmodel.count,
+                    list = travelLocationList
+                )
+            } else {
+                null
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            return  null
+        }
+
+    }
+
+
+
 
 
 }

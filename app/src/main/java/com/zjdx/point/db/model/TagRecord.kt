@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class TagRecord(
-    @PrimaryKey(autoGenerate = true) var id: Int? = null,
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
 
     @ColumnInfo(name = "destination") var destination: String = "",
 

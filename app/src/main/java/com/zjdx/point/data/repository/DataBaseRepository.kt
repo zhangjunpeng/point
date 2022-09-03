@@ -4,6 +4,8 @@ import androidx.annotation.WorkerThread
 import com.zjdx.point.data.DataSource
 import com.zjdx.point.data.bean.AppVersionModel
 import com.zjdx.point.data.bean.Back
+import com.zjdx.point.data.bean.HisLocationModel
+import com.zjdx.point.data.bean.HisTravelModel
 import com.zjdx.point.db.dao.LocationDao
 import com.zjdx.point.db.dao.TagRecordDao
 import com.zjdx.point.db.dao.TravelRecordDao
@@ -91,6 +93,11 @@ class DataBaseRepository(
     }
 
     @WorkerThread
+    fun insertLocationArray(location: ArrayList<Location>){
+        locationDao.insertLocationArray(location)
+    }
+
+    @WorkerThread
     fun findHasNotUpload(): TravelRecord {
         return travelRecordDao.findHasNotUpload()
     }
@@ -149,4 +156,17 @@ class DataBaseRepository(
         return dataSource.getAppVersion()
     }
 
+    @WorkerThread
+    suspend fun getTravelList(paramMap: Map<String, String>): HisTravelModel? {
+        return withContext(Dispatchers.IO) {
+            dataSource.getTravelListByTime(paramMap)
+        }
+    }
+
+    @WorkerThread
+    suspend fun getHisLocationListById(paramMap: Map<String, String>): HisLocationModel? {
+        return withContext(Dispatchers.IO) {
+            dataSource.getLocationListById(paramMap)
+        }
+    }
 }

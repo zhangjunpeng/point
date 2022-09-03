@@ -37,10 +37,8 @@ class TagInfoFragment : BottomSheetDialogFragment() {
         binding.recyler.layoutManager = LinearLayoutManager(context)
         binding.recyler.adapter = InfoAdapter(requireContext(), taggingViewModel)
         taggingViewModel.selectLoaction.observe(this) {
-            PopWindowUtil.instance.showTimePicker(requireContext()) { date, view ->
-                startTime = date
-                binding.startTime.text = DateUtil.dateFormat.format(date)
-            }
+                startTime = DateUtil.dateFormat.parse(it.creatTime)
+                binding.startTime.text = it.creatTime
         }
         binding.endTime.setOnClickListener {
             PopWindowUtil.instance.showTimePicker(requireContext()) { date, view ->
