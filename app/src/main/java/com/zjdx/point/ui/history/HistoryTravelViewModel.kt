@@ -45,8 +45,8 @@ class HistoryTravelViewModel(private val repository: DataBaseRepository) : ViewM
         val userCode = SPUtils.getInstance().getString(NameSpace.UID)
 
         val paramMap = HashMap<String, String>().apply {
-            this["start_time"] = startTime
-            this["end_time"] = endTime
+            this["startTime"] = startTime
+            this["endTime"] = endTime
             this["usercode"] = userCode
             this["limit"] = "100"
             this["page"] = "0"
@@ -94,7 +94,7 @@ class HistoryTravelViewModel(private val repository: DataBaseRepository) : ViewM
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 for (index in 0 until hisRecordLiveData.value!!.size) {
-                    syncIndex.value = index
+                    syncIndex.postValue(index)
                     val model = hisRecordLiveData.value!![index]
                     repository.insertTravelRecord(model)
                     getLocationList(model.id, isFreash = true)

@@ -23,7 +23,7 @@ class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
                 LayoutInflater.from(context).inflate(R.layout.item_add_new_travel, parent, false)
             AddDataViewHolder(view)
         } else {
-            val binding = ItemTagRecylerBinding.inflate(LayoutInflater.from(context))
+            val binding = ItemTagRecylerBinding.inflate(LayoutInflater.from(context),parent,false)
             ViewHolder(binding)
         }
     }
@@ -34,7 +34,7 @@ class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
                 viewModel.addTag.postValue(true)
             }
         } else if (holder is ViewHolder) {
-            val tagRecord = viewModel.notUpTagRecord.value!![position - 1]
+            val tagRecord = viewModel.notUpTagRecord.value!![position ]
             holder.binding.index.text = (position + 1).toString()
 
             val starArr = tagRecord.startTime.split(" ")

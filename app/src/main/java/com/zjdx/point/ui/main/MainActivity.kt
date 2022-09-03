@@ -66,7 +66,7 @@ class MainActivity : BaseActivity() {
         mainViewModel.appVersionModelLiveData.observe(this) {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
             val versionCode = packageInfo.versionCode
-            if (it.list.isEmpty() || versionCode >= it.list[0].version) {
+            if (it.list==null||it.list.isEmpty() || versionCode >= it.list[0].version) {
                 return@observe
             }
             val alertDialog = AlertDialog.Builder(this)

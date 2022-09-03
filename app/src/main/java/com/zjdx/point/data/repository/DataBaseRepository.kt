@@ -158,11 +158,15 @@ class DataBaseRepository(
 
     @WorkerThread
     suspend fun getTravelList(paramMap: Map<String, String>): HisTravelModel? {
-        return  dataSource.getTravelListByTime(paramMap)
+        return withContext(Dispatchers.IO) {
+            dataSource.getTravelListByTime(paramMap)
+        }
     }
 
     @WorkerThread
     suspend fun getHisLocationListById(paramMap: Map<String, String>): HisLocationModel? {
-        return  dataSource.getLocationListById(paramMap)
+        return withContext(Dispatchers.IO) {
+            dataSource.getLocationListById(paramMap)
+        }
     }
 }

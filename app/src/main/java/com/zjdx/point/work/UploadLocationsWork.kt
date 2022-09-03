@@ -23,6 +23,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONArray
 import org.json.JSONObject
+import java.net.InetSocketAddress
+import java.net.Proxy
 import java.util.*
 
 class UploadLocationsWork(
@@ -212,6 +214,11 @@ class UploadLocationsWork(
                 locationObj.put("source", loca.source)
                 locationObj.put("travelposition", loca.address)
                 locationObj.put("collecttime", loca.creatTime)
+                locationObj.put("mcc", loca.mcc)
+                locationObj.put("mnc", loca.mnc)
+                locationObj.put("lac", loca.lac)
+                locationObj.put("cid", loca.cid)
+                locationObj.put("bsss", loca.bsss)
                 paramArray.put(locationObj)
             }
         }
@@ -223,9 +230,15 @@ class UploadLocationsWork(
             "traveltime",
             travelRecord!!.createTime
         )
+        travelObj.put(
+            "create_time",
+            travelRecord!!.createTime
+        )
+        travelObj.put("start_time",travelRecord.startTime)
+        travelObj.put("end_time",travelRecord.endTime)
 
-        jsonObject.put("param", paramArray)
-        jsonObject.put("object", travelObj)
+        jsonObject.put("historicalTrack", paramArray)
+        jsonObject.put("travelInfo", travelObj)
 
         val back = postTravel(jsonObject.toString())
         if (back is Back.Success) {
@@ -237,7 +250,6 @@ class UploadLocationsWork(
         } else if (back is Back.Error) {
             LogUtils.i("上传结果异常：${back.error.msg},结束上传work")
             sendMsgEvent("失败：上传结果异常：${back.error.msg},结束上传")
-
             WorkManager.getInstance(context).cancelWorkById(this.id)
 
         }
@@ -267,7 +279,9 @@ class UploadLocationsWork(
         try {
             val mediaType = "application/json; charset=utf-8".toMediaType()
 
-            val client = OkHttpClient.Builder().build()
+            val client = OkHttpClient.Builder().proxy(
+                Proxy(Proxy.Type.HTTP, InetSocketAddress("192.168.0.164", 9090))
+            ).build()
 
             val requestBody = travelInfo.toRequestBody(mediaType)
 
