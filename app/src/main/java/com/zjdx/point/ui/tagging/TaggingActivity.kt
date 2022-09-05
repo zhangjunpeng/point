@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amap.api.maps2d.AMap
 import com.amap.api.maps2d.CameraUpdateFactory
@@ -122,6 +123,26 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
             }
         }
 
+        binding.cancel.setOnClickListener {
+
+        }
+        binding.save.setOnClickListener { }
+        binding.upload.setOnClickListener {
+            if (taggingViewModel.notUpTagRecord.value!!.size==0){
+                ToastUtils.showLong("请添加标注")
+                return@setOnClickListener
+            }
+            AlertDialog.Builder(this).setMessage("确定上传吗？")
+                .setPositiveButton("确定") { dialog, which ->
+                    dialog.dismiss()
+                    showProgressDialog()
+                    taggingViewModel.startUpload()
+                }.setNegativeButton("取消") { dialog, which ->
+                    dialog.dismiss()
+                }.create().show()
+
+        }
+
     }
 
 
@@ -186,19 +207,20 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         }
         taggingViewModel.addTag.observe(this) {
             if (it) {
-//                val bottom = BottomSheetDialogFragment()
-//                tagInfoBinding = FragmentTagInfoBinding.inflate(layoutInflater)
-//                bottom.(tagInfoBinding!!.root)
-//                bottom.show()
                 supportFragmentManager.beginTransaction().add(R.id.container_recyler, fragment)
                     .commit()
-
-
-//                fragment.show(supportFragmentManager,null)
-
             } else {
                 supportFragmentManager.beginTransaction().hide(fragment)
             }
+        }
+        taggingViewModel.backResult.observe(this){
+            if (it){
+                ToastUtils.showShort("上传成功")
+            }else{
+                ToastUtils.showShort("上传失败")
+            }
+            dismissProgressDialog()
+            taggingViewModel.changeTagRecordIsNotUpload()
         }
     }
 
@@ -206,12 +228,9 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
         entries.clear()
         for (i in 0 until taggingViewModel.allLication.value!!.size) {
-            //test
             entries.add(Entry(i.toFloat(), taggingViewModel.allLication.value!![i].speed))
-//            entries.add(Entry(i.toFloat(), taggingViewModel.allLication.value!![i].speed))
         }
 
-//        Collections.sort(entries, EntryXComparator())
 
         val set1 = LineDataSet(entries, "速度")
         set1.lineWidth = 1.5f

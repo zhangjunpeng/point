@@ -21,7 +21,7 @@ data class TagRecord(
 
     @ColumnInfo(name = "end_type") var endType: String = "",
 
-    @ColumnInfo(name = "travel_model") var travelodel: String = "",
+    @ColumnInfo(name = "travel_model") var travelmodel: String = "",
 
     @ColumnInfo(name = "isupload", defaultValue = "0") var isupload: Int = 0,
 

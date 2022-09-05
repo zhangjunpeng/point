@@ -212,6 +212,7 @@ class UploadLocationsWork(
                 locationObj.put("height", loca.altitude)
                 locationObj.put("accuracy", loca.accuracy)
                 locationObj.put("source", loca.source)
+                locationObj.put("travelid", loca.tId)
                 locationObj.put("travelposition", loca.address)
                 locationObj.put("collecttime", loca.creatTime)
                 locationObj.put("mcc", loca.mcc)
@@ -223,19 +224,17 @@ class UploadLocationsWork(
             }
         }
         val travelObj = JSONObject()
-        travelObj.put("travel_types", travelRecord.travelTypes)
-        travelObj.put("travel_user", travelRecord!!.travelUser)
-        travelObj.put("travel_id", travelRecord!!.id)
+        travelObj.put("traveltypes", travelRecord.travelTypes)
+        travelObj.put("traveluser", travelRecord!!.travelUser)
+        travelObj.put("travelid", travelRecord!!.id)
         travelObj.put(
             "traveltime",
             travelRecord!!.createTime
         )
         travelObj.put(
-            "create_time",
+            "createtime",
             travelRecord!!.createTime
         )
-        travelObj.put("start_time",travelRecord.startTime)
-        travelObj.put("end_time",travelRecord.endTime)
         jsonObject.put("historicalTrack", paramArray)
         jsonObject.put("travelInfo", travelObj)
 

@@ -122,6 +122,8 @@ class DataBaseRepository(
         travelRecordDao.updateTravelRecrod(travelRecord)
     }
 
+
+
     @WorkerThread
     fun getLocationsHasNotUpload(tid: String): MutableList<Location> {
         return locationDao.queryListHasNotUploadByTid(tid).toMutableList()
@@ -152,6 +154,11 @@ class DataBaseRepository(
         return tagRecordDao.insertTagRecord(tagRecord)
     }
 
+    @WorkerThread
+    fun updateTags(tagRecords: List<TagRecord>) {
+        tagRecordDao.updateTagRecord(tagRecords)
+    }
+
     suspend fun getAppVersion(): Back<AppVersionModel> {
         return dataSource.getAppVersion()
     }
@@ -168,5 +175,10 @@ class DataBaseRepository(
         return withContext(Dispatchers.IO) {
             dataSource.getLocationListById(paramMap)
         }
+    }
+
+    @WorkerThread
+    fun uploadTagInfo(data: String): Back<Boolean> {
+       return dataSource.uploadTagInfo(data)
     }
 }

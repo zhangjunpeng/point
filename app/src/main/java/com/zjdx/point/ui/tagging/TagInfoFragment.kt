@@ -86,7 +86,7 @@ class TagInfoFragment : BottomSheetDialogFragment() {
                 endTime = DateUtil.dateFormat.format(endTime),
                 startType = binding.startType.text.toString(),
                 endType = binding.endType.text.toString(),
-                travelodel = taggingViewModel.tarvelModelList.joinToString(separator = ","),
+                travelmodel = taggingViewModel.tarvelModelList.joinToString(separator = ","),
                 destination = binding.dis.text.toString(),
                 desc = binding.desc.text.toString(),
                 )

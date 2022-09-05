@@ -12,9 +12,11 @@ import okhttp3.Call
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.net.InetSocketAddress
 import java.net.Proxy
+
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
@@ -427,13 +429,40 @@ class DataSource {
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
-            return  null
+            return null
         }
 
     }
 
+    fun uploadTagInfo(
+        data: String
+    ): Back<Boolean> {
+        try {
+            val request: Request = Request.Builder().url(REST.addTag).post(data.toRequestBody())
+                .addHeader("content-type", "application/json").build()
+            val call: Call = client.newCall(request)
+            val response = call.execute()
+//            val type = Types.newParameterizedType( AppVersionModel::class.java,List::class.java,AppVersion::class.java)
+            return if (response.isSuccessful) {
+                val jsonObject=JSONObject(response.body!!.string())
+                if (jsonObject.getInt("code")==0){
+                    Back.Success(true)
+                }else{
+                    Back.Success(false)
+                }
+            } else {
+                Back.Error(
+                    GsonUtils.fromJson(
+                        response.body!!.string(), SubmitBackModel::class.java
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return getErrorSubmitBack(e)
+        }
 
-
+    }
 
 
 }
