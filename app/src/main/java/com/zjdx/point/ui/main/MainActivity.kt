@@ -1,16 +1,14 @@
 package com.zjdx.point.ui.main
 
-import android.Manifest
 import android.content.Intent
 import android.text.Html
 import android.view.Gravity
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.work.*
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityMainBinding
@@ -18,7 +16,6 @@ import com.zjdx.point.event.UpdateMsgEvent
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.edit.EditUserInfoActivity
 import com.zjdx.point.ui.history.HistoryTravelActivity
-import com.zjdx.point.ui.login.LoginActivity
 import com.zjdx.point.ui.setting.SettingActivity
 import com.zjdx.point.ui.tagging.HisTagActivity
 import com.zjdx.point.ui.tagging.TaggingActivity
@@ -27,13 +24,9 @@ import com.zjdx.point.ui.viewmodel.ViewModelFactory
 import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.DownloadUtils
 import com.zjdx.point.work.PointWorkManager
-import kotlinx.coroutines.launch
-import okhttp3.internal.format
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import permissions.dispatcher.NeedsPermission
-import permissions.dispatcher.RuntimePermissions
 import java.util.*
 
 
@@ -70,13 +63,11 @@ class MainActivity : BaseActivity() {
             if (it.list==null||it.list.isEmpty() || versionCode >= it.list[0].version) {
                 return@observe
             }
-            val alertDialog = AlertDialog.Builder(this)
-                .setMessage("发现新版本，请更新！")
+            val alertDialog = AlertDialog.Builder(this).setMessage("发现新版本，请更新！")
                 .setPositiveButton("下载") { dialog, which ->
                     dialog.dismiss()
                     DownloadUtils(this, it, "point.apk")
-                }
-                .create()
+                }.create()
             alertDialog.show()
         }
         binding.recyclerMain.layoutManager = LinearLayoutManager(this)
@@ -85,6 +76,14 @@ class MainActivity : BaseActivity() {
 //        mainViewModel.uploadMsgLiveData.observe(this, {
 //            binding.recyclerMain.adapter!!.notifyDataSetChanged()
 //        })
+        mainViewModel.sysUserLiveData.observe(this) {
+            if (it.address.isNullOrEmpty() || it.salary.isNullOrEmpty() || it.hasCar == null || it.hasBicycle == null || it.hasVehicle == null || it.telphone.isNullOrEmpty()) {
+                finish()
+                val intent=Intent(this, EditUserInfoActivity::class.java)
+                intent.putExtra("isEidit",true)
+                startActivity(intent)
+            }
+        }
     }
 
     private fun updateMainInfo() {
@@ -96,6 +95,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initData() {
+        mainViewModel.getUserInfo()
 
         if (!SPUtils.getInstance().getBoolean(NameSpace.ISRECORDING)) {
             mainViewModel.findTravelNum()

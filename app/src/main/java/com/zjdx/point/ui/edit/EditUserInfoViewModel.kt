@@ -9,17 +9,21 @@ import com.zjdx.point.NameSpace
 import com.zjdx.point.data.bean.Back
 import com.zjdx.point.data.bean.SubmitBackModel
 import com.zjdx.point.data.bean.SysUser
-import com.zjdx.point.data.repository.EditRepository
-import com.zjdx.point.ui.base.BaseListViewModel
-import com.zjdx.point.ui.history.HistoryLocationViewModel
-import com.zjdx.point.ui.history.HistoryTravelViewModel
-import com.zjdx.point.ui.main.MainViewModel
+import com.zjdx.point.data.repository.DataBaseRepository
 import kotlinx.coroutines.launch
 
-class EditUserInfoViewModel(val repository: EditRepository) : ViewModel() {
+class EditUserInfoViewModel(val repository: DataBaseRepository) : ViewModel() {
 
     val sysUserLiveData = MutableLiveData<SysUser>()
     val errorBack = MutableLiveData<SubmitBackModel>()
+
+
+    val ageList=arrayListOf( "0-17","18-35","36-60","60以上")
+    val salaryList= arrayListOf( "0-2000","2000-5000","5000-10000","10000-")
+    val hasCarList= arrayListOf("是","否")
+    val hasVeList= arrayListOf("是","否")
+    val hasBicList= arrayListOf("是","否")
+
 
     fun getUserInfo() {
         viewModelScope.launch {
@@ -70,13 +74,3 @@ class EditUserInfoViewModel(val repository: EditRepository) : ViewModel() {
 
 }
 
-class EditUserInfoViewModelFactory(val repository: EditRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(EditUserInfoViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return EditUserInfoViewModel(repository) as T
-        }
-
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}

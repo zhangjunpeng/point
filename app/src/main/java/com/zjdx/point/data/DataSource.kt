@@ -224,12 +224,18 @@ class DataSource {
     fun getUserInfo(userCode: String): Back<UserInfoModel> {
         try {
 //            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
-            val formBodyBulider = FormBody.Builder().add("userCode", userCode)
-            val formBody = formBodyBulider.build()
-            val request: Request = Request.Builder()
-                .url(REST.userInfo)
-                .post(formBody)
+
+            val urlStringBuffer = StringBuffer(REST.userInfo)
+            urlStringBuffer.append("?")
+            urlStringBuffer.append("userCode=$userCode")
+
+            val requestBuilder =
+                Request.Builder()
+            requestBuilder.url(urlStringBuffer.toString())
+
+            val request = requestBuilder.get()
                 .build()
+
             val call: Call = client.newCall(request)
             val response = call.execute()
 //            val type = Types.newParameterizedType( AppVersionModel::class.java,List::class.java,AppVersion::class.java)

@@ -8,10 +8,12 @@ import androidx.activity.viewModels
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.zjdx.point.NameSpace
+import com.zjdx.point.PointApplication
 import com.zjdx.point.R
-import com.zjdx.point.data.repository.EditRepository
+import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.databinding.ActivityRegisterBinding
 import com.zjdx.point.ui.base.BaseActivity
+import com.zjdx.point.ui.viewmodel.ViewModelFactory
 
 class EditUserInfoActivity : BaseActivity() {
     lateinit var binding: ActivityRegisterBinding
@@ -19,12 +21,17 @@ class EditUserInfoActivity : BaseActivity() {
     var id: Int? = null
 
     val editUserInfoViewModel by viewModels<EditUserInfoViewModel> {
-        EditUserInfoViewModelFactory(EditRepository())
+        ViewModelFactory((application as PointApplication).travelRepository)
     }
 
     override fun initRootView() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if (intent.getBooleanExtra("isEidit",false)){
+            ToastUtils.showLong("请完善信息！")
+        }
+
 
     }
 
@@ -74,22 +81,21 @@ class EditUserInfoActivity : BaseActivity() {
     }
 
     override fun initViewMoedl() {
-        editUserInfoViewModel.sysUserLiveData.observe(this, { user ->
+        editUserInfoViewModel.sysUserLiveData.observe(this) { user ->
             dismissProgressDialog()
             id = user.id
-
             user!!.address?.let {
                 binding.addressRegisterAc.setText(it)
             }
             user.age.let {
                 binding.ageRegisterAc.setText(it.toString())
             }
-            user.maxsalary?.let {
-                binding.maxsalaryRegisterAc.setText(it)
-            }
-            user.minsalary?.let {
-                binding.minsalaryRegisterAc.setText(it)
-            }
+//            user.maxsalary?.let {
+//                binding.maxsalaryRegisterAc.setText(it)
+//            }
+//            user.minsalary?.let {
+//                binding.minsalaryRegisterAc.setText(it)
+//            }
             user.telphone?.let {
                 binding.telphoneRegisterAc.setText(it)
             }
@@ -108,8 +114,8 @@ class EditUserInfoActivity : BaseActivity() {
                 }
             }
 
-        })
-        editUserInfoViewModel.errorBack.observe(this, {
+        }
+        editUserInfoViewModel.errorBack.observe(this) {
             dismissProgressDialog()
             if (it.code == 0) {
                 ToastUtils.showLong("修改成功")
@@ -117,7 +123,7 @@ class EditUserInfoActivity : BaseActivity() {
             } else {
                 ToastUtils.showLong(it.msg)
             }
-        })
+        }
     }
 
     override fun initData() {

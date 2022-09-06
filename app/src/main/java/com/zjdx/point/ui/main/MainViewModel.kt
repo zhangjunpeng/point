@@ -4,9 +4,12 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.blankj.utilcode.util.SPUtils
+import com.zjdx.point.NameSpace
 import com.zjdx.point.data.bean.AppVersionModel
 import com.zjdx.point.data.bean.Back
 import com.zjdx.point.data.bean.SubmitBackModel
+import com.zjdx.point.data.bean.SysUser
 import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.event.UpdateMsgEvent
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +47,22 @@ class MainViewModel(val repository: DataBaseRepository) : ViewModel() {
                 } else if (back is Back.Error) {
                     submitBackModelLiveData.postValue(back.error)
                 }
+            }
+        }
+    }
+
+
+    val sysUserLiveData = MutableLiveData<SysUser>()
+    val errorBack = MutableLiveData<SubmitBackModel>()
+
+    fun getUserInfo() {
+        viewModelScope.launch {
+            val userCode = SPUtils.getInstance().getString(NameSpace.UID)
+            val back = repository.getUserInfo(userCode)
+            if (back is Back.Success) {
+                sysUserLiveData.postValue(back.data.list)
+            } else if (back is Back.Error) {
+                errorBack.postValue(back.error)
             }
         }
     }

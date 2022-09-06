@@ -2,10 +2,7 @@ package com.zjdx.point.data.repository
 
 import androidx.annotation.WorkerThread
 import com.zjdx.point.data.DataSource
-import com.zjdx.point.data.bean.AppVersionModel
-import com.zjdx.point.data.bean.Back
-import com.zjdx.point.data.bean.HisLocationModel
-import com.zjdx.point.data.bean.HisTravelModel
+import com.zjdx.point.data.bean.*
 import com.zjdx.point.db.dao.LocationDao
 import com.zjdx.point.db.dao.TagRecordDao
 import com.zjdx.point.db.dao.TravelRecordDao
@@ -189,5 +186,40 @@ class DataBaseRepository(
     @WorkerThread
     fun uploadTagInfo(data: String): Back<Boolean> {
        return dataSource.uploadTagInfo(data)
+    }
+
+
+    suspend fun getUserInfo(userCode: String): Back<UserInfoModel> {
+        return withContext(Dispatchers.IO) {
+            dataSource.getUserInfo(userCode)
+        }
+    }
+
+    suspend fun editUserInfo(
+        id: String,
+        userCode: String,
+        userName: String?,
+        telphone: String?,
+        note: String?,
+        sex: Int?,
+        age: String?,
+        address: String?,
+        minsalary: String?,
+        maxsalary: String?
+    ): Back<SubmitBackModel> {
+        return withContext(Dispatchers.IO) {
+            dataSource.editUserInfo(
+                id,
+                userCode,
+                userName,
+                telphone,
+                note,
+                sex,
+                age,
+                address,
+                minsalary,
+                maxsalary
+            )
+        }
     }
 }

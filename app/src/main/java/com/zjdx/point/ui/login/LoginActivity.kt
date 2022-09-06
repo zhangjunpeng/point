@@ -82,7 +82,6 @@ class LoginActivity : BaseActivity() {
 
                 SPUtils.getInstance().put(NameSpace.ISLOGIN, true)
                 SPUtils.getInstance().put(NameSpace.UID, it.sysUser.usercode)
-
                 //Complete and destroy login activity once successful
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()

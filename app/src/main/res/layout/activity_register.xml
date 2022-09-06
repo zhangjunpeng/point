@@ -181,7 +181,7 @@
                 android:gravity="right|center_vertical"
                 android:text="年龄："
                 />
-            <EditText
+            <Spinner
                 android:id="@+id/age_register_ac"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -222,9 +222,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="right|center_vertical"
-                android:text="最低收入："
+                android:text="收入区间："
                 />
-            <EditText
+            <Spinner
                 android:id="@+id/minsalary_register_ac"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -243,10 +243,52 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="right|center_vertical"
-                android:text="最高收入："
+                android:text="是否拥有小汽车："
                 />
-            <EditText
-                android:id="@+id/maxsalary_register_ac"
+            <Spinner
+                android:id="@+id/have_car_register_ac"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/border_edit"
+                android:layout_margin="5dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:text="是否拥有电动车："
+                />
+            <Spinner
+                android:id="@+id/have_ve_register_ac"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/border_edit"
+                android:layout_margin="5dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:text="是否拥有自行车："
+                />
+            <Spinner
+                android:id="@+id/have_bic_register_ac"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

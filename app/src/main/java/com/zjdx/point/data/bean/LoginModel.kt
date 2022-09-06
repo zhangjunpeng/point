@@ -15,13 +15,18 @@ data class SysUser(
     val age: Int,
     val createtime: String,
     val id: Int,
-    var maxsalary: String?,
-    var minsalary: String?,
+
     var note: String?,
     val password: String,
     var sex: String?,
     var telphone: String?,
     val usercode: String,
-    var username: String?
-)
+    var username: String?,
+    var salary: String?,
+    var hasCar: Boolean?,
+    var hasVehicle: Boolean?,
+    var hasBicycle: Boolean?,
+
+
+    )
 
