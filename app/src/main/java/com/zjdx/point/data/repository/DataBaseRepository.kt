@@ -150,6 +150,15 @@ class DataBaseRepository(
     }
 
     @WorkerThread
+    fun getUpload(): MutableList<TagRecord> {
+        return tagRecordDao.queryAllTagtHasUpload().toMutableList()
+    }
+
+    @WorkerThread
+    fun getUploadByTime(startTime: String,endTime: String): MutableList<TagRecord> {
+        return tagRecordDao.queryAllTagtHasUploadbyTime(startTime,endTime).toMutableList()
+    }
+    @WorkerThread
     fun insertTag(tagRecord: TagRecord) {
         return tagRecordDao.insertTagRecord(tagRecord)
     }

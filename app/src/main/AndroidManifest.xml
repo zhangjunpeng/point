@@ -26,14 +26,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Point">
-
+        <activity
+            android:name=".ui.tagging.HisDeatailActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.tagging.HisTagActivity"
+            android:exported="false"
+            android:label="@string/title_activity_his_tag"
+            android:theme="@style/Theme.Point"></activity>
         <activity
             android:name=".ui.tagging.TaggingActivity"
             android:exported="true"
             android:label="@string/title_activity_tagging"
-            android:theme="@style/Theme.Point">
-
-        </activity>
+            android:theme="@style/Theme.Point" />
         <activity
             android:name=".ui.setting.SettingActivity"
             android:exported="true" />
@@ -59,6 +68,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

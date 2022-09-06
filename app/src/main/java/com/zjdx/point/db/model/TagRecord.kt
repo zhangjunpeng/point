@@ -25,5 +25,6 @@ data class TagRecord(
 
     @ColumnInfo(name = "isupload", defaultValue = "0") var isupload: Int = 0,
 
+    @ColumnInfo(name = "upload_date", defaultValue = "0") var uploadDate: String = "",
 
     )

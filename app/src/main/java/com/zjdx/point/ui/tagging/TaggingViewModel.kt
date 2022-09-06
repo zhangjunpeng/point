@@ -38,10 +38,7 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
     }
 
 
-    val backResult = MutableLiveData<Boolean>().apply {
-        this.value = false
-    }
-
+    val backResult = MutableLiveData<Boolean>()
     fun getLocationsByTime() {
         viewModelScope.launch {
             allLication.value = repository.getLocationListByTime(
@@ -102,6 +99,7 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
             withContext(Dispatchers.IO){
                 notUpTagRecord.value!!.forEach {
                     it.isupload=1
+                    it.uploadDate=DateUtil.dayFormat.format(Date())
                 }
                 repository.updateTags(notUpTagRecord.value!!)
                 getTagRecordIsNotUpload()

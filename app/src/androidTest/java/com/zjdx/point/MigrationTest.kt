@@ -74,4 +74,19 @@ class MigrationTest {
         // MigrationTestHelper automatically verifies the schema changes,
         // but you need to validate that the data was migrated properly.
     }
+
+    @Test
+    @Throws(IOException::class)
+    fun migrate5To6() {
+        var db = helper().createDatabase(TEST_DB, 5).apply {
+            close()
+        }
+
+        // Re-open the database with version 2 and provide
+        // MIGRATION_1_2 as the migration process.
+        db = helper().runMigrationsAndValidate(TEST_DB, 5, true, MyDataBase.MIGRATION_5_6)
+
+        // MigrationTestHelper automatically verifies the schema changes,
+        // but you need to validate that the data was migrated properly.
+    }
 }

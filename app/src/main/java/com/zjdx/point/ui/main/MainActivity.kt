@@ -20,6 +20,7 @@ import com.zjdx.point.ui.edit.EditUserInfoActivity
 import com.zjdx.point.ui.history.HistoryTravelActivity
 import com.zjdx.point.ui.login.LoginActivity
 import com.zjdx.point.ui.setting.SettingActivity
+import com.zjdx.point.ui.tagging.HisTagActivity
 import com.zjdx.point.ui.tagging.TaggingActivity
 import com.zjdx.point.ui.travel.TravelActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
@@ -159,6 +160,9 @@ class MainActivity : BaseActivity() {
         }
         binding.historyMainAc.setOnClickListener {
             startActivity(Intent(this, HistoryTravelActivity::class.java))
+        }
+        binding.historyTgMainAc.setOnClickListener {
+            startActivity(Intent(this, HisTagActivity::class.java))
         }
         binding.leftIvMainAc.setOnClickListener {
             binding.root.openDrawer(Gravity.LEFT)

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.ui.base.BaseListViewModel
+import com.zjdx.point.ui.tagging.HisTagViewModel
 import com.zjdx.point.ui.history.HistoryLocationViewModel
 import com.zjdx.point.ui.history.HistoryTravelViewModel
 import com.zjdx.point.ui.main.MainViewModel
@@ -27,8 +28,10 @@ class ViewModelFactory(private val repository: DataBaseRepository) :
             @Suppress("UNCHECKED_CAST")
             return BaseListViewModel() as T
         }
-
-
+        if (modelClass.isAssignableFrom(HisTagViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return HisTagViewModel(repository) as T
+        }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
