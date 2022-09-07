@@ -24,9 +24,7 @@ import java.net.Proxy
 class DataSource {
 
 
-    val client = OkHttpClient.Builder().proxy(
-        Proxy(Proxy.Type.HTTP, InetSocketAddress("192.168.0.164", 9090))
-    ).build()
+    val client = OkHttpClient.Builder().build()
 
 
     fun login(username: String, password: String): Back<LoginModel> {
