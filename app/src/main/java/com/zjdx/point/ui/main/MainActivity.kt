@@ -78,10 +78,10 @@ class MainActivity : BaseActivity() {
 //        })
         mainViewModel.sysUserLiveData.observe(this) {
             if (it.address.isNullOrEmpty() || it.salary.isNullOrEmpty() || it.hasCar == null || it.hasBicycle == null || it.hasVehicle == null || it.telphone.isNullOrEmpty()) {
-//                finish()
-//                val intent=Intent(this, EditUserInfoActivity::class.java)
-//                intent.putExtra("isEidit",true)
-//                startActivity(intent)
+                finish()
+                val intent=Intent(this, EditUserInfoActivity::class.java)
+                intent.putExtra("isEidit",true)
+                startActivity(intent)
             }
         }
     }

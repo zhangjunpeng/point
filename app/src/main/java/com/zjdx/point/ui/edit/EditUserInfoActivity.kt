@@ -1,6 +1,7 @@
 package com.zjdx.point.ui.edit
 
 import android.R
+import android.content.Intent
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
@@ -10,12 +11,15 @@ import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityRegisterBinding
 import com.zjdx.point.ui.base.BaseActivity
+import com.zjdx.point.ui.main.MainActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
 
 class EditUserInfoActivity : BaseActivity() {
     lateinit var binding: ActivityRegisterBinding
 
     var id: Int? = null
+
+    var isFouce = false
 
     val editUserInfoViewModel by viewModels<EditUserInfoViewModel> {
         ViewModelFactory((application as PointApplication).travelRepository)
@@ -24,8 +28,8 @@ class EditUserInfoActivity : BaseActivity() {
     override fun initRootView() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        if (intent.getBooleanExtra("isEidit",false)){
+        isFouce = intent.getBooleanExtra("isEidit", false)
+        if (isFouce) {
             ToastUtils.showLong("请完善信息！")
         }
 
@@ -176,6 +180,10 @@ class EditUserInfoActivity : BaseActivity() {
             if (it.code == 0) {
                 ToastUtils.showLong("修改成功")
                 finish()
+                if (isFouce) {
+                    startActivity(Intent(this, MainActivity::class.java))
+                }
+
             } else {
                 ToastUtils.showLong(it.msg)
             }
