@@ -50,27 +50,35 @@ class HistoryTravelActivity : BaseActivity() {
 
         historyTravelViewModel.hisRecordLiveData.observe(this){
             dismissProgressDialog()
-            if (it.isEmpty()){
-                syncDialogBinding?.info?.text="选择的时间段内没有出行记录"
-                syncDialogBinding?.syncInfo?.visibility=View.GONE
+            if (it.isEmpty()) {
+                syncDialogBinding?.info?.text = "选择的时间段内没有出行记录"
+                syncDialogBinding?.syncInfo?.visibility = View.GONE
 
-            }else{
-                syncDialogBinding?.info?.text="查询到${it.size}条数据，开始同步："
-                syncDialogBinding?.syncInfo?.visibility=View.VISIBLE
+            } else {
+                syncDialogBinding?.info?.text = "查询到${it.size}条数据，开始同步："
+                syncDialogBinding?.syncInfo?.visibility = View.VISIBLE
                 historyTravelViewModel.startSync()
             }
         }
-        historyTravelViewModel.syncIndex.observe(this){
-            if (it==-1){
-                syncDialogBinding?.syncInfo?.visibility=View.GONE
+        historyTravelViewModel.syncIndex.observe(this) {
+            if (it == -1) {
+                syncDialogBinding?.syncInfo?.visibility = View.GONE
                 return@observe
             }
-            syncDialogBinding?.syncInfo?.visibility=View.VISIBLE
-            syncDialogBinding?.syncInfo?.text="正在同步第${it+1}条记录："
+            syncDialogBinding?.syncInfo?.visibility = View.VISIBLE
+            syncDialogBinding?.syncInfo?.text = "正在同步第${it + 1}条记录："
         }
-        historyTravelViewModel.syncLocationCount.observe(this){
-            if (it>0){
-                syncDialogBinding?.syncLocationInfo?.text="已同步${it}条点位记录"
+        historyTravelViewModel.syncLocationCount.observe(this) {
+            if (it > 0) {
+                syncDialogBinding?.syncLocationInfo?.visibility = View.VISIBLE
+                syncDialogBinding?.syncLocationInfo?.text = "已同步${it}条点位记录"
+            }
+        }
+        historyTravelViewModel.syncComplete.observe(this) {
+            if (it) {
+                syncDialog?.dismiss()
+                ToastUtils.showLong("同步完成")
+                refeashData()
             }
         }
     }

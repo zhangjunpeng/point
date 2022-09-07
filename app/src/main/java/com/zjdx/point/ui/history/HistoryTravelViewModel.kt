@@ -35,6 +35,8 @@ class HistoryTravelViewModel(private val repository: DataBaseRepository) : ViewM
         this.value = 0
     }
 
+    val syncComplete=MutableLiveData<Boolean>()
+
     fun getAllTravelRecord(uid: String, startTime: Long, endTime: Long) {
         viewModelScope.launch {
             allRecordLiveData.value = repository.getAll(uid, startTime, endTime)
@@ -84,6 +86,8 @@ class HistoryTravelViewModel(private val repository: DataBaseRepository) : ViewM
                 repository.insertLocationArray(hisLocationLiveData.value!!)
                 getLocationList(travleId)
                 syncLocationCount.postValue(syncLocationCount.value!! + tempModel.list.size)
+            }else{
+                syncComplete.postValue(true)
             }
 
         }

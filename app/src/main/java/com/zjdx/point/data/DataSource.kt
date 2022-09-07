@@ -321,12 +321,12 @@ class DataSource {
                     val jObj = jsonArr.getJSONObject(index)
                     travelRecordList.add(
                         TravelRecord(
-                            id = jObj.getString("travel_id"),
-                            createTime = jObj.getString("create_time"),
-                            startTime = DateUtil.dateFormat.parse(jObj.getString("start_time")).time,
-                            endTime = DateUtil.dateFormat.parse(jObj.getString("end_time")).time,
-                            travelTypes = jObj.getString("travel_types"),
-                            travelUser = jObj.getString("travel_user"),
+                            id = jObj.getString("travelid"),
+                            createTime = jObj.getString("traveltime"),
+                            startTime = DateUtil.dateFormat.parse(jObj.getString("traveltime")).time,
+                            endTime = 0,
+                            travelTypes = jObj.getString("traveltypes"),
+                            travelUser = jObj.getString("traveluser"),
                             isUpload = 1,
                         )
                     )
