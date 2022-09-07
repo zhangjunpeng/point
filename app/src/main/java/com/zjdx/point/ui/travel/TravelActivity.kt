@@ -397,7 +397,7 @@ class TravelActivity : BaseActivity() {
         //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
         mLocationOption.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
         //设置定位间隔,单位毫秒,默认为2000ms，最低1000ms
-        mLocationOption.interval = 1000
+        mLocationOption.interval = 5000
 
         //设置是否返回地址信息（默认返回地址信息）
         mLocationOption.isNeedAddress = true
