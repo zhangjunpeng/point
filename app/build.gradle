@@ -38,7 +38,7 @@ android {
 
         ndk {
             // 设置支持的SO库架构
-            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            abiFilters 'armeabi',  'armeabi-v7a',  'arm64-v8a'
         }
         vectorDrawables {
             useSupportLibrary true
@@ -109,7 +109,6 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.4.0'
     implementation project(path: ':wheelview')
     implementation project(path: ':pickerview')
-    implementation 'com.tencent.bugly:crashreport_upgrade:1.5.23'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation "androidx.compose.ui:ui:1.2.1"
     implementation "androidx.compose.ui:ui-tooling-preview:1.2.1"
@@ -181,7 +180,7 @@ dependencies {
 
     implementation 'com.blankj:utilcodex:1.31.0'
 
-
+    implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
 
 }
 

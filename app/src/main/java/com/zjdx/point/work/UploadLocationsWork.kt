@@ -277,9 +277,7 @@ class UploadLocationsWork(
         try {
             val mediaType = "application/json; charset=utf-8".toMediaType()
 
-            val client = OkHttpClient.Builder().proxy(
-                Proxy(Proxy.Type.HTTP, InetSocketAddress("192.168.0.164", 9090))
-            ).build()
+            val client = OkHttpClient.Builder().build()
 
             val requestBody = travelInfo.toRequestBody(mediaType)
 

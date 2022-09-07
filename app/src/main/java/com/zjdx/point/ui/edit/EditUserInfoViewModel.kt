@@ -19,7 +19,7 @@ class EditUserInfoViewModel(val repository: DataBaseRepository) : ViewModel() {
 
 
     val ageList=arrayListOf( "0-17","18-35","36-60","60以上")
-    val salaryList= arrayListOf( "0-2000","2000-5000","5000-10000","10000-")
+    val salaryList= arrayListOf( "0-2000","2000-5000","5000-10000","10000+")
     val hasCarList= arrayListOf("是","否")
     val hasVeList= arrayListOf("是","否")
     val hasBicList= arrayListOf("是","否")
@@ -46,8 +46,10 @@ class EditUserInfoViewModel(val repository: DataBaseRepository) : ViewModel() {
         sex: Int?,
         age: String?,
         address: String?,
-        minsalary: String?,
-        maxsalary: String?
+        salary: String?,
+        hasBicycle: Boolean ,
+        hasCar: Boolean ,
+        hasVehicle: Boolean,
     ) {
         viewModelScope.launch {
             val result = repository.editUserInfo(
@@ -59,8 +61,9 @@ class EditUserInfoViewModel(val repository: DataBaseRepository) : ViewModel() {
                 sex,
                 age,
                 address,
-                minsalary,
-                maxsalary
+                salary,
+                hasBicycle, hasCar, hasVehicle
+
             )
             if (result is Back.Success) {
                 errorBack.postValue(result.data)

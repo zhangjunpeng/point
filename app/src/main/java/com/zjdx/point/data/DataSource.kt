@@ -24,9 +24,7 @@ import java.net.Proxy
 class DataSource {
 
 
-    val client = OkHttpClient.Builder().proxy(
-        Proxy(Proxy.Type.HTTP, InetSocketAddress("192.168.0.164", 9090))
-    ).build()
+    val client = OkHttpClient.Builder().build()
 
 
     fun login(username: String, password: String): Back<LoginModel> {
@@ -96,8 +94,10 @@ class DataSource {
         sex: Int?,
         age: String?,
         address: String?,
-        minsalary: String?,
-        maxsalary: String?
+        salary: String?,
+        hasBicycle: Boolean ,
+        hasCar: Boolean ,
+        hasVehicle: Boolean,
     ): Back<SubmitBackModel> {
         try {
 //            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
@@ -123,11 +123,23 @@ class DataSource {
             if (address != null && address.isNotEmpty()) {
                 formBodyBulider.add("address", address)
             }
-            if (minsalary != null && minsalary.isNotEmpty()) {
-                formBodyBulider.add("minsalary", minsalary)
+            if (salary != null && salary.isNotEmpty()) {
+                formBodyBulider.add("salary", salary)
             }
-            if (maxsalary != null && maxsalary.isNotEmpty()) {
-                formBodyBulider.add("maxsalary", maxsalary)
+            if (hasBicycle) {
+                formBodyBulider.add("has_bicycle", "1")
+            } else {
+                formBodyBulider.add("has_bicycle", "0")
+            }
+            if (hasCar) {
+                formBodyBulider.add("has_car", "1")
+            } else {
+                formBodyBulider.add("has_car", "0")
+            }
+            if (hasVehicle) {
+                formBodyBulider.add("has_vehicle", "1")
+            } else {
+                formBodyBulider.add("has_vehicle", "0")
             }
             val request: Request = Request.Builder()
                 .url(REST.register)
@@ -161,8 +173,10 @@ class DataSource {
         sex: Int?,
         age: String?,
         address: String?,
-        minsalary: String?,
-        maxsalary: String?
+        salary: String?,
+        hasBicycle: Boolean ,
+        hasCar: Boolean ,
+        hasVehicle: Boolean,
     ): Back<SubmitBackModel> {
         try {
 //            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
@@ -188,24 +202,33 @@ class DataSource {
             if (address != null && address.isNotEmpty()) {
                 formBodyBulider.add("address", address)
             }
-            if (minsalary != null && minsalary.isNotEmpty()) {
-                formBodyBulider.add("minsalary", minsalary)
+            if (salary != null && salary.isNotEmpty()) {
+                formBodyBulider.add("salary", salary)
             }
-            if (maxsalary != null && maxsalary.isNotEmpty()) {
-                formBodyBulider.add("maxsalary", maxsalary)
+            if (hasBicycle) {
+                formBodyBulider.add("has_bicycle", "1")
+            } else {
+                formBodyBulider.add("has_bicycle", "0")
             }
-            val request: Request = Request.Builder()
-                .url(REST.editUserInfo)
-                .post(formBodyBulider.build())
-                .build()
+            if (hasCar) {
+                formBodyBulider.add("has_car", "1")
+            } else {
+                formBodyBulider.add("has_car", "0")
+            }
+            if (hasVehicle) {
+                formBodyBulider.add("has_vehicle", "1")
+            } else {
+                formBodyBulider.add("has_vehicle", "0")
+            }
+            val request: Request =
+                Request.Builder().url(REST.editUserInfo).post(formBodyBulider.build()).build()
             val call: Call = client.newCall(request)
             val response = call.execute()
 //            val type = Types.newParameterizedType( AppVersionModel::class.java,List::class.java,AppVersion::class.java)
             return if (response.isSuccessful) {
                 val data = response.body!!.string()
                 LogUtils.i(data)
-                val model =
-                    GsonUtils.fromJson(data, SubmitBackModel::class.java)
+                val model = GsonUtils.fromJson(data, SubmitBackModel::class.java)
                 Back.Success(model)
             } else {
                 val data = response.body!!.string()

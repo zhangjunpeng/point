@@ -38,17 +38,7 @@ class PointApplication : Application() {
 
     private fun initCrash() {
 
-// 获取当前包名
-//        val packageName = applicationContext.packageName
-// 获取当前进程名
-//        val processName = getProcessName(Process.myPid())
-// 设置是否为上报进程
-//        val strategy = UserStrategy(applicationContext)
-//        strategy.isUploadProcess = processName == null || processName == packageName
-//
-//        CrashReport.initCrashReport(applicationContext, "90cff47ede", true, strategy)
         Bugly.init(applicationContext, "90cff47ede", true)
-
 
     }
 

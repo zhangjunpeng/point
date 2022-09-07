@@ -204,8 +204,10 @@ class DataBaseRepository(
         sex: Int?,
         age: String?,
         address: String?,
-        minsalary: String?,
-        maxsalary: String?
+       salary: String?,
+        hasBicycle: Boolean ,
+        hasCar: Boolean ,
+        hasVehicle: Boolean,
     ): Back<SubmitBackModel> {
         return withContext(Dispatchers.IO) {
             dataSource.editUserInfo(
@@ -217,8 +219,8 @@ class DataBaseRepository(
                 sex,
                 age,
                 address,
-                minsalary,
-                maxsalary
+                salary,
+                hasBicycle, hasCar, hasVehicle
             )
         }
     }

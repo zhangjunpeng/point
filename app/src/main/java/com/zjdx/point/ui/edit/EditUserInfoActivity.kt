@@ -1,16 +1,13 @@
 package com.zjdx.point.ui.edit
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
+import android.R
 import android.view.View
-import android.widget.Toast
+import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
-import com.zjdx.point.R
-import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.databinding.ActivityRegisterBinding
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
@@ -45,6 +42,34 @@ class EditUserInfoActivity : BaseActivity() {
         binding.titleBarRegisterAc.middleTvTitleBar.text = "修改信息"
         binding.registerBtRegisterAc.text = "修改信息"
 
+        binding.ageRegisterAc.adapter =
+            ArrayAdapter(this, R.layout.simple_spinner_item, editUserInfoViewModel.ageList).apply {
+                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            }
+
+        binding.minsalaryRegisterAc.adapter = ArrayAdapter(
+            this, R.layout.simple_spinner_item, editUserInfoViewModel.salaryList
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
+        binding.haveBicRegisterAc.adapter = ArrayAdapter(
+            this, R.layout.simple_spinner_item, editUserInfoViewModel.hasBicList
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        binding.haveCarRegisterAc.adapter = ArrayAdapter(
+            this, R.layout.simple_spinner_item, editUserInfoViewModel.hasCarList
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
+        binding.haveVeRegisterAc.adapter = ArrayAdapter(
+            this, R.layout.simple_spinner_item, editUserInfoViewModel.hasVeList
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
         binding.registerBtRegisterAc.setOnClickListener {
             if (id == null) {
                 ToastUtils.showLong("网络异常")
@@ -61,10 +86,10 @@ class EditUserInfoActivity : BaseActivity() {
             } else {
                 1
             }
-            val age = binding.ageRegisterAc.editableText.toString()
+            val age = editUserInfoViewModel.ageList[binding.ageRegisterAc.selectedItemPosition]
             val address = binding.addressRegisterAc.editableText.toString()
-            val minsalary = binding.minsalaryRegisterAc.editableText.toString()
-            val maxsalary = binding.maxsalaryRegisterAc.editableText.toString()
+            val salary =
+                editUserInfoViewModel.salaryList[binding.minsalaryRegisterAc.selectedItemPosition]
             editUserInfoViewModel.editUserInfo(
                 id.toString(),
                 userCode,
@@ -74,8 +99,10 @@ class EditUserInfoActivity : BaseActivity() {
                 sex,
                 age,
                 address,
-                minsalary,
-                maxsalary
+                salary,
+                binding.haveBicRegisterAc.selectedItemPosition == 0,
+                binding.haveCarRegisterAc.selectedItemPosition == 0,
+                binding.haveVeRegisterAc.selectedItemPosition == 0,
             )
         }
     }
@@ -88,11 +115,40 @@ class EditUserInfoActivity : BaseActivity() {
                 binding.addressRegisterAc.setText(it)
             }
             user.age.let {
-                binding.ageRegisterAc.setText(it.toString())
+                var posi = editUserInfoViewModel.ageList.indexOf(it.toString())
+                if (posi == -1) {
+                    posi = 0
+                }
+                binding.ageRegisterAc.setSelection(posi)
             }
-//            user.maxsalary?.let {
-//                binding.maxsalaryRegisterAc.setText(it)
-//            }
+            user.salary?.let {
+                var posi = editUserInfoViewModel.salaryList.indexOf(it)
+                if (posi == -1) {
+                    posi = 0
+                }
+                binding.minsalaryRegisterAc.setSelection(posi)
+            }
+            user.hasBicycle?.let {
+                if (it) {
+                    binding.haveBicRegisterAc.setSelection(0)
+                } else {
+                    binding.haveBicRegisterAc.setSelection(1)
+                }
+            }
+            user.hasCar?.let {
+                if (it) {
+                    binding.haveCarRegisterAc.setSelection(0)
+                } else {
+                    binding.haveCarRegisterAc.setSelection(1)
+                }
+            }
+            user.hasVehicle?.let {
+                if (it) {
+                    binding.haveVeRegisterAc.setSelection(0)
+                } else {
+                    binding.haveVeRegisterAc.setSelection(1)
+                }
+            }
 //            user.minsalary?.let {
 //                binding.minsalaryRegisterAc.setText(it)
 //            }

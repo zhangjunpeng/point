@@ -16,8 +16,10 @@ class RegisterRepository() {
         sex: Int?,
         age: String?,
         address: String?,
-        minsalary: String?,
-        maxsalary: String?
+        salary: String?,
+        hasBicycle: Boolean ,
+        hasCar: Boolean ,
+        hasVehicle: Boolean,
     ):Back<SubmitBackModel> {
       return  withContext(Dispatchers.IO) {
             dataSource.register(
@@ -29,8 +31,7 @@ class RegisterRepository() {
                 sex,
                 age,
                 address,
-                minsalary,
-                maxsalary
+                salary, hasBicycle, hasCar, hasVehicle
             )
         }
     }
