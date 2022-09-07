@@ -12,10 +12,9 @@ data class LoginModel (
 
 data class SysUser(
     var address: String?,
-    val age: Int,
+    val age:  String?,
     val createtime: String,
     val id: Int,
-
     var note: String?,
     val password: String,
     var sex: String?,
@@ -23,9 +22,10 @@ data class SysUser(
     val usercode: String,
     var username: String?,
     var salary: String?,
-    var hasCar: Boolean?,
-    var hasVehicle: Boolean?,
-    var hasBicycle: Boolean?,
+
+    var has_car: Int?,
+    var has_vehicle: Int?,
+    var has_bicycle: Int?,
 
 
     )

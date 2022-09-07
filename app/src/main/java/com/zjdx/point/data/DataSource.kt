@@ -24,7 +24,9 @@ import java.net.Proxy
 class DataSource {
 
 
-    val client = OkHttpClient.Builder().build()
+    val client = OkHttpClient.Builder().proxy(
+        Proxy(Proxy.Type.HTTP, InetSocketAddress("192.168.0.164", 9090))
+    ).build()
 
 
     fun login(username: String, password: String): Back<LoginModel> {
@@ -39,6 +41,7 @@ class DataSource {
             return if (response.isSuccessful) {
 
                 val model = GsonUtils.fromJson(response.body!!.string(), LoginModel::class.java)
+
                 Back.Success(model!!)
             } else {
                 Back.Error(

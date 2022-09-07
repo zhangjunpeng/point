@@ -132,22 +132,22 @@ class EditUserInfoActivity : BaseActivity() {
                 }
                 binding.minsalaryRegisterAc.setSelection(posi)
             }
-            user.hasBicycle?.let {
-                if (it) {
+            user.has_bicycle?.let {
+                if (it==0) {
                     binding.haveBicRegisterAc.setSelection(0)
                 } else {
                     binding.haveBicRegisterAc.setSelection(1)
                 }
             }
-            user.hasCar?.let {
-                if (it) {
+            user.has_car?.let {
+                if (it==0) {
                     binding.haveCarRegisterAc.setSelection(0)
                 } else {
                     binding.haveCarRegisterAc.setSelection(1)
                 }
             }
-            user.hasVehicle?.let {
-                if (it) {
+            user.has_vehicle?.let {
+                if (it==0) {
                     binding.haveVeRegisterAc.setSelection(0)
                 } else {
                     binding.haveVeRegisterAc.setSelection(1)
