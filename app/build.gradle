@@ -100,6 +100,10 @@ android {
     }
 }
 
+ext {
+    parseVersion = "4.1.4"
+}
+
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.10"
@@ -181,6 +185,22 @@ dependencies {
     implementation 'com.blankj:utilcodex:1.31.0'
 
     implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
+
+    implementation "com.github.parse-community.Parse-SDK-Android:parse:$parseVersion"
+    // for Google login/signup support (optional)
+    implementation "com.github.parse-community.Parse-SDK-Android:google:$parseVersion"
+    // for Facebook login/signup support (optional)
+    implementation "com.github.parse-community.Parse-SDK-Android:facebook:$parseVersion"
+    // for Twitter login/signup support (optional)
+    implementation "com.github.parse-community.Parse-SDK-Android:twitter:$parseVersion"
+    // for FCM Push support (optional)
+    implementation "com.github.parse-community.Parse-SDK-Android:fcm:$parseVersion"
+    // for Kotlin extensions support (optional)
+    implementation "com.github.parse-community.Parse-SDK-Android:ktx:$parseVersion"
+    // for Kotlin coroutines support (optional)
+    implementation "com.github.parse-community.Parse-SDK-Android:coroutines:$parseVersion"
+    // for RxJava support (optional)
+    implementation "com.github.parse-community.Parse-SDK-Android:rxjava:$parseVersion"
 
 }
 

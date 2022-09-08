@@ -1,16 +1,12 @@
 package com.zjdx.point
 
 import android.app.Application
-import android.content.Context
-import android.os.Process
 import android.text.TextUtils
 import com.blankj.utilcode.util.Utils
 import com.tencent.bugly.Bugly
-import com.tencent.bugly.crashreport.CrashReport
-import com.tencent.bugly.crashreport.CrashReport.UserStrategy
+import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.data.repository.LocationRepository
 import com.zjdx.point.data.repository.RegisterRepository
-import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.db.MyDataBase
 import java.io.BufferedReader
 import java.io.FileReader
@@ -32,8 +28,19 @@ class PointApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         initCrash()
+        initParse()
 
         Utils.init(this)
+    }
+
+    private fun initParse() {
+        Parse.initialize(
+            Builder(this)
+                .applicationId("YOUR_APP_ID") // if desired
+                .clientKey("YOUR_CLIENT_KEY")
+                .server("https://your-server-address/parse/")
+                .build()
+        )
     }
 
     private fun initCrash() {

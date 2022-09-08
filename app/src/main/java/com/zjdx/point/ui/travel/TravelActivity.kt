@@ -356,9 +356,9 @@ class TravelActivity : BaseActivity() {
 
     override fun initViewMoedl() {
 //        travelViewModel.setQueryId(travelRecord.id)
-        travelViewModel.allLication.observe(this, { locations ->
+        travelViewModel.allLication.observe(this) { locations ->
             addPointOnMap()
-        })
+        }
     }
 
 
