@@ -151,6 +151,12 @@ class DataBaseRepository(
         return tagRecordDao.queryAllTagtHasUpload().toMutableList()
     }
 
+    suspend fun queryUploadBytime(paramMap: Map<String, String>): MutableList<TagRecord>? {
+        return withContext(Dispatchers.IO) {
+            dataSource.queryTagUploadBytime(paramMap)
+        }
+    }
+
     @WorkerThread
     fun getUploadByTime(startTime: String,endTime: String): MutableList<TagRecord> {
         return tagRecordDao.queryAllTagtHasUploadbyTime(startTime,endTime).toMutableList()
@@ -158,6 +164,11 @@ class DataBaseRepository(
     @WorkerThread
     fun insertTag(tagRecord: TagRecord) {
         return tagRecordDao.insertTagRecord(tagRecord)
+    }
+
+    @WorkerThread
+    fun insertTagList(tagRecords: MutableList<TagRecord>) {
+        return tagRecordDao.insertTagRecords(tagRecords)
     }
 
     @WorkerThread
@@ -192,6 +203,11 @@ class DataBaseRepository(
     suspend fun getUserInfo(userCode: String): Back<UserInfoModel> {
         return withContext(Dispatchers.IO) {
             dataSource.getUserInfo(userCode)
+        }
+    }
+    suspend fun delTag(userCode: String, id: String): Back<Boolean>{
+        return withContext(Dispatchers.IO) {
+            dataSource.delTag(userCode, id)
         }
     }
 

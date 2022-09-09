@@ -76,6 +76,63 @@
             </androidx.recyclerview.widget.RecyclerView>
 
             <LinearLayout
+                android:id="@+id/history_main_ac"
+                android:layout_width="200dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/border_edit"
+                android:elevation="3dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="14dp"
+                    android:src="@drawable/history" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="14dp"
+                    android:text="历史轨迹"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/history_tg_main_ac"
+                android:layout_width="200dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border_edit"
+                android:gravity="center_horizontal"
+                android:elevation="3dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="14dp"
+                    android:src="@drawable/tag" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="14dp"
+                    android:text="历史行程记录"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -88,6 +145,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:layout_marginTop="20dp"
+                    android:elevation="4dp"
                     android:orientation="horizontal"
                     android:background="@drawable/border_text_blue"
                     >
@@ -114,10 +172,10 @@
                     android:layout_height="48dp"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:elevation="4dp"
                     android:orientation="horizontal"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/border_text_blue"
-
                     >
 
                     <ImageView
@@ -182,52 +240,6 @@
         </LinearLayout>
 
 
-        <LinearLayout
-            android:id="@+id/history_main_ac"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="14dp"
-                android:src="@drawable/history" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="14dp"
-                android:text="历史轨迹"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/history_tg_main_ac"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="14dp"
-                android:src="@drawable/history" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="14dp"
-                android:text="历史标注"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-        </LinearLayout>
 
 
         <LinearLayout

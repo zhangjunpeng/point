@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.zjdx.point.databinding.ItemHisTagRecylerItemBinding
 import com.zjdx.point.db.model.TagRecord
+import com.zjdx.point.event.DeleteEvent
 import com.zjdx.point.event.HisTagEvent
+import com.zjdx.point.utils.PopWindowUtil
 import org.greenrobot.eventbus.EventBus
 
 class HisTagItemAdapter(val context: Context, val dataList: List<TagRecord>) :
     RecyclerView.Adapter<HisTagItemAdapter.ViewHolder>() {
-
 
     inner class ViewHolder(val binding: ItemHisTagRecylerItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -43,6 +44,11 @@ class HisTagItemAdapter(val context: Context, val dataList: List<TagRecord>) :
                 HisTagEvent(tagRecord)
             )
             context.startActivity(Intent(context, HisDeatailActivity::class.java))
+        }
+        holder.binding.delete.setOnClickListener {
+            PopWindowUtil.instance.showDelDialog(context){
+                EventBus.getDefault().post(DeleteEvent(tagRecord.id))
+            }
         }
 
     }

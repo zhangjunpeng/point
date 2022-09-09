@@ -3,14 +3,20 @@ package com.zjdx.point.utils
 import android.content.Context
 import android.graphics.Color
 import android.text.TextUtils
-import android.view.*
-import android.widget.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.PopupWindow
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.bigkoo.pickerview.builder.TimePickerBuilder
+import com.bigkoo.pickerview.configure.PickerOptions
 import com.bigkoo.pickerview.listener.OnTimeSelectListener
 import com.bigkoo.pickerview.view.TimePickerView
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.zjdx.point.R
 import com.zjdx.point.databinding.PopwindowUtilBinding
 import com.zjdx.point.db.model.BaseListSreen
@@ -125,32 +131,35 @@ var mContext:Context?=null
         return popupWindow
     }
 
-    fun showTimePicker( context: Context,
-                        onTimeSelectListener: OnTimeSelectListener){
-        val timePicker= TimePickerBuilder(context, onTimeSelectListener)
-            .setType(booleanArrayOf(true, true, true, true, true, true)) //分别对应年月日时分秒，默认全部显示
-            .setCancelText("取消") //取消按钮文字
-            .setSubmitText("确定") //确认按钮文字
-            //.setContentSize(18) //滚轮文字大小
+    fun showTimePicker(
+        context: Context,
+        type: BooleanArray = booleanArrayOf(true, true, true, true, true, true),
+        isDialog: Boolean=true,
+        onTimeSelectListener: OnTimeSelectListener,
+    ) {
 
-            .setContentTextSize(18)
-            .setTitleSize(20) //标题文字大小
-            .setTitleText("日期选择") //标题文字
-            .setOutSideCancelable(false) //点击屏幕，点在控件外部范围时，是否取消显示
-            .isCyclic(true) //是否循环滚动
-            .setTitleColor(Color.BLACK) //标题文字颜色
-            .setTitleBgColor(context.resources!!.getColor(R.color.light_blue_600))
-            .setBgColor(Color.WHITE)
-            .setTextColorCenter(context.resources!!.getColor(R.color.light_blue_600))
-            .setTextColorOut(Color.BLACK)
-            .setSubmitColor(Color.WHITE) //确定按钮文字颜色
-            .setCancelColor(Color.WHITE) //取消按钮文字颜色
+        val timePicker =
+            TimePickerBuilder(context, onTimeSelectListener).setType(type) //分别对应年月日时分秒，默认全部显示
+                .setCancelText("取消") //取消按钮文字
+                .setSubmitText("确定") //确认按钮文字
+                //.setContentSize(18) //滚轮文字大小
+                .setContentTextSize(18).setTitleSize(20) //标题文字大小
+                .setTitleText("日期选择") //标题文字
+                .setOutSideCancelable(false) //点击屏幕，点在控件外部范围时，是否取消显示
+                .isCyclic(true) //是否循环滚动
+                .setTitleColor(Color.BLACK) //标题文字颜色
+                .setTitleBgColor(context.resources!!.getColor(R.color.light_blue_600))
+                .setBgColor(Color.WHITE)
+                .setTextColorCenter(context.resources!!.getColor(R.color.light_blue_600))
+                .setTextColorOut(Color.BLACK).setSubmitColor(Color.WHITE) //确定按钮文字颜色
+                .setCancelColor(Color.WHITE) //取消按钮文字颜色
+                .setGravity(Gravity.BOTTOM)
 //            .setBgColor(-0xcccccd) //滚轮背景颜色 Night mode //默认是1900-2100年
 //            .setDate(selectedDate) // 如果不设置的话，默认是系统时间*/
 //            .setRangDate(startDate, endDate) //起始终止年月日设定
-            .setLabel("年", "月", "日", "时", "分", "秒")
-            .isDialog(true) //是否显示为对话框样式
-            .build()
+                .setLabel("年", "月", "日", "时", "分", "秒").isDialog(isDialog) //是否显示为对话框样式
+
+                .build()
 
         timePicker.show();
     }

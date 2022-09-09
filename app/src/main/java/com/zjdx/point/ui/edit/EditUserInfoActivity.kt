@@ -10,9 +10,12 @@ import com.blankj.utilcode.util.ToastUtils
 import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityRegisterBinding
+import com.zjdx.point.event.ChooseEvent
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.main.MainActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 class EditUserInfoActivity : BaseActivity() {
     lateinit var binding: ActivityRegisterBinding
@@ -33,8 +36,10 @@ class EditUserInfoActivity : BaseActivity() {
             ToastUtils.showLong("请完善信息！")
         }
 
+        EventBus.getDefault().register(this)
 
     }
+
 
     override fun initView() {
         binding.titleBarRegisterAc.leftIvTitleBar.setOnClickListener {
@@ -45,6 +50,10 @@ class EditUserInfoActivity : BaseActivity() {
 
         binding.titleBarRegisterAc.middleTvTitleBar.text = "修改信息"
         binding.registerBtRegisterAc.text = "修改信息"
+
+        binding.addressRegisterAc.setOnClickListener {
+            startActivity(Intent(this@EditUserInfoActivity, ChooseAddressActivity::class.java))
+        }
 
         binding.ageRegisterAc.adapter =
             ArrayAdapter(this, R.layout.simple_spinner_item, editUserInfoViewModel.ageList).apply {
@@ -73,6 +82,8 @@ class EditUserInfoActivity : BaseActivity() {
         ).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
+
+
 
         binding.registerBtRegisterAc.setOnClickListener {
             if (id == null) {
@@ -190,9 +201,20 @@ class EditUserInfoActivity : BaseActivity() {
         }
     }
 
+    @Subscribe
+    fun onReceiveEvent(event:ChooseEvent){
+        binding.addressRegisterAc.text=event.address
+    }
+
     override fun initData() {
         showProgressDialog()
         editUserInfoViewModel.getUserInfo()
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
+
     }
 
 }
