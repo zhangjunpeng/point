@@ -1,6 +1,5 @@
 package com.zjdx.point.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.zjdx.point.db.model.Location
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +15,7 @@ interface LocationDao {
     @Query("Select * from Location where t_id = :tId order by creat_time desc limit 1")
     fun getLastLocationById(tId: String): Location
 
-    @Query("Select * from Location where creat_time between :startTime and :endTime order by creat_time desc")
+    @Query("Select * from Location where creat_time between :startTime and :endTime order by creat_time ")
     fun getLastLocationByTime(startTime: String,endTime:String):  Array<Location>
 
     @Query("Select * from Location where t_id = :tId order by creat_time limit 1")

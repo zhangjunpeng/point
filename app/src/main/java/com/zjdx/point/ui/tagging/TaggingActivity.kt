@@ -11,6 +11,7 @@ import com.amap.api.maps2d.AMap
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.*
 import com.blankj.utilcode.util.ToastUtils
+import com.github.mikephil.charting.components.IMarker
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.Legend.LegendForm
 import com.github.mikephil.charting.data.Entry
@@ -22,10 +23,13 @@ import com.zjdx.point.PointApplication
 import com.zjdx.point.R
 import com.zjdx.point.databinding.ActivityTaggingBinding
 import com.zjdx.point.databinding.FragmentTagInfoBinding
+import com.zjdx.point.event.EditTagEvent
 import com.zjdx.point.ui.DBViewModelFactory
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.PopWindowUtil
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 
@@ -59,6 +63,7 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
         binding = ActivityTaggingBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
+        EventBus.getDefault().register(this)
         binding.mapviewTaggingAc.onCreate(savedInstanceState)
         initMapWithPermissionCheck()
         onInitView()
@@ -87,7 +92,6 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
         // enable scaling and dragging
         binding.chart.isDragEnabled = true
-        binding.chart.setScaleEnabled(true)
 
         // if disabled, scaling can be done on x- and y-axis separately
         binding.chart.setPinchZoom(true)
@@ -98,22 +102,35 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         // modify the legend ...
         l.form = LegendForm.LINE
 
+        binding.chart.axisRight.isEnabled = false
+        binding.chart.axisLeft.isEnabled = false
+        binding.chart.xAxis.isEnabled=false
+        binding.chart.isScaleYEnabled = false
+
+        val marker: IMarker = MyMarkerView(this, R.layout.item_tv)
+        binding.chart.marker = marker
+
+
         // don't forget to refresh the drawing
         binding.chart.invalidate()
     }
 
     private fun onInitView() {
         binding.startTime.setOnClickListener {
-            PopWindowUtil.instance.showTimePicker(this) { date, view ->
+            PopWindowUtil.instance.showTimePicker(
+                this, type = booleanArrayOf(true, true, true, true, true, false)
+            ) { date, view ->
                 binding.startTime.text = DateUtil.dateFormat.format(date)
-                taggingViewModel.startTime.value=date
+                taggingViewModel.startTime = date
 
             }
         }
         binding.endTime.setOnClickListener {
-            PopWindowUtil.instance.showTimePicker(this) { date, view ->
+            PopWindowUtil.instance.showTimePicker(
+                this, type = booleanArrayOf(true, true, true, true, true, false)
+            ) { date, view ->
                 binding.endTime.text = DateUtil.dateFormat.format(date)
-                taggingViewModel.endTime.value = date
+                taggingViewModel.endTime = date
 
             }
         }
@@ -124,11 +141,20 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         }
 
         binding.cancel.setOnClickListener {
-
+            AlertDialog.Builder(this).setMessage("您有记录尚未保存，是否退出？")
+                .setPositiveButton("确定") { dialog, which ->
+                    finish()
+                }.setNegativeButton("取消") { dialog, which ->
+                    dialog.dismiss()
+                }.create().show()
         }
-        binding.save.setOnClickListener { }
+        binding.save.setOnClickListener {
+            taggingViewModel.repository.insertTagList(taggingViewModel.notUpTagRecord.value!!)
+            ToastUtils.showLong("保存成功")
+            taggingViewModel.getTagRecordIsNotUpload()
+        }
         binding.upload.setOnClickListener {
-            if (taggingViewModel.notUpTagRecord.value!!.size==0){
+            if (taggingViewModel.notUpTagRecord.value!!.size == 0) {
                 ToastUtils.showLong("请添加标注")
                 return@setOnClickListener
             }
@@ -141,6 +167,22 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
                     dialog.dismiss()
                 }.create().show()
 
+        }
+        binding.clear.setOnClickListener {
+            binding.startTime.text = ""
+            binding.endTime.text = ""
+            taggingViewModel.endTime = null
+            taggingViewModel.startTime = null
+        }
+        binding.query.setOnClickListener {
+            if (taggingViewModel.endTime == null) {
+
+                return@setOnClickListener
+            }
+            if (taggingViewModel.startTime == null) {
+                return@setOnClickListener
+            }
+            taggingViewModel.getLocationsByTime()
         }
 
     }
@@ -170,20 +212,14 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
     }
 
+    @Subscribe
+    fun onEditTag(event: EditTagEvent){
+        supportFragmentManager.beginTransaction().add(R.id.container_recyler, fragment)
+            .commit()
+    }
 
     private fun onInitViewModel() {
-        taggingViewModel.startTime.observe(this) {
-            if (taggingViewModel.endTime.value == null) {
-                return@observe
-            }
-            taggingViewModel.getLocationsByTime()
-        }
-        taggingViewModel.endTime.observe(this) {
-            if (taggingViewModel.startTime.value == null) {
-                return@observe
-            }
-            taggingViewModel.getLocationsByTime()
-        }
+
         taggingViewModel.allLication.observe(this) {
             if (taggingViewModel.allLication.value == null || taggingViewModel.allLication.value!!.size == 0) {
                 ToastUtils.showLong("该时间段内没有数据，请重新选择时间")
@@ -228,18 +264,26 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
         entries.clear()
         for (i in 0 until taggingViewModel.allLication.value!!.size) {
-            entries.add(Entry(i.toFloat(), taggingViewModel.allLication.value!![i].speed))
+            val entry = Entry(i.toFloat(), 50f)
+            entry.data = taggingViewModel.allLication.value!![i].creatTime.substring(5)
+            entries.add(entry)
         }
 
 
-        val set1 = LineDataSet(entries, "速度")
-        set1.lineWidth = 1.5f
-        set1.circleRadius = 4f
+        val set1 = LineDataSet(entries, "")
+        set1.lineWidth = 2f
+        set1.circleRadius = 1f
+
+        set1.setDrawHighlightIndicators(true)
+        set1.highLightColor=Color.RED
+        set1.highlightLineWidth=1f
 
         // create a data object with the data sets
         val data = LineData(set1)
         // set data
         binding.chart.data = data
+        binding.chart.data.isHighlightEnabled = true
+
         binding.chart.invalidate()
     }
 
@@ -277,6 +321,7 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
     }
 
     override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
         super.onDestroy()
         binding.mapviewTaggingAc.onDestroy()
     }
@@ -284,9 +329,12 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
     override fun onValueSelected(e: Entry?, h: Highlight?) {
         val index = entries.indexOf(e)
         taggingViewModel.selectLoaction.value = taggingViewModel.allLication.value!![index]
+        binding.chart.highlightValue(h)
     }
 
+
     override fun onNothingSelected() {
+        marker?.remove()
     }
 
 }

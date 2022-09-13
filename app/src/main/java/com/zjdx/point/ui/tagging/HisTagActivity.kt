@@ -11,11 +11,13 @@ import com.zjdx.point.PointApplication
 import com.zjdx.point.R
 import com.zjdx.point.databinding.ActivityHisTaggingBinding
 import com.zjdx.point.databinding.DialogSyncBinding
+import com.zjdx.point.event.DeleteEvent
 import com.zjdx.point.ui.DBViewModelFactory
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.PopWindowUtil
-
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 class HisTagActivity : BaseActivity() {
 
@@ -28,6 +30,7 @@ class HisTagActivity : BaseActivity() {
     override fun initView() {
         binding = ActivityHisTaggingBinding.inflate(layoutInflater, null, false)
         setContentView(binding.root)
+        EventBus.getDefault().register(this)
         binding.recyler.layoutManager = LinearLayoutManager(this)
         binding.titleBarHistag.leftIvTitleBar.setOnClickListener {
             finish()
@@ -45,6 +48,15 @@ class HisTagActivity : BaseActivity() {
                 ToastUtils.showShort("无标注数据")
             }
             binding.recyler.adapter = HisTagAdapter(this@HisTagActivity, hisTagViewModel)
+        }
+        hisTagViewModel.delRest.observe(this) {
+            dismissProgressDialog()
+            if (it) {
+                ToastUtils.showShort("删除成功")
+                hisTagViewModel.getTagRecordIsUploadByTime(
+                    hisTagViewModel.mStartTime, hisTagViewModel.mEndTime
+                )
+            }
         }
     }
 
@@ -95,5 +107,15 @@ class HisTagActivity : BaseActivity() {
 
     }
 
+    @Subscribe
+    fun getDeleteEvent(event: DeleteEvent) {
+        showProgressDialog()
+        hisTagViewModel.deleteTag(event.tagid)
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
+    }
 }
 

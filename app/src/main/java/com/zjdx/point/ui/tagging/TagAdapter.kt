@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.zjdx.point.R
 import com.zjdx.point.databinding.ItemTagRecylerBinding
+import com.zjdx.point.event.EditTagEvent
 import com.zjdx.point.utils.PopWindowUtil
+import org.greenrobot.eventbus.EventBus
 
 class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -58,6 +60,10 @@ class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
                     tempList.add(position + 1, record)
                     viewModel.notUpTagRecord.value = tempList
                 }
+            }
+            holder.binding.edit.setOnClickListener {
+                viewModel.addingTag=tagRecord
+                EventBus.getDefault().post(EditTagEvent())
             }
 
             holder.binding.del.setOnClickListener {

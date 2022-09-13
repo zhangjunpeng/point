@@ -21,11 +21,14 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
 
     val allLication = MutableLiveData<MutableList<Location>>()
 
+
     val notUpTagRecord = MutableLiveData<MutableList<TagRecord>>()
 
 
-    val startTime = MutableLiveData<Date>()
-    val endTime = MutableLiveData<Date>()
+    var startTime: Date? = null
+    var endTime: Date? = null
+
+    var addingTag:TagRecord?=null
 
     val selectLoaction = MutableLiveData<Location>()
 
@@ -42,16 +45,9 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
     fun getLocationsByTime() {
         viewModelScope.launch {
             allLication.value = repository.getLocationListByTime(
-                startTime = DateUtil.dateFormat.format(startTime.value!!),
-                endTime = DateUtil.dateFormat.format(endTime.value!!)
+                startTime = DateUtil.dateFormat.format(startTime!!),
+                endTime = DateUtil.dateFormat.format(endTime!!)
             )
-        }
-    }
-
-    fun insertTagRecord(tagRecord: TagRecord) {
-        viewModelScope.launch {
-            repository.insertTag(tagRecord)
-            notUpTagRecord.value = repository.getNotUpload()
         }
     }
 
@@ -69,7 +65,9 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
 
                 val paramArray = JSONArray()
                 if (notUpTagRecord.value!!.isNotEmpty()) {
+                    repository.insertTagList(notUpTagRecord.value!!)
                     notUpTagRecord.value!!.forEach { tag ->
+
                         val ta = JSONObject()
                         ta.put("description", tag.desc)
                         ta.put("destination", tag.destination)

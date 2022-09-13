@@ -35,6 +35,7 @@ import com.zjdx.point.event.UpdateMapEvent
 import com.zjdx.point.ui.DBViewModelFactory
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.main.MainActivity
+import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.Utils
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -59,13 +60,13 @@ class TravelActivity : BaseActivity() {
 
     companion object {
         var mLocationClient: AMapLocationClient? = null
+        var isRecording = false
     }
 
 
     val TAG = "TravlelActivity"
     var travelRecord: TravelRecord? = null
 
-    val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
 
     init {
@@ -77,6 +78,7 @@ class TravelActivity : BaseActivity() {
             mLocationClient!!.stopLocation()
             SPUtils.getInstance().put(NameSpace.ISRECORDING, false)
             SPUtils.getInstance().put(NameSpace.RECORDINGID, "")
+            isRecording = false
             startMain(true)
             finish()
         }
@@ -129,6 +131,7 @@ class TravelActivity : BaseActivity() {
 
         SPUtils.getInstance().put(NameSpace.ISRECORDING, false)
         SPUtils.getInstance().put(NameSpace.RECORDINGID, "")
+        isRecording = false
     }
 
 
@@ -152,6 +155,7 @@ class TravelActivity : BaseActivity() {
         binding.endTravel.setOnClickListener(endListener)
         SPUtils.getInstance().put(NameSpace.ISRECORDING, true)
         SPUtils.getInstance().put(NameSpace.RECORDINGID, travelRecord!!.id)
+        isRecording = true
 
     }
     val endListener = View.OnClickListener {
@@ -264,7 +268,7 @@ class TravelActivity : BaseActivity() {
                         altitude = amapLocation.altitude,
                         accuracy = amapLocation.accuracy,
                         source = source,
-                        creatTime = format.format(amapLocation.time),
+                        creatTime = DateUtil.dateFormat.format(amapLocation.time),
                         address = amapLocation.address,
                         mcc = mcc,
                         mnc = mnc,
@@ -273,16 +277,9 @@ class TravelActivity : BaseActivity() {
                         bsss = rssi,
                     )
 
-
                     travelViewModel.repository.insertLocation(loca)
                     travelViewModel.getLocationsById(travelRecord!!.id)
 
-
-
-
-                    Log.i(
-                        TAG, "source==$source"
-                    )
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -439,6 +436,9 @@ class TravelActivity : BaseActivity() {
 
     override fun onBackPressed() {
         startMain(false)
+        if (!isRecording) {
+            finish()
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

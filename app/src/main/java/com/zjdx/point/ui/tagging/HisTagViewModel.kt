@@ -3,22 +3,37 @@ package com.zjdx.point.ui.tagging
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.blankj.utilcode.util.SPUtils
+import com.zjdx.point.NameSpace
+import com.zjdx.point.data.bean.Back
 import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.db.model.TagRecord
+import com.zjdx.point.utils.DateUtil
 import kotlinx.coroutines.launch
+import java.util.*
 
 class HisTagViewModel(private val repository: DataBaseRepository) : ViewModel() {
 
-    val allTagLiveData = MutableLiveData<Map<String, List<TagRecord>>>().apply {
-        this.value = HashMap<String, List<TagRecord>>()
-    }
+    val allTagLiveData = MutableLiveData<Map<String, List<TagRecord>>>()
+
+    val delRest = MutableLiveData<Boolean>()
 
 
     fun getTagRecordIsUpload() {
+
         viewModelScope.launch {
-            val templist = repository.getUpload()
+            val userCode = SPUtils.getInstance().getString(NameSpace.UID)
+
+            val paramMap = HashMap<String, String>().apply {
+//                this["startTime"] = mStartTime
+//                this["endTime"] = mEndTime
+                this["usercode"] = userCode
+                this["limit"] = "1000"
+                this["page"] = "0"
+            }
+            val templist = repository.queryUploadBytime(paramMap)
             val map = HashMap<String, ArrayList<TagRecord>>()
-            templist.forEach {
+            templist?.forEach {
                 val date = it.uploadDate
                 if (map.containsKey(date)) {
                     val list = map[date]
@@ -34,8 +49,8 @@ class HisTagViewModel(private val repository: DataBaseRepository) : ViewModel() 
     }
 
 
-    var mStartTime: String = "请选择开始时间"
-    var mEndTime: String = "请选择结束时间"
+    var mStartTime: String = DateUtil.dateFormat.format(Date().time - (30L * 24 * 60 * 60 * 1000))
+    var mEndTime: String = DateUtil.dateFormat.format(Date())
 
 
     fun getTagRecordIsUploadByTime(startTime: String, endTime: String) {
@@ -43,9 +58,18 @@ class HisTagViewModel(private val repository: DataBaseRepository) : ViewModel() 
         mEndTime = endTime
 
         viewModelScope.launch {
-            val templist = repository.getUploadByTime(startTime, endTime)
+            val userCode = SPUtils.getInstance().getString(NameSpace.UID)
+
+            val paramMap = HashMap<String, String>().apply {
+                this["startTime"] = mStartTime
+                this["endTime"] = mEndTime
+                this["usercode"] = userCode
+                this["limit"] = "1000"
+                this["page"] = "0"
+            }
+            val templist = repository.queryUploadBytime(paramMap)
             val map = HashMap<String, ArrayList<TagRecord>>()
-            templist.forEach {
+            templist?.forEach {
                 val date = it.uploadDate
                 if (map.containsKey(date)) {
                     val list = map[date]
@@ -57,6 +81,19 @@ class HisTagViewModel(private val repository: DataBaseRepository) : ViewModel() 
                 }
             }
             allTagLiveData.postValue(map)
+        }
+    }
+
+    fun deleteTag(tagid: Int) {
+        viewModelScope.launch {
+
+            val userCode = SPUtils.getInstance().getString(NameSpace.UID)
+            val back = repository.delTag(userCode, tagid.toString())
+            if (back is Back.Success) {
+                delRest.postValue(back.data)
+            } else {
+                delRest.postValue(false)
+            }
         }
     }
 

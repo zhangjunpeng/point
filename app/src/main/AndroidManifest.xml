@@ -28,6 +28,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Point">
         <activity
+            android:name=".ui.edit.ChooseAddressActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ui.tagging.HisDeatailActivity"
             android:exported="false">
             <meta-data
@@ -38,7 +45,7 @@
             android:name=".ui.tagging.HisTagActivity"
             android:exported="false"
             android:label="@string/title_activity_his_tag"
-            android:theme="@style/Theme.Point"></activity>
+            android:theme="@style/Theme.Point" />
         <activity
             android:name=".ui.tagging.TaggingActivity"
             android:exported="true"
@@ -104,11 +111,11 @@
             android:name=".ui.main.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
-
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.zjdx.point.fileprovider"

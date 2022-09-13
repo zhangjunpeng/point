@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.zjdx.point.config.REST
 import com.zjdx.point.data.bean.*
 import com.zjdx.point.db.model.Location
+import com.zjdx.point.db.model.TagRecord
 import com.zjdx.point.db.model.TravelRecord
 import com.zjdx.point.utils.DateUtil
 import okhttp3.Call
@@ -14,8 +15,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
-import java.net.InetSocketAddress
-import java.net.Proxy
 
 
 /**
@@ -492,6 +491,81 @@ class DataSource {
             return getErrorSubmitBack(e)
         }
 
+    }
+
+    fun delTag(userCode: String, id: String): Back<Boolean> {
+        try {
+//            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+            val formBodyBulider = FormBody.Builder()
+            formBodyBulider.add("id", id).add("usercode", userCode)
+
+            val request: Request =
+                Request.Builder().url(REST.delTag).post(formBodyBulider.build()).build()
+            val call: Call = client.newCall(request)
+            val response = call.execute()
+//            val type = Types.newParameterizedType( AppVersionModel::class.java,List::class.java,AppVersion::class.java)
+            return if (response.isSuccessful) {
+                val data = response.body!!.string()
+                if (data.contains("success")) {
+                    Back.Success(true)
+                } else {
+                    Back.Success(false)
+                }
+            } else {
+                Back.Success(false)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return Back.Success(false)
+        }
+    }
+
+    fun queryTagUploadBytime(paramMap: Map<String, String>): MutableList<TagRecord>? {
+
+        try {
+            val urlStringBuffer = StringBuffer(REST.hisTag)
+            if (paramMap.keys.isNotEmpty()) {
+                urlStringBuffer.append("?")
+                paramMap.keys.forEach { t ->
+                    urlStringBuffer.append("$t=${paramMap[t]}&")
+                }
+            }
+            val requestBuilder = Request.Builder()
+            requestBuilder.url(urlStringBuffer.toString())
+
+            val request = requestBuilder.get().build()
+            val call: Call = client.newCall(request)
+            val response = call.execute()
+            val dataStr = response.body!!.string()
+            return if (response.isSuccessful) {
+                val jsonObject = JSONObject(dataStr)
+                val jsonArr = jsonObject.getJSONArray("list")
+
+                val tagList = ArrayList<TagRecord>()
+                for (index in 0 until jsonArr.length()) {
+                    val jObj = jsonArr.getJSONObject(index)
+                    tagList.add(
+                        TagRecord(
+                            id = jObj.getInt("id"),
+                            desc = jObj.getString("description"),
+                            destination = jObj.getString("destination"),
+                            startTime = jObj.getString("start_time"),
+                            endTime = jObj.getString("start_time"),
+                            startType = jObj.getString("start_type"),
+                            endType = jObj.getString("end_type"),
+                            travelmodel = jObj.getString("travel_types"),
+                            uploadDate = jObj.getString("create_time").split(" ").first(),
+                        )
+                    )
+                }
+                tagList
+            } else {
+                null
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            return null
+        }
     }
 
 

@@ -13,9 +13,9 @@ class REST {
 
         val hisTravel = BaseUrl + "historicalTrack/selectTravels"
         val hisLocation = BaseUrl + "historicalTrack/selectHistoricalTrack"
+        val hisTag = BaseUrl + "historicalTrack/getMarkInfos"
 
         val addTag = BaseUrl + "historicalTrack/insertMarkInfo"
-
-
+        val delTag = BaseUrl + "historicalTrack/deleteMarkInfo"
     }
 }

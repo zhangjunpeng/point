@@ -18,6 +18,9 @@ interface TagRecordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTagRecord(tagRecord: TagRecord)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertTagRecords(tagRecord: MutableList<TagRecord>)
+
     @Update
     fun updateTagRecord(tagRecords: List<TagRecord>)
 
