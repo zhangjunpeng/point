@@ -3,6 +3,7 @@ package com.zjdx.point
 import android.app.Application
 import android.text.TextUtils
 import com.blankj.utilcode.util.Utils
+import com.parse.Parse
 import com.tencent.bugly.Bugly
 import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.data.repository.LocationRepository
@@ -35,10 +36,10 @@ class PointApplication : Application() {
 
     private fun initParse() {
         Parse.initialize(
-            Builder(this)
-                .applicationId("YOUR_APP_ID") // if desired
-                .clientKey("YOUR_CLIENT_KEY")
-                .server("https://your-server-address/parse/")
+            Parse.Configuration.Builder(this)
+                .applicationId("point") // if desired
+//                .clientKey("")
+                .server("http://192.168.0.164:1337/parse")
                 .build()
         )
     }

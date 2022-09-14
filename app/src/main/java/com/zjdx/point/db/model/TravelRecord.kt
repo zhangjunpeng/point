@@ -3,6 +3,7 @@ package com.zjdx.point.db.model
 import androidx.room.PrimaryKey
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import com.parse.ParseObject
 import java.util.*
 
 @Entity

@@ -100,9 +100,7 @@ android {
     }
 }
 
-ext {
-    parseVersion = "4.1.4"
-}
+
 
 dependencies {
 
@@ -184,7 +182,9 @@ dependencies {
 
     implementation 'com.blankj:utilcodex:1.31.0'
 
-    implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+
+    def parseVersion = "4.1.0"
 
     implementation "com.github.parse-community.Parse-SDK-Android:parse:$parseVersion"
     // for Google login/signup support (optional)

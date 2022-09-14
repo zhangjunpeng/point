@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.parse.ParseObject
 import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityMainBinding
@@ -97,6 +98,10 @@ class MainActivity : BaseActivity() {
     override fun initData() {
         mainViewModel.getUserInfo()
 
+        val parseObject=ParseObject("main")
+        parseObject.put("usercode",12312)
+        parseObject.saveInBackground()
+
         if (!SPUtils.getInstance().getBoolean(NameSpace.ISRECORDING)) {
             mainViewModel.findTravelNum()
             addUploadWork()
@@ -130,6 +135,8 @@ class MainActivity : BaseActivity() {
             SPUtils.getInstance().put(NameSpace.ISRECORDING, false)
             SPUtils.getInstance().put(NameSpace.RECORDINGID, "")
             addUploadWork()
+
+
 
         }
 
