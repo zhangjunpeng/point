@@ -125,14 +125,20 @@ class HistoryTravelActivity : BaseActivity() {
             syncDialog!!.dismiss()
         }
         syncDialogBinding!!.startTime.setOnClickListener {
-            PopWindowUtil.instance.showTimePicker(this) { date, view ->
-                ( it as TextView).text=DateUtil.dateFormat.format(date)
-            }
+            PopWindowUtil.instance.showTimePicker(
+                this,
+                onTimeSelectListener = { date, view ->
+                    ( it as TextView).text=DateUtil.dateFormat.format(date)
+                },
+            )
         }
         syncDialogBinding!!.endTime.setOnClickListener {
-            PopWindowUtil.instance.showTimePicker(this) { date, view ->
-                ( it as TextView).text=DateUtil.dateFormat.format(date)
-            }
+            PopWindowUtil.instance.showTimePicker(
+                this,
+                onTimeSelectListener = { date, view ->
+                    ( it as TextView).text=DateUtil.dateFormat.format(date)
+                },
+            )
         }
 
 

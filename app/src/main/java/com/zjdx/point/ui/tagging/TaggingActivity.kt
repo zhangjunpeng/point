@@ -32,6 +32,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
+import java.util.*
 
 @RuntimePermissions
 class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
@@ -104,7 +105,8 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
         binding.chart.axisRight.isEnabled = false
         binding.chart.axisLeft.isEnabled = false
-        binding.chart.xAxis.isEnabled=false
+        binding.chart.xAxis.isEnabled = false
+
         binding.chart.isScaleYEnabled = false
 
         val marker: IMarker = MyMarkerView(this, R.layout.item_tv)
@@ -117,39 +119,63 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
     private fun onInitView() {
         binding.startTime.setOnClickListener {
-            PopWindowUtil.instance.showTimePicker(
-                this, type = booleanArrayOf(true, true, true, true, true, false)
-            ) { date, view ->
-                binding.startTime.text = DateUtil.dateFormat.format(date)
-                taggingViewModel.startTime = date
-
+            val cel = Calendar.getInstance()
+            if (taggingViewModel.startTime != null) {
+                cel.time = taggingViewModel.startTime!!
             }
+            PopWindowUtil.instance.showTimePicker(
+                this, type = booleanArrayOf(true, true, true, true, true, false),
+                selectedDate = cel,
+                onTimeSelectListener = { date, view ->
+                    binding.startTime.text = DateUtil.dateFormat.format(date)
+                    taggingViewModel.startTime = date
+
+                },
+            )
         }
         binding.endTime.setOnClickListener {
+            val cel = Calendar.getInstance()
+            if (taggingViewModel.endTime != null) {
+                cel.time = taggingViewModel.endTime!!
+            }
             PopWindowUtil.instance.showTimePicker(
-                this, type = booleanArrayOf(true, true, true, true, true, false)
-            ) { date, view ->
-                binding.endTime.text = DateUtil.dateFormat.format(date)
-                taggingViewModel.endTime = date
+                this, type = booleanArrayOf(true, true, true, true, true, false),
+                selectedDate = cel,
+                onTimeSelectListener = { date, view ->
+                    binding.endTime.text = DateUtil.dateFormat.format(date)
+                    taggingViewModel.endTime = date
 
-            }
+                },
+            )
         }
-        binding.recyler.layoutManager = object : LinearLayoutManager(this) {
-            override fun canScrollVertically(): Boolean {
-                return false
-            }
-        }
+        binding.recyler.layoutManager = LinearLayoutManager(this)
 
         binding.cancel.setOnClickListener {
-            AlertDialog.Builder(this).setMessage("您有记录尚未保存，是否退出？")
-                .setPositiveButton("确定") { dialog, which ->
-                    finish()
-                }.setNegativeButton("取消") { dialog, which ->
-                    dialog.dismiss()
-                }.create().show()
+            while (taggingViewModel.notUpTagRecord.value!!.any {
+                    it.id == 0
+                }) {
+                AlertDialog.Builder(this).setMessage("您有记录尚未保存，是否退出？")
+                    .setPositiveButton("确定") { dialog, which ->
+                        finish()
+                    }.setNegativeButton("取消") { dialog, which ->
+                        dialog.dismiss()
+                    }.create().show()
+                return@setOnClickListener
+            }
+            if (taggingViewModel.hasChange) {
+                AlertDialog.Builder(this).setMessage("您有记录尚未保存，是否退出？")
+                    .setPositiveButton("确定") { dialog, which ->
+                        finish()
+                    }.setNegativeButton("取消") { dialog, which ->
+                        dialog.dismiss()
+                    }.create().show()
+            }
+
         }
         binding.save.setOnClickListener {
             taggingViewModel.repository.insertTagList(taggingViewModel.notUpTagRecord.value!!)
+            taggingViewModel.repository.delDBTag(taggingViewModel.deleList)
+            taggingViewModel.hasChange = false
             ToastUtils.showLong("保存成功")
             taggingViewModel.getTagRecordIsNotUpload()
         }
@@ -173,6 +199,8 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
             binding.endTime.text = ""
             taggingViewModel.endTime = null
             taggingViewModel.startTime = null
+            taggingViewModel.allLication.value!!.clear()
+            renderChart()
         }
         binding.query.setOnClickListener {
             if (taggingViewModel.endTime == null) {
@@ -217,6 +245,7 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         supportFragmentManager.beginTransaction().add(R.id.container_recyler, fragment)
             .commit()
     }
+
 
     private fun onInitViewModel() {
 
@@ -264,7 +293,7 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
         entries.clear()
         for (i in 0 until taggingViewModel.allLication.value!!.size) {
-            val entry = Entry(i.toFloat(), 50f)
+            val entry = Entry(i.toFloat(), 0f)
             entry.data = taggingViewModel.allLication.value!![i].creatTime.substring(5)
             entries.add(entry)
         }
@@ -272,11 +301,17 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
         val set1 = LineDataSet(entries, "")
         set1.lineWidth = 2f
-        set1.circleRadius = 1f
+        set1.circleRadius = 3f
+        set1.setCircleColor(Color.RED)
 
-        set1.setDrawHighlightIndicators(true)
-        set1.highLightColor=Color.RED
-        set1.highlightLineWidth=1f
+        set1.setValueFormatter { value, entry, dataSetIndex, viewPortHandler ->
+            ""
+        }
+
+        set1.setDrawVerticalHighlightIndicator(true)
+        set1.setDrawHorizontalHighlightIndicator(false)
+        set1.highLightColor = Color.RED
+        set1.highlightLineWidth = 1f
 
         // create a data object with the data sets
         val data = LineData(set1)
@@ -309,6 +344,29 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
 
     }
+
+    override fun onBackPressed() {
+        while (taggingViewModel.notUpTagRecord.value!!.any {
+                it.id == 0
+            }) {
+            AlertDialog.Builder(this).setMessage("您有记录尚未保存，是否退出？")
+                .setPositiveButton("确定") { dialog, which ->
+                    finish()
+                }.setNegativeButton("取消") { dialog, which ->
+                    dialog.dismiss()
+                }.create().show()
+            return
+        }
+        if (taggingViewModel.hasChange) {
+            AlertDialog.Builder(this).setMessage("您有记录尚未保存，是否退出？")
+                .setPositiveButton("确定") { dialog, which ->
+                    finish()
+                }.setNegativeButton("取消") { dialog, which ->
+                    dialog.dismiss()
+                }.create().show()
+        }
+    }
+
 
     override fun onPause() {
         super.onPause()

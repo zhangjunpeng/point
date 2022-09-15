@@ -42,7 +42,7 @@ class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
             val starArr = tagRecord.startTime.split(" ")
             val entArr = tagRecord.endTime.split(" ")
             holder.binding.info.text =
-                "${tagRecord.destination}   ${starArr[0]}\n起止地点：${tagRecord.startType}-${tagRecord.startType}" + "\n起止时刻：${starArr[1]}-${entArr[1]}"
+                "${tagRecord.destination}   ${starArr[0]}\n起止地点：${tagRecord.startType}-${tagRecord.endType}" + "\n起止时刻：${starArr[1]}-${entArr[1]}"
 
             holder.binding.up.setOnClickListener {
                 if (position > 0) {
@@ -50,6 +50,7 @@ class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
                     val record = tempList.removeAt(position)
                     tempList.add(position - 1, record)
                     viewModel.notUpTagRecord.value = tempList
+                    viewModel.hasChange = true
                 }
             }
 
@@ -59,18 +60,22 @@ class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
                     val record = tempList.removeAt(position)
                     tempList.add(position + 1, record)
                     viewModel.notUpTagRecord.value = tempList
+                    viewModel.hasChange = true
                 }
             }
             holder.binding.edit.setOnClickListener {
-                viewModel.addingTag=tagRecord
+                viewModel.hasChange = true
+                viewModel.addingTag = tagRecord
                 EventBus.getDefault().post(EditTagEvent())
             }
 
             holder.binding.del.setOnClickListener {
                 PopWindowUtil.instance.showDelDialog(context) {
                     val tempList = viewModel.notUpTagRecord.value!!
-                    tempList.removeAt(position)
+                    val tag = tempList.removeAt(position)
+                    viewModel.deleList.add(tag)
                     viewModel.notUpTagRecord.value = tempList
+                    viewModel.hasChange = true
 
                 }
             }

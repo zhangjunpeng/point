@@ -35,6 +35,7 @@ class HisTagActivity : BaseActivity() {
         binding.titleBarHistag.leftIvTitleBar.setOnClickListener {
             finish()
         }
+        binding.titleBarHistag.middleTvTitleBar.text="历史行程记录"
         binding.titleBarHistag.rightIvTitleBar.setImageResource(R.drawable.shaixuan)
         binding.titleBarHistag.rightIvTitleBar.setOnClickListener {
             initSyncDialog()
@@ -93,14 +94,20 @@ class HisTagActivity : BaseActivity() {
             hisTagViewModel.getTagRecordIsUpload()
         }
         syncDialogBinding!!.startTime.setOnClickListener {
-            PopWindowUtil.instance.showTimePicker(this) { date, view ->
-                (it as TextView).text = DateUtil.dateFormat.format(date)
-            }
+            PopWindowUtil.instance.showTimePicker(
+                this,
+                onTimeSelectListener = { date, view ->
+                    (it as TextView).text = DateUtil.dateFormat.format(date)
+                },
+            )
         }
         syncDialogBinding!!.endTime.setOnClickListener {
-            PopWindowUtil.instance.showTimePicker(this) { date, view ->
-                (it as TextView).text = DateUtil.dateFormat.format(date)
-            }
+            PopWindowUtil.instance.showTimePicker(
+                this,
+                onTimeSelectListener = { date, view ->
+                    (it as TextView).text = DateUtil.dateFormat.format(date)
+                },
+            )
         }
 
         syncDialog!!.show()

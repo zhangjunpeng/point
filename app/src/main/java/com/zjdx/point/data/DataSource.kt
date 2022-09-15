@@ -550,7 +550,7 @@ class DataSource {
                             desc = jObj.getString("description"),
                             destination = jObj.getString("destination"),
                             startTime = jObj.getString("start_time"),
-                            endTime = jObj.getString("start_time"),
+                            endTime = jObj.getString("end_time"),
                             startType = jObj.getString("start_type"),
                             endType = jObj.getString("end_type"),
                             travelmodel = jObj.getString("travel_types"),
@@ -567,6 +567,8 @@ class DataSource {
             return null
         }
     }
+
+
 
 
 }

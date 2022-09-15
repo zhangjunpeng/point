@@ -116,9 +116,10 @@ class UploadLocationsWork(
                 }
                 if (item.endTime - item.startTime > 60 * 1000) {
                     repository.updateTravelRecord(item)
-                } else {
-                    repository.deteleTravel(item)
                 }
+//                else {
+//                    repository.deteleTravel(item)
+//                }
             }
         }
     }

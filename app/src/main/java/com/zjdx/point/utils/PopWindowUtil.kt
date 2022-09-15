@@ -11,16 +11,15 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.bigkoo.pickerview.builder.TimePickerBuilder
-import com.bigkoo.pickerview.configure.PickerOptions
 import com.bigkoo.pickerview.listener.OnTimeSelectListener
 import com.bigkoo.pickerview.view.TimePickerView
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.zjdx.point.R
 import com.zjdx.point.databinding.PopwindowUtilBinding
 import com.zjdx.point.db.model.BaseListSreen
 import com.zjdx.point.ui.base.BaseListViewModel
+import java.util.*
 
 
 class PopWindowUtil : View.OnClickListener {
@@ -134,7 +133,8 @@ var mContext:Context?=null
     fun showTimePicker(
         context: Context,
         type: BooleanArray = booleanArrayOf(true, true, true, true, true, true),
-        isDialog: Boolean=true,
+        isDialog: Boolean = true,
+        selectedDate: Calendar? = null,
         onTimeSelectListener: OnTimeSelectListener,
     ) {
 
@@ -155,7 +155,8 @@ var mContext:Context?=null
                 .setCancelColor(Color.WHITE) //取消按钮文字颜色
                 .setGravity(Gravity.BOTTOM)
 //            .setBgColor(-0xcccccd) //滚轮背景颜色 Night mode //默认是1900-2100年
-//            .setDate(selectedDate) // 如果不设置的话，默认是系统时间*/
+                .setDate(selectedDate) // 如果不设置的话，默认是系统时间*/
+
 //            .setRangDate(startDate, endDate) //起始终止年月日设定
                 .setLabel("年", "月", "日", "时", "分", "秒").isDialog(isDialog) //是否显示为对话框样式
 

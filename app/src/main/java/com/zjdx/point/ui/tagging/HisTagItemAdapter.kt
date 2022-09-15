@@ -37,7 +37,7 @@ class HisTagItemAdapter(val context: Context, val dataList: List<TagRecord>) :
         val starArr = tagRecord.startTime.split(" ")
         val entArr = tagRecord.endTime.split(" ")
         holder.binding.info.text =
-            "${tagRecord.destination}   ${starArr[0]}\n起止地点：${tagRecord.startType}-${tagRecord.startType}" + "\n起止时刻：${starArr[1]}-${entArr[1]}"
+            "${tagRecord.destination}   ${starArr[0]}\n起止地点：${tagRecord.startType}-${tagRecord.endType}" + "\n起止时刻：${starArr.last()}-${entArr.last()}"
 
         holder.binding.check.setOnClickListener {
             EventBus.getDefault().postSticky(

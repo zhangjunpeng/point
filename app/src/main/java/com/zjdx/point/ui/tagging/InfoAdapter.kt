@@ -70,17 +70,25 @@ class InfoAdapter(val context: Context, val viewModl: TaggingViewModel) :
             }
             notifyDataSetChanged()
         }
+      val modelStr=  viewModl.tarvelModelList[index]
+        var selection = modelList.indexOf(modelStr)
+        if (selection == -1) {
+            modelList.add(modelList.lastIndex, modelStr)
+            selection = modelList.indexOf(modelStr)
+        }
         holder.binding.model.adapter =
             ArrayAdapter(context, android.R.layout.simple_spinner_item, modelList).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
-        holder.binding.model.setSelection(modelList.indexOf(viewModl.tarvelModelList[index]))
+        holder.binding.model.setSelection(selection)
+
+
 
         holder.binding.model.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?, view: View?, posi: Int, id: Long
             ) {
-                if (posi == modelList.size - 1) {
+                if (posi == modelList.lastIndex) {
                     val dialog =
                         ComponentDialog(context, android.R.style.Theme_Material_Light_Dialog)
                     val dialogBinding =
@@ -92,7 +100,11 @@ class InfoAdapter(val context: Context, val viewModl: TaggingViewModel) :
                             return@setOnClickListener
                         }
                         (view as TextView).text = dialogBinding.input.text
-                        viewModl.tarvelModelList[index] = dialogBinding.input.text.toString()
+                        modelList.add(modelList.lastIndex,  dialogBinding.input.text.toString())
+                        (holder.binding.model.adapter as ArrayAdapter<*>).notifyDataSetChanged()
+
+                        selection = modelList.indexOf(dialogBinding.input.text.toString())
+                        holder.binding.model.setSelection(selection)
                         dialog.dismiss()
                     }
                     dialogBinding.cancel.setOnClickListener {

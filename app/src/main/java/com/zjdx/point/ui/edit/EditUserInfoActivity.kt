@@ -102,7 +102,7 @@ class EditUserInfoActivity : BaseActivity() {
                 1
             }
             val age = editUserInfoViewModel.ageList[binding.ageRegisterAc.selectedItemPosition]
-            val address = binding.addressRegisterAc.editableText.toString()
+            val address = binding.addressRegisterAc.text.toString()
             val salary =
                 editUserInfoViewModel.salaryList[binding.minsalaryRegisterAc.selectedItemPosition]
             editUserInfoViewModel.editUserInfo(

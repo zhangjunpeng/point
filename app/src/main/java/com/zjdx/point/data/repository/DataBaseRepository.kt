@@ -196,7 +196,7 @@ class DataBaseRepository(
 
     @WorkerThread
     fun uploadTagInfo(data: String): Back<Boolean> {
-       return dataSource.uploadTagInfo(data)
+        return dataSource.uploadTagInfo(data)
     }
 
 
@@ -205,10 +205,16 @@ class DataBaseRepository(
             dataSource.getUserInfo(userCode)
         }
     }
-    suspend fun delTag(userCode: String, id: String): Back<Boolean>{
+
+    suspend fun delTag(userCode: String, id: String): Back<Boolean> {
         return withContext(Dispatchers.IO) {
             dataSource.delTag(userCode, id)
         }
+    }
+
+    @WorkerThread
+    fun delDBTag(tagRecords: List<TagRecord>) {
+        tagRecordDao.delDBTag(tagRecords)
     }
 
     suspend fun editUserInfo(

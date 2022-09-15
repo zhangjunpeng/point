@@ -16,6 +16,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
+import kotlin.collections.ArrayList
 
 class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
 
@@ -24,6 +25,7 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
 
     val notUpTagRecord = MutableLiveData<MutableList<TagRecord>>()
 
+    val deleList=ArrayList<TagRecord>()
 
     var startTime: Date? = null
     var endTime: Date? = null
@@ -31,6 +33,8 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
     var addingTag:TagRecord?=null
 
     val selectLoaction = MutableLiveData<Location>()
+
+    var hasChange=false
 
     val addTag = MutableLiveData<Boolean>().apply {
         this.value = false

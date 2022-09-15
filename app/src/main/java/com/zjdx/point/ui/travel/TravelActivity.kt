@@ -37,6 +37,7 @@ import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.main.MainActivity
 import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.Utils
+import com.zjdx.point.work.PointWorkManager
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -111,6 +112,9 @@ class TravelActivity : BaseActivity() {
     }
 
     private fun saveTravelRecord() {
+        if (travelRecord == null) {
+            return
+        }
         if (endTime == 0L) {
             endTime = Date().time
         }
@@ -156,6 +160,8 @@ class TravelActivity : BaseActivity() {
         SPUtils.getInstance().put(NameSpace.ISRECORDING, true)
         SPUtils.getInstance().put(NameSpace.RECORDINGID, travelRecord!!.id)
         isRecording = true
+
+        PointWorkManager.instance.addPeriodicWork(this)
 
     }
     val endListener = View.OnClickListener {
@@ -239,13 +245,9 @@ class TravelActivity : BaseActivity() {
                             rssi = cellinfo.cellSignalStrength.cdmaDbm
                         }
                         if (cellinfo is CellInfoLte) {
-                            lac = cellinfo.cellIdentity.pci
-                            cellId = cellinfo.cellIdentity.tac
-                            rssi = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                cellinfo.cellSignalStrength.rssi
-                            } else {
-                                cellinfo.cellSignalStrength.dbm
-                            }
+                            lac = cellinfo.cellIdentity.tac
+                            cellId = cellinfo.cellIdentity.ci
+                            rssi = cellinfo.cellSignalStrength.dbm
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                             if (cellinfo is CellInfoNr) {
@@ -428,6 +430,9 @@ class TravelActivity : BaseActivity() {
         binding.endTravel.text = "开始出行"
         binding.endTravel.setOnClickListener(startListener)
         binding.titleBarTravelAc.leftIvTitleBar.setOnClickListener {
+            if (!isRecording) {
+                finish()
+            }
             startMain(false)
         }
         binding.titleBarTravelAc.rightIvTitleBar.visibility = View.INVISIBLE
@@ -435,10 +440,11 @@ class TravelActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        startMain(false)
         if (!isRecording) {
             finish()
         }
+        startMain(false)
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

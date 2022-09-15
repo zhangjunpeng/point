@@ -1,6 +1,7 @@
 package com.zjdx.point.ui.main
 
 import android.content.Intent
+import android.os.Build
 import android.text.Html
 import android.view.Gravity
 import android.widget.Toast
@@ -8,7 +9,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityMainBinding
@@ -176,7 +176,7 @@ class MainActivity : BaseActivity() {
     }
 
     fun addUploadWork() {
-        val request = PointWorkManager.instance.addUploadWork(this)
+            PointWorkManager.instance.addUploadWork(this)
 //        WorkManager.getInstance(this).getWorkInfoByIdLiveData(request!!.id)
 //            .observe(this) { workInfo ->
 //                Log.i("workInfo", workInfo!!.state.toString())

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ToastUtils
@@ -12,7 +13,6 @@ import com.zjdx.point.databinding.FragmentTagInfoBinding
 import com.zjdx.point.db.model.TagRecord
 import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.PopWindowUtil
-import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 class TagInfoFragment : BottomSheetDialogFragment() {
@@ -35,28 +35,48 @@ class TagInfoFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyler.layoutManager = LinearLayoutManager(context)
+        binding.recyler.layoutManager = object : LinearLayoutManager(context) {
+            override fun canScrollVertically(): Boolean {
+                return false
+            }
+        }
         binding.recyler.adapter = InfoAdapter(requireContext(), taggingViewModel)
         binding.startTime.setOnClickListener {
-            PopWindowUtil.instance.showTimePicker(
-                requireContext(), isDialog = false
-            ) { date, view ->
-                startTime = date
-                binding.startTime.text = DateUtil.dateFormat.format(date)
+            val cel = Calendar.getInstance()
+            if (startTime != null) {
+                cel.time = startTime!!
             }
+            PopWindowUtil.instance.showTimePicker(
+                requireContext(), isDialog = false,
+                selectedDate = cel,
+                onTimeSelectListener = { date, view ->
+                    startTime = date
+                    binding.startTime.text = DateUtil.dateFormat.format(date)
+                },
+            )
         }
         binding.endTime.setOnClickListener {
-            PopWindowUtil.instance.showTimePicker(
-                requireContext(), isDialog = false
-            ) { date, view ->
-                endTime = date
-                binding.endTime.text = DateUtil.dateFormat.format(date)
+            val cel = Calendar.getInstance()
+            if (endTime != null) {
+                cel.time = endTime!!
             }
+            PopWindowUtil.instance.showTimePicker(
+                requireContext(), isDialog = false,
+                selectedDate = cel,
+                onTimeSelectListener = { date, view ->
+                    endTime = date
+                    binding.endTime.text = DateUtil.dateFormat.format(date)
+                },
+            )
         }
         binding.cancel.setOnClickListener {
-            PopWindowUtil.instance.showDelDialog(requireContext()) {
-                this@TagInfoFragment.dismiss()
-            }
+            AlertDialog.Builder(requireContext()).setMessage("“本次修改将不被保存，是否退出？")
+                .setPositiveButton("确定") { dialog, which ->
+                    this@TagInfoFragment.dismiss()
+                }.setNegativeButton("取消") { dialog, which ->
+                    dialog.dismiss()
+                }.create().show()
+
         }
         binding.confirm.setOnClickListener {
             if (binding.dis.text.isEmpty()) {
@@ -123,6 +143,8 @@ class TagInfoFragment : BottomSheetDialogFragment() {
         taggingViewModel.addingTag?.let {
             binding.startTime.text = it.startTime
             binding.endTime.text = it.endTime
+            startTime = DateUtil.dateFormat.parse(it.startTime)
+            endTime = DateUtil.dateFormat.parse(it.endTime)
             binding.startType.setText(it.startType)
             binding.endType.setText(it.endType)
             binding.dis.setText(it.destination)
