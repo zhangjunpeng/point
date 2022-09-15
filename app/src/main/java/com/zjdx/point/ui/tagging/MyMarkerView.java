@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -38,5 +39,14 @@ public class MyMarkerView extends MarkerView {
             mOffset = new MPPointF(-(getWidth() / 2), -getHeight());
         }
         return mOffset;
+    }
+
+    @Override
+    public MPPointF getOffsetForDrawingAtPoint(float posX, float posY) {
+        LogUtils.i(posX + "::" + posY);
+        if (posX > 630f) {
+            return new MPPointF(530-posX  , -getHeight());
+        }
+        return super.getOffsetForDrawingAtPoint(posX, posY);
     }
 }

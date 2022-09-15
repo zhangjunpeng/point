@@ -169,7 +169,9 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
                     }.setNegativeButton("取消") { dialog, which ->
                         dialog.dismiss()
                     }.create().show()
+                return@setOnClickListener
             }
+            finish()
 
         }
         binding.save.setOnClickListener {
@@ -200,6 +202,7 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
             taggingViewModel.endTime = null
             taggingViewModel.startTime = null
             taggingViewModel.allLication.value!!.clear()
+            renderLocation()
             renderChart()
         }
         binding.query.setOnClickListener {
@@ -272,6 +275,7 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         }
         taggingViewModel.addTag.observe(this) {
             if (it) {
+                taggingViewModel.addingTag=null
                 supportFragmentManager.beginTransaction().add(R.id.container_recyler, fragment)
                     .commit()
             } else {
@@ -299,10 +303,12 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         }
 
 
-        val set1 = LineDataSet(entries, "")
+        val set1 = LineDataSet(entries, null)
         set1.lineWidth = 2f
         set1.circleRadius = 3f
-        set1.setCircleColor(Color.RED)
+        set1.setDrawIcons(false)
+
+        set1.setCircleColor(Color.BLUE)
 
         set1.setValueFormatter { value, entry, dataSetIndex, viewPortHandler ->
             ""
@@ -364,7 +370,9 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
                 }.setNegativeButton("取消") { dialog, which ->
                     dialog.dismiss()
                 }.create().show()
+            return
         }
+        finish()
     }
 
 

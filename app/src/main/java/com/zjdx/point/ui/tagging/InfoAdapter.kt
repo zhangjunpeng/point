@@ -102,9 +102,10 @@ class InfoAdapter(val context: Context, val viewModl: TaggingViewModel) :
                         (view as TextView).text = dialogBinding.input.text
                         modelList.add(modelList.lastIndex,  dialogBinding.input.text.toString())
                         (holder.binding.model.adapter as ArrayAdapter<*>).notifyDataSetChanged()
-
                         selection = modelList.indexOf(dialogBinding.input.text.toString())
                         holder.binding.model.setSelection(selection)
+                        viewModl.tarvelModelList[index] = modelList[posi]
+
                         dialog.dismiss()
                     }
                     dialogBinding.cancel.setOnClickListener {
