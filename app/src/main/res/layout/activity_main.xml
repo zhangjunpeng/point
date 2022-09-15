@@ -139,34 +139,6 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/travel_main_ac"
-                    android:layout_width="200dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:elevation="4dp"
-                    android:orientation="horizontal"
-                    android:background="@drawable/border_text_blue"
-                    >
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/daohang" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="14dp"
-                        android:text="开始出行"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/tagging_main_ac"
                     android:layout_width="200dp"
                     android:layout_height="48dp"
@@ -175,7 +147,7 @@
                     android:elevation="4dp"
                     android:orientation="horizontal"
                     android:layout_marginTop="20dp"
-                    android:background="@drawable/border_text_blue"
+                    android:background="@drawable/white_border_text_blue"
                     >
 
                     <ImageView
@@ -189,10 +161,40 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="14dp"
-                        android:text="轨迹标注"
+                        android:text="标注我的行程"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/travel_main_ac"
+                    android:layout_width="200dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:elevation="4dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/white_border_text_blue"
+                    >
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/daohang" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="14dp"
+                        android:text="开始新的出行"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+
             </LinearLayout>
 
         </LinearLayout>
