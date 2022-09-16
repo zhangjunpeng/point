@@ -272,7 +272,7 @@ class TravelActivity : BaseActivity() {
                         altitude = amapLocation.altitude,
                         accuracy = amapLocation.accuracy,
                         source = source,
-                        creatTime = DateUtil.dateFormat.format(amapLocation.time),
+                        creatTime = DateUtil.dateFormat.format(Date()),
                         address = amapLocation.address,
                         mcc = mcc,
                         mnc = mnc,
