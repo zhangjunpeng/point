@@ -161,7 +161,9 @@ class TravelActivity : BaseActivity() {
         SPUtils.getInstance().put(NameSpace.RECORDINGID, travelRecord!!.id)
         isRecording = true
 
-        PointWorkManager.instance.addPeriodicWork(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            PointWorkManager.instance.addPeriodicWork(this)
+        }
 
     }
     val endListener = View.OnClickListener {

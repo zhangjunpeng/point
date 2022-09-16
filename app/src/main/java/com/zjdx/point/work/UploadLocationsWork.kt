@@ -8,23 +8,23 @@ import androidx.work.WorkerParameters
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SPUtils
 import com.zjdx.point.NameSpace
+import com.zjdx.point.config.REST
 import com.zjdx.point.data.bean.Back
 import com.zjdx.point.data.bean.SubmitBackModel
-import com.zjdx.point.config.REST
+import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.db.MyDataBase
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.db.model.TravelRecord
-import com.zjdx.point.data.repository.DataBaseRepository
 import com.zjdx.point.event.UpdateMsgEvent
 import com.zjdx.point.utils.DateUtil
-import okhttp3.*
+import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONArray
 import org.json.JSONObject
-import java.net.InetSocketAddress
-import java.net.Proxy
 import java.util.*
 
 class UploadLocationsWork(
@@ -99,7 +99,6 @@ class UploadLocationsWork(
                 if (item.startTime == 0L) {
                     val loca = repository.getFirsttLocationById(item.id)
                     if (loca == null) {
-                        repository.deteleTravel(item)
                         continue
                     } else {
                         item.startTime = DateUtil.dateFormat.parse(loca.creatTime).time
