@@ -107,7 +107,6 @@ class UploadLocationsWork(
                 if (item.endTime == 0L) {
                     val loca = repository.getLastLocationById(item.id)
                     if (loca == null) {
-                        repository.deteleTravel(item)
                         continue
                     } else {
                         item.endTime = DateUtil.dateFormat.parse(loca.creatTime).time
