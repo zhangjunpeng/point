@@ -155,7 +155,7 @@ class TravelActivity : BaseActivity() {
         startLoactionService()
 //        startService(Intent(applicationContext,KeepLifeService::class.java))
 
-        binding.endTravel.text = "结束出行"
+        binding.endTravel.text = "结 束 出 行"
         binding.endTravel.setOnClickListener(endListener)
         SPUtils.getInstance().put(NameSpace.ISRECORDING, true)
         SPUtils.getInstance().put(NameSpace.RECORDINGID, travelRecord!!.id)
@@ -429,7 +429,7 @@ class TravelActivity : BaseActivity() {
     }
 
     override fun initView() {
-        binding.endTravel.text = "开始出行"
+        binding.endTravel.text = "开 始 出 行"
         binding.endTravel.setOnClickListener(startListener)
         binding.titleBarTravelAc.leftIvTitleBar.setOnClickListener {
             if (!isRecording) {

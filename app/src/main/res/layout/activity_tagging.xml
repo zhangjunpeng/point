@@ -140,11 +140,16 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="#D0CECE"
+                />
             <LinearLayout
                 android:id="@+id/button_layout"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="#ccc"
+                android:background="@color/white"
                 android:orientation="horizontal"
                 android:paddingVertical="5dp">
 
@@ -154,10 +159,10 @@
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="10dp"
                     android:layout_weight="1"
-                    android:background="@drawable/white_radius_text"
+                    android:background="@drawable/cancel_radius_text"
                     android:gravity="center"
                     android:text="取消"
-                    android:textColor="@color/gray" />
+                    android:textColor="#595959" />
 
                 <TextView
                     android:id="@+id/save"
@@ -165,10 +170,10 @@
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="10dp"
                     android:layout_weight="1"
-                    android:background="@drawable/blue_radius_text"
+                    android:background="@drawable/save_radius_text"
                     android:gravity="center"
                     android:text="保存"
-                    android:textColor="@color/white"
+                    android:textColor="#4472C4"
 
                     />
 

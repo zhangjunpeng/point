@@ -11,10 +11,11 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textSize="15dp"
-        android:background="@drawable/blue_radius_text"
+        android:background="@drawable/his_blue_radius_text"
         android:paddingHorizontal="15dp"
         android:paddingVertical="5dp"
-        android:textColor="@color/white"
+        android:textColor="#4472C4"
+        android:layout_marginLeft="14dp"
         android:text="1" />
 
   <androidx.recyclerview.widget.RecyclerView

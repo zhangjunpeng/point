@@ -3,12 +3,32 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/work/point/app/src/main/res/drawable-v24/low_blue_radius_text.xml" value="0.1205" />
+        <entry key="..\:/work/point/app/src/main/res/drawable/blue_radius_text.xml" value="0.1205" />
         <entry key="..\:/work/point/app/src/main/res/drawable/border_edit.xml" value="0.2335" />
+        <entry key="..\:/work/point/app/src/main/res/drawable/button_border.xml" value="0.1205" />
+        <entry key="..\:/work/point/app/src/main/res/drawable/cancel_radius_text.xml" value="0.1205" />
+        <entry key="..\:/work/point/app/src/main/res/drawable/chuxing_button_border.xml" value="0.1205" />
+        <entry key="..\:/work/point/app/src/main/res/drawable/gray_border_text.xml" value="0.1205" />
+        <entry key="..\:/work/point/app/src/main/res/drawable/his_blue_radius_text.xml" value="0.1205" />
+        <entry key="..\:/work/point/app/src/main/res/drawable/orange_radius_text.xml" value="0.1205" />
+        <entry key="..\:/work/point/app/src/main/res/drawable/save_radius_text.xml" value="0.1205" />
         <entry key="..\:/work/point/app/src/main/res/drawable/shadow_gray.xml" value="0.2275" />
+        <entry key="..\:/work/point/app/src/main/res/drawable/white_radius_text.xml" value="0.1205" />
+        <entry key="..\:/work/point/app/src/main/res/layout/activity_his_deatail.xml" value="0.109375" />
+        <entry key="..\:/work/point/app/src/main/res/layout/activity_his_tagging.xml" value="0.109375" />
         <entry key="..\:/work/point/app/src/main/res/layout/activity_tagging.xml" value="0.23007246376811594" />
+        <entry key="..\:/work/point/app/src/main/res/layout/activity_travel.xml" value="0.16799999999999998" />
         <entry key="..\:/work/point/app/src/main/res/layout/fragment_tag_info.xml" value="0.24947916666666667" />
-        <entry key="..\:/work/point/app/src/main/res/layout/item_add_new_travel.xml" value="0.109375" />
+        <entry key="..\:/work/point/app/src/main/res/layout/item_add_new_travel.xml" value="0.4" />
+        <entry key="..\:/work/point/app/src/main/res/layout/item_his_tag_recyler.xml" value="0.109375" />
+        <entry key="..\:/work/point/app/src/main/res/layout/item_his_tag_recyler_item.xml" value="0.109375" />
+        <entry key="..\:/work/point/app/src/main/res/layout/item_spinner_base_work.xml" value="0.109375" />
         <entry key="..\:/work/point/app/src/main/res/layout/item_tag_add_track.xml" value="0.23007246376811594" />
+        <entry key="..\:/work/point/app/src/main/res/layout/item_tag_recyler.xml" value="0.109375" />
+        <entry key="..\:/work/point/app/src/main/res/layout/item_tv.xml" value="0.109375" />
+        <entry key="..\:/work/point/app/src/main/res/layout/title_bar.xml" value="0.109375" />
+        <entry key="..\:/work/point/app/src/main/res/layout/title_bar_his.xml" value="0.109375" />
       </map>
     </option>
   </component>
