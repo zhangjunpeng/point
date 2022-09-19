@@ -201,7 +201,7 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
             binding.endTime.text = ""
             taggingViewModel.endTime = null
             taggingViewModel.startTime = null
-            taggingViewModel.allLication.value!!.clear()
+            taggingViewModel.allLication.value?.clear()
             renderLocation()
             renderChart()
         }
@@ -294,7 +294,9 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
     }
 
     private fun renderChart() {
-
+        if (taggingViewModel.allLication.value == null) {
+            return
+        }
         entries.clear()
         for (i in 0 until taggingViewModel.allLication.value!!.size) {
             val entry = Entry(i.toFloat(), 0f)
@@ -329,7 +331,12 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
     }
 
     private fun renderLocation() {
+        if (taggingViewModel.allLication.value == null) {
+            return
+        }
         val latLngList = ArrayList<LatLng>()
+
+
 
         for (i in 0 until taggingViewModel.allLication.value!!.size) {
             val local = taggingViewModel.allLication.value!![i]

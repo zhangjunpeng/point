@@ -3,14 +3,14 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@color/white"
     tools:context=".ui.tagging.TagInfoFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -18,18 +18,46 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_margin="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
             <TextView
-
                 android:id="@+id/cancel"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="30dp"
                 android:background="@drawable/gray_border_text"
                 android:gravity="center"
                 android:text="取消" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
+            <TextView
+                android:id="@+id/set_start"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/blue_radius_text"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:text="设为起点" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/set_end"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:background="@drawable/blue_radius_text"
+                android:gravity="center"
+                android:text="设为终点" />
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -39,7 +67,6 @@
                 android:id="@+id/confirm"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="30dp"
                 android:background="@drawable/blue_radius_text"
                 android:gravity="center"
                 android:text="确定" />
@@ -52,7 +79,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
@@ -68,25 +95,23 @@
                 android:layout_weight="2"
                 android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/dis"
+                <Spinner
+                    android:id="@+id/dis_sp"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="40dp"
                     android:layout_margin="5dp"
-                    android:layout_weight="1"
                     android:background="@drawable/border_edit"
                     android:gravity="center" />
 
                 <EditText
                     android:id="@+id/desc"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="40dp"
                     android:layout_margin="5dp"
-                    android:layout_weight="1"
                     android:background="@drawable/border_edit"
                     android:gravity="center"
-
-                    android:hint="描述" />
+                    android:hint="描述"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
 
@@ -153,7 +178,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
@@ -163,15 +188,32 @@
                 android:gravity="center"
                 android:text="起点类型" />
 
-            <EditText
-                android:id="@+id/start_type"
+
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:background="@drawable/border_edit"
-                android:gravity="center"
-                android:hint="请输入" />
+                android:orientation="vertical">
+
+                <Spinner
+                    android:id="@+id/start_type_sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/border_edit"
+                    android:gravity="center" />
+
+                <EditText
+                    android:id="@+id/start_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/border_edit"
+                    android:gravity="center"
+                    android:hint="描述"
+                    android:visibility="gone" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <View
@@ -181,7 +223,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
@@ -191,15 +233,30 @@
                 android:gravity="center"
                 android:text="终点类型" />
 
-            <EditText
-                android:id="@+id/end_type"
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:background="@drawable/border_edit"
-                android:gravity="center"
-                android:hint="请输入" />
+                android:orientation="vertical">
+
+                <Spinner
+                    android:id="@+id/end_type_sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/border_edit"
+                    android:gravity="center" />
+
+                <EditText
+                    android:id="@+id/end_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/border_edit"
+                    android:gravity="center"
+                    android:hint="描述"
+                    android:visibility="gone" />
+            </LinearLayout>
         </LinearLayout>
 
         <View
@@ -215,10 +272,15 @@
             android:text="请按照顺序填写使用的交通方式"
             android:textColor="#F60707" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyler"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
 
     </LinearLayout>
 

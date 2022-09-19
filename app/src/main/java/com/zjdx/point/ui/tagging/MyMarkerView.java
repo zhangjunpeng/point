@@ -44,9 +44,7 @@ public class MyMarkerView extends MarkerView {
     @Override
     public MPPointF getOffsetForDrawingAtPoint(float posX, float posY) {
         LogUtils.i(posX + "::" + posY);
-        if (posX > 630f) {
-            return new MPPointF(530-posX  , -getHeight());
-        }
-        return super.getOffsetForDrawingAtPoint(posX, posY);
+        return new MPPointF(300 - posX, -getHeight());
+
     }
 }

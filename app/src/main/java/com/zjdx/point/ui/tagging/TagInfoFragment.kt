@@ -1,10 +1,14 @@
 package com.zjdx.point.ui.tagging
 
+import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ToastUtils
@@ -15,7 +19,7 @@ import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.PopWindowUtil
 import java.util.*
 
-class TagInfoFragment : BottomSheetDialogFragment() {
+class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: FragmentTagInfoBinding
 
@@ -41,6 +45,29 @@ class TagInfoFragment : BottomSheetDialogFragment() {
             }
         }
         binding.recyler.adapter = InfoAdapter(requireContext(), taggingViewModel)
+
+
+        binding.disSp.adapter = ArrayAdapter(
+            requireContext(), R.layout.simple_spinner_item, taggingViewModel.travelDis
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
+        binding.startTypeSp.adapter = ArrayAdapter(
+            requireContext(), R.layout.simple_spinner_item, taggingViewModel.types
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
+        binding.endTypeSp.adapter = ArrayAdapter(
+            requireContext(), R.layout.simple_spinner_item, taggingViewModel.types
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        binding.disSp.onItemSelectedListener = this
+        binding.startTypeSp.onItemSelectedListener = this
+        binding.endTypeSp.onItemSelectedListener = this
+
         binding.startTime.setOnClickListener {
             val cel = Calendar.getInstance()
             if (startTime != null) {
@@ -79,7 +106,7 @@ class TagInfoFragment : BottomSheetDialogFragment() {
 
         }
         binding.confirm.setOnClickListener {
-            if (binding.dis.text.isEmpty()) {
+            if (binding.desc.isVisible && binding.desc.text.isEmpty()) {
                 ToastUtils.showLong("请输入目的地")
                 return@setOnClickListener
             }
@@ -90,14 +117,18 @@ class TagInfoFragment : BottomSheetDialogFragment() {
             if (endTime == null) {
                 ToastUtils.showLong("请点击选择结束时间")
                 return@setOnClickListener
-
             }
-            if (binding.startType.text.isEmpty()) {
+
+            if(startTime!!.after(endTime!!)){
+                ToastUtils.showLong("到达时刻应晚于出发时刻!")
+                return@setOnClickListener
+            }
+            if (binding.startType.isVisible && binding.startType.text.isEmpty()) {
                 ToastUtils.showLong("请输入起点类型")
                 return@setOnClickListener
 
             }
-            if (binding.endType.text.isEmpty()) {
+            if (binding.endType.isVisible && binding.endType.text.isEmpty()) {
                 ToastUtils.showLong("请输入终点类型")
                 return@setOnClickListener
 
@@ -111,24 +142,53 @@ class TagInfoFragment : BottomSheetDialogFragment() {
             if (taggingViewModel.addingTag!=null){
                 taggingViewModel.addingTag?.let {
                     it.startTime = DateUtil.dateFormat.format(startTime)
-                    it. endTime = DateUtil.dateFormat.format(endTime)
-                    it. startType = binding.startType.text.toString()
-                    it. endType = binding.endType.text.toString()
-                    it. travelmodel = taggingViewModel.tarvelModelList.joinToString(separator = ",")
-                    it. destination = binding.dis.text.toString()
-                    it. desc = binding.desc.text.toString()
+                    it.endTime = DateUtil.dateFormat.format(endTime)
+
+                    if (binding.startType.isVisible) {
+                        it.startType = binding.startType.text.toString()
+                    } else {
+                        it.startType = binding.startTypeSp.selectedItem.toString()
+                    }
+                    if (binding.endType.isVisible) {
+                        it.endType = binding.endType.text.toString()
+                    } else {
+                        it.endType = binding.endTypeSp.selectedItem.toString()
+                    }
+                    it.travelmodel = taggingViewModel.tarvelModelList.joinToString(separator = ",")
+                    if (binding.disSp.isVisible) {
+                        it.destination = binding.desc.text.toString()
+                    } else {
+                        it.destination = binding.disSp.selectedItem.toString()
+                    }
+
+                    it.desc = binding.desc.text.toString()
                 }
                 taggingViewModel.repository.updateTags(arrayListOf(taggingViewModel.addingTag!!))
 
-                taggingViewModel.addingTag=null
-            }else{
+                taggingViewModel.addingTag = null
+            } else {
+                val startType = if (binding.startType.isVisible) {
+                    binding.startType.text.toString()
+                } else {
+                    binding.startTypeSp.selectedItem.toString()
+                }
+                val endType = if (binding.endType.isVisible) {
+                    binding.endType.text.toString()
+                } else {
+                    binding.endTypeSp.selectedItem.toString()
+                }
+                val destination = if (binding.disSp.isVisible) {
+                    binding.desc.text.toString()
+                } else {
+                    binding.disSp.selectedItem.toString()
+                }
                 val tagRecord = TagRecord(
                     startTime = DateUtil.dateFormat.format(startTime),
                     endTime = DateUtil.dateFormat.format(endTime),
-                    startType = binding.startType.text.toString(),
-                    endType = binding.endType.text.toString(),
+                    startType = startType,
+                    endType = endType,
                     travelmodel = taggingViewModel.tarvelModelList.joinToString(separator = ","),
-                    destination = binding.dis.text.toString(),
+                    destination = destination,
                     desc = binding.desc.text.toString(),
                 )
                 val list = taggingViewModel.notUpTagRecord.value!!
@@ -141,13 +201,38 @@ class TagInfoFragment : BottomSheetDialogFragment() {
         }
 
         taggingViewModel.addingTag?.let {
+
+            if (taggingViewModel.travelDis.contains(it.destination)) {
+                binding.disSp.setSelection(taggingViewModel.travelDis.indexOf(it.destination))
+                binding.desc.visibility = View.GONE
+            } else {
+                binding.disSp.setSelection(taggingViewModel.travelDis.lastIndex)
+                binding.desc.visibility = View.VISIBLE
+                binding.desc.setText(it.destination)
+            }
+
+            if (taggingViewModel.types.contains(it.startType)) {
+                binding.startTypeSp.setSelection(taggingViewModel.types.indexOf(it.startType))
+                binding.startType.visibility = View.GONE
+            } else {
+                binding.startTypeSp.setSelection(taggingViewModel.types.lastIndex)
+                binding.startType.visibility = View.VISIBLE
+                binding.startType.setText(it.startType)
+            }
+
+            if (taggingViewModel.types.contains(it.endType)) {
+                binding.endTypeSp.setSelection(taggingViewModel.types.indexOf(it.endType))
+                binding.endType.visibility = View.GONE
+            } else {
+                binding.endTypeSp.setSelection(taggingViewModel.types.lastIndex)
+                binding.endType.visibility = View.VISIBLE
+                binding.endType.setText(it.endType)
+            }
+
             binding.startTime.text = it.startTime
             binding.endTime.text = it.endTime
             startTime = DateUtil.dateFormat.parse(it.startTime)
             endTime = DateUtil.dateFormat.parse(it.endTime)
-            binding.startType.setText(it.startType)
-            binding.endType.setText(it.endType)
-            binding.dis.setText(it.destination)
             binding.desc.setText(it.desc)
             taggingViewModel.tarvelModelList.clear()
             taggingViewModel.tarvelModelList.addAll(it.travelmodel.split(","))
@@ -162,6 +247,36 @@ class TagInfoFragment : BottomSheetDialogFragment() {
         fun newInstance() = TagInfoFragment()
     }
 
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        when (parent?.id) {
+            binding.disSp.id -> {
+                if (position == taggingViewModel.travelDis.lastIndex) {
+                    binding.desc.visibility = View.VISIBLE
+                } else {
+                    binding.desc.visibility = View.GONE
+                }
+            }
+            binding.startTypeSp.id -> {
+                if (position == taggingViewModel.types.lastIndex) {
+                    binding.startType.visibility = View.VISIBLE
+                } else {
+                    binding.startType.visibility = View.GONE
+                }
+            }
+            binding.endTypeSp.id -> {
+                if (position == taggingViewModel.types.lastIndex) {
+                    binding.endType.visibility = View.VISIBLE
+                } else {
+                    binding.endType.visibility = View.GONE
+                }
+            }
+        }
+
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        TODO("Not yet implemented")
+    }
 
 
 }

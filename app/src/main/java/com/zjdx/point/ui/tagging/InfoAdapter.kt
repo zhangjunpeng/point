@@ -39,7 +39,12 @@ class InfoAdapter(val context: Context, val viewModl: TaggingViewModel) :
         )
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, index: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        if (position == 0) {
+            holder.binding.title.visibility = View.VISIBLE
+        } else {
+            holder.binding.title.visibility = View.INVISIBLE
+        }
         holder.binding.add.setOnClickListener {
             viewModl.tarvelModelList.add("步行")
             notifyDataSetChanged()
@@ -47,7 +52,7 @@ class InfoAdapter(val context: Context, val viewModl: TaggingViewModel) :
         holder.binding.del.setOnClickListener {
             PopWindowUtil.instance.showDelDialog(context) {
                 if (viewModl.tarvelModelList.size != 1) {
-                    viewModl.tarvelModelList.removeAt(index)
+                    viewModl.tarvelModelList.removeAt(position)
                     notifyDataSetChanged()
                 }
 
@@ -55,22 +60,22 @@ class InfoAdapter(val context: Context, val viewModl: TaggingViewModel) :
 
         }
         holder.binding.up.setOnClickListener {
-            if (index > 0) {
-                val str = viewModl.tarvelModelList[index]
-                viewModl.tarvelModelList.removeAt(index)
-                viewModl.tarvelModelList.add(index - 1, str)
+            if (position > 0) {
+                val str = viewModl.tarvelModelList[position]
+                viewModl.tarvelModelList.removeAt(position)
+                viewModl.tarvelModelList.add(position - 1, str)
             }
             notifyDataSetChanged()
         }
         holder.binding.down.setOnClickListener {
-            if (index < viewModl.tarvelModelList.size - 1) {
-                val str = viewModl.tarvelModelList[index]
-                viewModl.tarvelModelList.removeAt(index)
-                viewModl.tarvelModelList.add(index + 1, str)
+            if (position < viewModl.tarvelModelList.size - 1) {
+                val str = viewModl.tarvelModelList[position]
+                viewModl.tarvelModelList.removeAt(position)
+                viewModl.tarvelModelList.add(position + 1, str)
             }
             notifyDataSetChanged()
         }
-      val modelStr=  viewModl.tarvelModelList[index]
+        val modelStr = viewModl.tarvelModelList[position]
         var selection = modelList.indexOf(modelStr)
         if (selection == -1) {
             modelList.add(modelList.lastIndex, modelStr)
@@ -81,7 +86,6 @@ class InfoAdapter(val context: Context, val viewModl: TaggingViewModel) :
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
         holder.binding.model.setSelection(selection)
-
 
 
         holder.binding.model.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -104,7 +108,7 @@ class InfoAdapter(val context: Context, val viewModl: TaggingViewModel) :
                         (holder.binding.model.adapter as ArrayAdapter<*>).notifyDataSetChanged()
                         selection = modelList.indexOf(dialogBinding.input.text.toString())
                         holder.binding.model.setSelection(selection)
-                        viewModl.tarvelModelList[index] = modelList[posi]
+                        viewModl.tarvelModelList[position] = modelList[posi]
 
                         dialog.dismiss()
                     }
@@ -113,7 +117,7 @@ class InfoAdapter(val context: Context, val viewModl: TaggingViewModel) :
                     }
                     dialog.show()
                 } else {
-                    viewModl.tarvelModelList[index] = modelList[posi]
+                    viewModl.tarvelModelList[position] = modelList[posi]
                 }
             }
 
