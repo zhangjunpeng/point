@@ -3,7 +3,6 @@ package com.zjdx.point.ui.tagging
 import android.R
 import android.graphics.Color
 import android.os.Bundle
-import android.provider.CalendarContract.Colors
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -157,7 +156,7 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                         it.endType = binding.endTypeSp.selectedItem.toString()
                     }
                     it.travelmodel = taggingViewModel.tarvelModelList.joinToString(separator = ",")
-                    if (binding.disSp.isVisible) {
+                    if (binding.desc.isVisible) {
                         it.destination = binding.desc.text.toString()
                     } else {
                         it.destination = binding.disSp.selectedItem.toString()
@@ -167,7 +166,20 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                 }
                 taggingViewModel.repository.updateTags(arrayListOf(taggingViewModel.addingTag!!))
 
+                val list = taggingViewModel.notUpTagRecord.value!!
+                var index = -1
+                list.forEach {
+                    if (it.id != null && it.id == taggingViewModel.addingTag!!.id) {
+                        index = list.indexOf(it)
+                    }
+                }
+                if (index != -1) {
+                    list.removeAt(index)
+                    list.add(index, taggingViewModel.addingTag!!)
+                    taggingViewModel.notUpTagRecord.value = list
+                }
                 taggingViewModel.addingTag = null
+
             } else {
                 val startType = if (binding.startType.isVisible) {
                     binding.startType.text.toString()
@@ -219,9 +231,12 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                 binding.setEnd.setTextColor(Color.parseColor("#595959"))
                 binding.setStart.setOnClickListener {
                     binding.startTime.text = loca.creatTime
+                    startTime = DateUtil.dateFormat.parse(loca.creatTime)
                 }
                 binding.setEnd.setOnClickListener {
                     binding.endTime.text = loca.creatTime
+                    endTime = DateUtil.dateFormat.parse(loca.creatTime)
+
                 }
             }
         }
