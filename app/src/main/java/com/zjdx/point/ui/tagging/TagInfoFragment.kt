@@ -1,7 +1,9 @@
 package com.zjdx.point.ui.tagging
 
 import android.R
+import android.graphics.Color
 import android.os.Bundle
+import android.provider.CalendarContract.Colors
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -198,6 +200,30 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
 
 
             this@TagInfoFragment.dismiss()
+        }
+
+        taggingViewModel.selectLoaction.observe(this) { loca ->
+            if (loca == null) {
+                binding.setStart.isSelected = false
+                binding.setEnd.isSelected = false
+                binding.setStart.setTextColor(Color.WHITE)
+                binding.setEnd.setTextColor(Color.WHITE)
+
+                binding.setStart.setOnClickListener(null)
+                binding.setEnd.setOnClickListener(null)
+
+            } else {
+                binding.setStart.isSelected = true
+                binding.setEnd.isSelected = true
+                binding.setStart.setTextColor(Color.parseColor("#595959"))
+                binding.setEnd.setTextColor(Color.parseColor("#595959"))
+                binding.setStart.setOnClickListener {
+                    binding.startTime.text = loca.creatTime
+                }
+                binding.setEnd.setOnClickListener {
+                    binding.endTime.text = loca.creatTime
+                }
+            }
         }
 
         taggingViewModel.addingTag?.let {
