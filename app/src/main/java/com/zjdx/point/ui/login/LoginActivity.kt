@@ -44,6 +44,15 @@ class LoginActivity : BaseActivity() {
         binding.registerLoginAc.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
+
+        binding.isUsePhone.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked){
+                binding.username.hint="手机号"
+            }else{
+                binding.username.hint="用户名"
+            }
+
+        }
     }
 
     override fun initViewMoedl() {
@@ -91,10 +100,10 @@ class LoginActivity : BaseActivity() {
 
         })
 
-        loginViewModel.errorModel.observe(this, {
+        loginViewModel.errorModel.observe(this) {
             dismissProgressDialog()
 
-        })
+        }
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
@@ -114,7 +123,7 @@ class LoginActivity : BaseActivity() {
 
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+                loginViewModel.login(username.text.toString(), password.text.toString(),binding.isUsePhone.isChecked)
             }
         }
 

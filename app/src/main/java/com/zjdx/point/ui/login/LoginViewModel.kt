@@ -24,10 +24,10 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     val errorModel=MutableLiveData<SubmitBackModel>()
 
 
-    fun login(username: String, password: String) {
+    fun login(username: String, password: String,isPhone:Boolean) {
         // can be launched in a separate asynchronous job
         viewModelScope.launch {
-            val result = loginRepository.login(username, password)
+            val result = loginRepository.login(username, password,isPhone)
 
             if (result is Back.Success) {
                 _loginResult.value =

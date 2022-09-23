@@ -4,6 +4,7 @@ import android.R
 import android.content.Intent
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.viewModels
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -47,6 +48,8 @@ class EditUserInfoActivity : BaseActivity() {
         }
         binding.titleBarRegisterAc.rightIvTitleBar.visibility = View.GONE
         binding.passwordLinearRegisterAc.visibility = View.GONE
+        binding.rePasswordLinearRegisterAc.visibility=View.GONE
+        binding.reTelphoneLayRegisterAc.visibility=View.GONE
 
         binding.titleBarRegisterAc.middleTvTitleBar.text = "修改信息"
         binding.registerBtRegisterAc.text = "修改信息"
@@ -90,7 +93,11 @@ class EditUserInfoActivity : BaseActivity() {
                 ToastUtils.showLong("网络异常")
                 return@setOnClickListener
             }
-            showProgressDialog()
+
+            if (binding.telphoneRegisterAc.editableText.toString()!=binding.reTelphoneRegisterAc.editableText.toString()){
+                Toast.makeText(this, "两次输入的电话不一致，请检查", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             val userCode = SPUtils.getInstance().getString(NameSpace.UID)
             val userName = binding.usernameRegisterAc.editableText.toString()
             val password = binding.passwordRegisterAc.editableText.toString()
@@ -105,6 +112,8 @@ class EditUserInfoActivity : BaseActivity() {
             val address = binding.addressRegisterAc.text.toString()
             val salary =
                 editUserInfoViewModel.salaryList[binding.minsalaryRegisterAc.selectedItemPosition]
+
+            showProgressDialog()
             editUserInfoViewModel.editUserInfo(
                 id.toString(),
                 userCode,
@@ -169,6 +178,7 @@ class EditUserInfoActivity : BaseActivity() {
 //            }
             user.telphone?.let {
                 binding.telphoneRegisterAc.setText(it)
+                binding.reTelphoneRegisterAc.setText(it)
             }
             user.username?.let {
                 binding.usernameRegisterAc.setText(it)

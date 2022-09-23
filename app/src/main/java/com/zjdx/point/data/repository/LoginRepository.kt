@@ -32,10 +32,10 @@ class LoginRepository(val dataSource: DataSource) {
         dataSource.logout()
     }
 
-    suspend fun login(username: String, password: String): Back<LoginModel> {
+    suspend fun login(username: String, password: String, isPhone: Boolean): Back<LoginModel> {
         // handle login
         return withContext(Dispatchers.IO) {
-            val result = dataSource.login(username, password)
+            val result = dataSource.login(username, password,isPhone)
             if (result is Back.Success) {
                 setLoggedInUser(result.data.sysUser)
             }

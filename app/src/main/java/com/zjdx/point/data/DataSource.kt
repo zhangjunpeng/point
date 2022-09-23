@@ -26,13 +26,20 @@ class DataSource {
     val client = OkHttpClient.Builder().build()
 
 
-    fun login(username: String, password: String): Back<LoginModel> {
+    fun login(username: String, password: String, isPhone: Boolean): Back<LoginModel> {
         try {
 //            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
             val formBodyBulider = FormBody.Builder()
             val formBody =
-                formBodyBulider.add("userCode", username).add("password", password).build()
-            val request: Request = Request.Builder().url(REST.login).post(formBody).build()
+                formBodyBulider.add("password", password)
+
+            if (isPhone){
+                formBody.add("telephone", username)
+            }else{
+                formBody.add("userCode", username)
+
+            }
+            val request: Request = Request.Builder().url(REST.login).post(formBody.build()).build()
             val call: Call = client.newCall(request)
             val response = call.execute()
             return if (response.isSuccessful) {

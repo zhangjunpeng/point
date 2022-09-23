@@ -10,8 +10,12 @@ import com.blankj.utilcode.util.SPUtils
 import com.zjdx.point.NameSpace
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityRegisterBinding
+import com.zjdx.point.event.ChooseEvent
 import com.zjdx.point.ui.base.BaseActivity
+import com.zjdx.point.ui.edit.ChooseAddressActivity
 import com.zjdx.point.ui.main.MainActivity
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 class RegisterActivity : BaseActivity() {
     lateinit var binding: ActivityRegisterBinding
@@ -23,6 +27,8 @@ class RegisterActivity : BaseActivity() {
     override fun initRootView() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        EventBus.getDefault().register(this)
+
     }
 
     override fun initView() {
@@ -31,6 +37,10 @@ class RegisterActivity : BaseActivity() {
         }
         binding.titleBarRegisterAc.rightIvTitleBar.visibility = View.GONE
         binding.titleBarRegisterAc.middleTvTitleBar.text = "注册"
+
+        binding.addressRegisterAc.setOnClickListener {
+            startActivity(Intent(this@RegisterActivity, ChooseAddressActivity::class.java))
+        }
 
         binding.ageRegisterAc.adapter =
             ArrayAdapter(this, R.layout.simple_spinner_item, registerViewModel.ageList).apply {
@@ -61,7 +71,6 @@ class RegisterActivity : BaseActivity() {
         }
 
         binding.registerBtRegisterAc.setOnClickListener {
-            showProgressDialog()
             val userCode = binding.usercodeRegisterAc.editableText.toString()
             val userName = binding.usernameRegisterAc.editableText.toString()
             val password = binding.passwordRegisterAc.editableText.toString()
@@ -73,13 +82,22 @@ class RegisterActivity : BaseActivity() {
                 1
             }
             val age = registerViewModel.ageList[binding.ageRegisterAc.selectedItemPosition]
-            val address = binding.addressRegisterAc.editableText.toString()
+            val address = binding.addressRegisterAc.text.toString()
             val salary =
                 registerViewModel.salaryList[binding.minsalaryRegisterAc.selectedItemPosition]
             if (userCode.isNullOrEmpty() || password.isNullOrEmpty()) {
                 Toast.makeText(this, "请输入用户名或密码", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
+            if (binding.telphoneRegisterAc.editableText.toString()!=binding.reTelphoneRegisterAc.editableText.toString()){
+                Toast.makeText(this, "两次输入的电话不一致，请检查", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            if (binding.passwordRegisterAc.editableText.toString()!=binding.rePasswordRegisterAc.editableText.toString()){
+                Toast.makeText(this, "两次输入的密码不一致，请检查", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            showProgressDialog()
             registerViewModel.registerUser(
                 userCode,
                 userName,
@@ -97,9 +115,19 @@ class RegisterActivity : BaseActivity() {
         }
     }
 
+    @Subscribe
+    fun onReceiveEvent(event: ChooseEvent){
+        binding.addressRegisterAc.text=event.address
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
     override fun initViewMoedl() {
         super.initViewMoedl()
-        registerViewModel.registerModel.observe(this, {
+        registerViewModel.registerModel.observe(this) {
             dismissProgressDialog()
             if (it.code == 0) {
 
@@ -112,6 +140,6 @@ class RegisterActivity : BaseActivity() {
             } else {
                 Toast.makeText(this, it.msg, Toast.LENGTH_LONG).show()
             }
-        })
+        }
     }
 }
