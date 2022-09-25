@@ -24,7 +24,7 @@ class HisTagAdapter(val context: Context, val viewModel: HisTagViewModel) :
 
     override fun onBindViewHolder(holder: HisTagAdapter.ViewHolder, position: Int) {
         val key = viewModel.allTagLiveData.value!!.keys.toList()[position]
-        holder.binding.date.text = key
+        holder.binding.date.text = "上传日期：$key"
         holder.binding.itemRecyler.layoutManager = object : LinearLayoutManager(context) {
             override fun canScrollVertically(): Boolean {
                 return false

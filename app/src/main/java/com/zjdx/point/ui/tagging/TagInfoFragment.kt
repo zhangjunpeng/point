@@ -191,7 +191,7 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                 } else {
                     binding.endTypeSp.selectedItem.toString()
                 }
-                val destination = if (binding.disSp.isVisible) {
+                val destination = if (binding.desc.isVisible) {
                     binding.desc.text.toString()
                 } else {
                     binding.disSp.selectedItem.toString()
@@ -203,7 +203,6 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                     endType = endType,
                     travelmodel = taggingViewModel.tarvelModelList.joinToString(separator = ","),
                     destination = destination,
-                    desc = binding.desc.text.toString(),
                 )
                 val list = taggingViewModel.notUpTagRecord.value!!
                 list.add(tagRecord)

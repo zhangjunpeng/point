@@ -397,6 +397,7 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         EventBus.getDefault().unregister(this)
         super.onDestroy()
         binding.mapviewTaggingAc.onDestroy()
+        taggingViewModel.addingTag=null
     }
 
     override fun onValueSelected(e: Entry?, h: Highlight?) {
