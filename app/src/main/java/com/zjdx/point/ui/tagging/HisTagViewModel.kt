@@ -80,9 +80,16 @@ class HisTagViewModel(private val repository: DataBaseRepository) : ViewModel() 
                     map[date] = list
                 }
             }
-            allTagLiveData.postValue(map)
+            val sortedMap =  map.toSortedMap(compareByDescending { convertDate(it) })
+            allTagLiveData.postValue(sortedMap)
         }
     }
+
+    fun convertDate(d: String): String {
+        val array = d.split("-")
+        return array[2] + array[1] + array[0]
+    }
+
 
     fun deleteTag(tagid: Int) {
         viewModelScope.launch {
