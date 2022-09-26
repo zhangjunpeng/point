@@ -13,8 +13,11 @@ import com.amap.api.maps2d.model.PolylineOptions
 import com.zjdx.point.PointApplication
 import com.zjdx.point.databinding.ActivityHistoryLocationBinding
 import com.zjdx.point.db.model.Location
+import com.zjdx.point.event.BeginTagEvent
 import com.zjdx.point.ui.base.BaseActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
+import com.zjdx.point.utils.DateUtil
+import org.greenrobot.eventbus.EventBus
 
 
 class HistoryLocationActivity : BaseActivity() {
@@ -52,15 +55,27 @@ class HistoryLocationActivity : BaseActivity() {
         }
 
         binding.titleBarHislocaAc.leftIvTitleBar.setOnClickListener { finish() }
-        binding.titleBarHislocaAc.middleTvTitleBar.text="历史轨迹查看"
-        binding.titleBarHislocaAc.rightIvTitleBar.visibility=View.INVISIBLE
+        binding.titleBarHislocaAc.middleTvTitleBar.text = "历史轨迹查看"
+        binding.titleBarHislocaAc.rightIvTitleBar.visibility = View.INVISIBLE
+
+        binding.beginTagging.setOnClickListener {
+            val startTime = historyLocationViewModel.locationListLiveData.value!!.first().creatTime
+            val endTime = historyLocationViewModel.locationListLiveData.value!!.last().creatTime
+
+            EventBus.getDefault().postSticky(
+                BeginTagEvent(
+                    DateUtil.dateFormat.parse(startTime),
+                    DateUtil.dateFormat.parse(endTime)
+                )
+            )
+        }
 
     }
 
     override fun initViewMoedl() {
-        historyLocationViewModel.locationListLiveData.observe(this, {
+        historyLocationViewModel.locationListLiveData.observe(this) {
             addPointsOnMap(it)
-        })
+        }
     }
 
     override fun initData() {

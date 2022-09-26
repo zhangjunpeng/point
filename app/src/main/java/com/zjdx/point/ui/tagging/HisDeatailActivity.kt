@@ -34,7 +34,6 @@ class HisDeatailActivity : BaseActivity() {
 
     override fun initViewMoedl() {
         hisDetailViewModel.tagRecordLiveData.observe(this) {
-            binding.desc.text = it.desc
             binding.dis.text = it.destination
             binding.startTime.text = it.startTime
             binding.endTime.text = it.endTime

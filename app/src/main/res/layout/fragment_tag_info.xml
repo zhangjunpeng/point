@@ -1,297 +1,328 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/white"
-    tools:context=".ui.tagging.TagInfoFragment">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:paddingVertical="10dp"
-            android:background="#E3E1EB"
-            >
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-            <TextView
-                android:id="@+id/cancel"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/gray_border_text"
-                android:gravity="center"
-                android:textColor="@color/gray"
-                android:text="取消" />
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/set_start"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/set_time_selector"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:text="设为起点" />
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/set_end"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:textColor="@color/white"
-                android:background="@drawable/set_time_selector"
-                android:gravity="center"
-                android:text="设为终点" />
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/confirm"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/blue_radius_text"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:text="确定" />
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-        </LinearLayout>
+        android:layout_height="50dp"
+        android:background="#E3E1EB"
+        android:orientation="horizontal"
+        android:paddingVertical="10dp">
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/gray" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="出行目的" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:orientation="vertical">
-
-                <Spinner
-                    android:id="@+id/dis_sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/border_edit"
-                    android:gravity="center" />
-
-                <EditText
-                    android:id="@+id/desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/border_edit"
-                    android:gravity="center"
-                    android:hint="描述"
-                    android:visibility="gone" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/gray" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="出发时刻" />
-
-            <TextView
-                android:id="@+id/start_time"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_margin="5dp"
-                android:layout_weight="2"
-                android:textColor="@color/gray"
-                android:textSize="16dp"
-                android:background="@drawable/border_edit"
-                android:gravity="center"
-                android:text="请选择" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/gray" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="到达时刻" />
-
-            <TextView
-                android:id="@+id/end_time"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_margin="5dp"
-                android:layout_weight="2"
-                android:textSize="16dp"
-                android:background="@drawable/border_edit"
-                android:gravity="center"
-                android:text="请选择" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/gray" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="起点类型" />
-
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:orientation="vertical">
-
-                <Spinner
-                    android:id="@+id/start_type_sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/border_edit"
-                    android:gravity="center" />
-
-                <EditText
-                    android:id="@+id/start_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/border_edit"
-                    android:gravity="center"
-                    android:hint="描述"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/gray" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="终点类型" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:orientation="vertical">
-
-                <Spinner
-                    android:id="@+id/end_type_sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/border_edit"
-                    android:gravity="center" />
-
-                <EditText
-                    android:id="@+id/end_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/border_edit"
-                    android:gravity="center"
-                    android:hint="描述"
-                    android:visibility="gone" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/gray" />
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginVertical="5dp"
+            android:id="@+id/cancel"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/gray_border_text"
             android:gravity="center"
-            android:text="请按照顺序填写使用的交通方式"
-            android:textColor="#F60707" />
+            android:text="取消"
+            android:textColor="@color/gray" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/set_start"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/set_time_selector"
+            android:gravity="center"
+            android:text="设为起点"
+            android:textColor="@color/white" />
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/set_end"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/set_time_selector"
+            android:gravity="center"
+            android:text="设为终点"
+            android:textColor="@color/white" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/confirm"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/blue_radius_text"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/white" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
     </LinearLayout>
 
-</ScrollView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray" />
+
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        tools:context=".ui.tagging.TagInfoFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#f0eff4"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="出行目的"
+                    android:textSize="18dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <Spinner
+                        android:id="@+id/dis_sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/border_edit"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="14dp"
+                         />
+
+                    <EditText
+                        android:id="@+id/desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/border_edit"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="14dp"
+
+                        android:hint="描述"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="出发时刻"
+
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/start_time"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="2"
+                    android:background="@drawable/border_edit"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="14dp"
+                    android:text="请选择"
+                    android:textColor="@color/gray"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="到达时刻"
+
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/end_time"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="2"
+                    android:background="@drawable/border_edit"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="14dp"
+                    android:text="请选择"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="起点类型"
+
+                    android:textSize="18dp" />
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <Spinner
+                        android:id="@+id/start_type_sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/border_edit"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="14dp" />
+
+                    <EditText
+                        android:id="@+id/start_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/border_edit"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="14dp"
+                        android:hint="描述"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="终点类型"
+
+                    android:textSize="18dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <Spinner
+                        android:id="@+id/end_type_sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/border_edit"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="14dp" />
+
+                    <EditText
+                        android:id="@+id/end_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/border_edit"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="14dp"
+                        android:hint="描述"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/gray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginVertical="5dp"
+                android:gravity="center"
+                android:text="请按照顺序填写使用的交通方式"
+                android:textColor="#F60707" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

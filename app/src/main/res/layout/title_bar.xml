@@ -15,14 +15,15 @@
         android:src="@drawable/abc_vector_test"
 
         />
+
     <TextView
         android:id="@+id/middle_tv_title_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="定位页面"
-        android:textColor="@color/white"
-        />
+        android:textSize="20dp"
+        android:textColor="@color/white" />
 
     <ImageView
         android:id="@+id/right_iv_title_bar"

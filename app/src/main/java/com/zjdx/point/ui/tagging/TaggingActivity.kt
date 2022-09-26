@@ -23,6 +23,7 @@ import com.zjdx.point.PointApplication
 import com.zjdx.point.R
 import com.zjdx.point.databinding.ActivityTaggingBinding
 import com.zjdx.point.databinding.FragmentTagInfoBinding
+import com.zjdx.point.event.BeginTagEvent
 import com.zjdx.point.event.EditTagEvent
 import com.zjdx.point.ui.DBViewModelFactory
 import com.zjdx.point.ui.base.BaseActivity
@@ -45,8 +46,6 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
     private var marker: Marker? = null
     private var polyline: Polyline? = null
     private var options: PolylineOptions? = null
-    var startTime: Long = 0
-    var endTime: Long = 0
 
     private val entries = ArrayList<Entry>()
 
@@ -380,6 +379,15 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
             return
         }
         finish()
+    }
+
+    @Subscribe
+    fun onGetBeginTag(event: BeginTagEvent) {
+        taggingViewModel.startTime = event.startTime
+        taggingViewModel.endTime = event.endTime
+        binding.startTime.text = DateUtil.dateFormat.format(event.startTime)
+        binding.endTime.text = DateUtil.dateFormat.format(event.endTime)
+        taggingViewModel.getLocationsByTime()
     }
 
 

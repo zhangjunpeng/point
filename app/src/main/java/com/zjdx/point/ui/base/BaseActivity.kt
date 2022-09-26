@@ -1,6 +1,7 @@
 package com.zjdx.point.ui.base
 
 import android.app.Dialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -29,7 +30,7 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        window.statusBarColor= Color.parseColor("#3B99FB")
         initRootView()
         initPopWindow()
         initView()
