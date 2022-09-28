@@ -17,7 +17,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@color/gray">
+            android:background="#3B99FB">
 
             <ImageView
                 android:id="@+id/left_iv_main_ac"

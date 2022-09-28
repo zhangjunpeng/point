@@ -91,6 +91,7 @@ open class BaseActivity : AppCompatActivity() {
                 if (submitBackModel.code == 200) {
                     finish()
                 }
+
             }
             .create()
         alertDialog.show()

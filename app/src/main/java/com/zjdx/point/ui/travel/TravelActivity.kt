@@ -16,6 +16,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.work.WorkManager
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
@@ -80,12 +81,14 @@ class TravelActivity : BaseActivity() {
             SPUtils.getInstance().put(NameSpace.ISRECORDING, false)
             SPUtils.getInstance().put(NameSpace.RECORDINGID, "")
             isRecording = false
+            PointWorkManager.instance.cancelPeriodWork(this)
             startMain(true)
             finish()
         }
         saveListener = View.OnClickListener {
 
             dismissAbnormalDialog()
+            PointWorkManager.instance.cancelPeriodWork(this)
             startMain(true)
             finish()
         }

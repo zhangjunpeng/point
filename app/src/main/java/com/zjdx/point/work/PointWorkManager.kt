@@ -39,25 +39,33 @@ class PointWorkManager {
     }
 
 
+    var periodicWorkRequest: PeriodicWorkRequest? = null
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun addPeriodicWork(context: Context): WorkRequest? {
         try {
             val constraints =
                 Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
             val duration = Duration.ofMinutes(15)
-            val uploadWorkRequest =
+            periodicWorkRequest =
                 PeriodicWorkRequestBuilder<UploadLocationsWork>(duration).setConstraints(constraints)
                     .build()
 
             WorkManager.getInstance(context).enqueue(
-                uploadWorkRequest
+                periodicWorkRequest!!
             )
-            return uploadWorkRequest
+            return periodicWorkRequest!!
         } catch (e: Exception) {
             e.printStackTrace()
         }
         return null
 
+
+    }
+
+    fun cancelPeriodWork(context: Context) {
+        if (periodicWorkRequest==null) return
+        WorkManager.getInstance(context).cancelWorkById(periodicWorkRequest!!.id)
 
     }
 
