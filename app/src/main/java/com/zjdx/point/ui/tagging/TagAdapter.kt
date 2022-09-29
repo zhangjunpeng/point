@@ -45,9 +45,9 @@ class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
                 "${tagRecord.destination}   ${starArr[0]}\n起止地点：${tagRecord.startType}-${tagRecord.endType}" + "\n起止时刻：${
                     starArr[1].substring(
                         0,
-                        4
+                        5
                     )
-                }-${entArr[1].substring(0, 4)}"
+                }-${entArr[1].substring(0, 5)}"
 
             holder.binding.up.setOnClickListener {
                 if (position > 0) {

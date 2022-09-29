@@ -73,7 +73,7 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
 
                 val paramArray = JSONArray()
                 if (notUpTagRecord.value!!.isNotEmpty()) {
-                    repository.insertTagList(notUpTagRecord.value!!)
+//                    repository.insertTagList(notUpTagRecord.value!!)
                     notUpTagRecord.value!!.forEach { tag ->
 
                         val ta = JSONObject()
@@ -83,7 +83,7 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
                         ta.put("end_type", tag.endType)
                         ta.put("start_time", tag.startTime)
                         ta.put("start_type", tag.startType)
-                        ta.put("travel_types", tag.travelmodel)
+                        ta.put("travmel_types", tag.travelmodel)
                         ta.put("travel_user", userCode)
                         paramArray.put(ta)
                     }
@@ -104,15 +104,26 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 notUpTagRecord.value!!.forEach {
+
                     it.isupload=1
                     it.uploadDate=DateUtil.dayFormat.format(Date())
+                    if (it.id==0){
+                        repository.insertTag(it)
+                    }else{
+                        repository.updateTag(it)
+                    }
                 }
-                repository.updateTags(notUpTagRecord.value!!)
                 getTagRecordIsNotUpload()
             }
         }
 
 
+    }
+
+    fun clearSelect() {
+        addingTag=null
+        tarvelModelList.clear()
+        tarvelModelList.add("步行")
     }
 
 }

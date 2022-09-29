@@ -24,6 +24,9 @@ interface TagRecordDao {
     @Update
     fun updateTagRecord(tagRecords: List<TagRecord>)
 
+    @Update
+    fun updateTag(tagRecord: TagRecord)
+
     @Delete
     fun delDBTag(tagRecords: List<TagRecord>)
 

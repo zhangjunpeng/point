@@ -189,6 +189,7 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
                 .setPositiveButton("确定") { dialog, which ->
                     dialog.dismiss()
                     showProgressDialog()
+                    taggingViewModel.hasChange = false
                     taggingViewModel.startUpload()
                 }.setNegativeButton("取消") { dialog, which ->
                     dialog.dismiss()
@@ -381,13 +382,14 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         finish()
     }
 
-    @Subscribe
+    @Subscribe(sticky = true)
     fun onGetBeginTag(event: BeginTagEvent) {
         taggingViewModel.startTime = event.startTime
         taggingViewModel.endTime = event.endTime
         binding.startTime.text = DateUtil.dateFormat.format(event.startTime)
         binding.endTime.text = DateUtil.dateFormat.format(event.endTime)
         taggingViewModel.getLocationsByTime()
+        EventBus.getDefault().removeStickyEvent(event)
     }
 
 
@@ -405,7 +407,6 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         EventBus.getDefault().unregister(this)
         super.onDestroy()
         binding.mapviewTaggingAc.onDestroy()
-        taggingViewModel.addingTag=null
     }
 
     override fun onValueSelected(e: Entry?, h: Highlight?) {

@@ -100,6 +100,7 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
         binding.cancel.setOnClickListener {
             AlertDialog.Builder(requireContext()).setMessage("“本次修改将不被保存，是否退出？")
                 .setPositiveButton("确定") { dialog, which ->
+                    taggingViewModel.clearSelect()
                     this@TagInfoFragment.dismiss()
                 }.setNegativeButton("取消") { dialog, which ->
                     dialog.dismiss()
@@ -209,7 +210,7 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                 taggingViewModel.notUpTagRecord.value = list
             }
 
-
+            taggingViewModel.clearSelect()
             this@TagInfoFragment.dismiss()
         }
 

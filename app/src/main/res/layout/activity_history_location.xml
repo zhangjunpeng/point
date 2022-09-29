@@ -27,7 +27,7 @@
         android:elevation="10dp"
         android:paddingHorizontal="20dp"
         android:paddingVertical="5dp"
-        android:text="在此规矩上标注行程"
+        android:text="在此轨迹上标注行程"
         android:textColor="@color/white"
         android:textSize="20dp" />
 

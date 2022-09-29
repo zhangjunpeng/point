@@ -1,5 +1,6 @@
 package com.zjdx.point.ui.history
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -15,6 +16,7 @@ import com.zjdx.point.databinding.ActivityHistoryLocationBinding
 import com.zjdx.point.db.model.Location
 import com.zjdx.point.event.BeginTagEvent
 import com.zjdx.point.ui.base.BaseActivity
+import com.zjdx.point.ui.tagging.TaggingActivity
 import com.zjdx.point.ui.viewmodel.ViewModelFactory
 import com.zjdx.point.utils.DateUtil
 import org.greenrobot.eventbus.EventBus
@@ -68,6 +70,7 @@ class HistoryLocationActivity : BaseActivity() {
                     DateUtil.dateFormat.parse(endTime)
                 )
             )
+            startActivity(Intent(this,TaggingActivity::class.java))
         }
 
     }

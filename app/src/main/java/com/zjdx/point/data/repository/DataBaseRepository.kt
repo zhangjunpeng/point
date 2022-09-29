@@ -176,6 +176,11 @@ class DataBaseRepository(
         tagRecordDao.updateTagRecord(tagRecords)
     }
 
+    @WorkerThread
+    fun updateTag(tagRecord: TagRecord) {
+        tagRecordDao.updateTag(tagRecord)
+    }
+
     suspend fun getAppVersion(): Back<AppVersionModel> {
         return dataSource.getAppVersion()
     }

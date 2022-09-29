@@ -44,7 +44,8 @@ class HisTagViewModel(private val repository: DataBaseRepository) : ViewModel() 
                     map[date] = list
                 }
             }
-            allTagLiveData.postValue(map)
+            val sortedMap =  map.toSortedMap(compareByDescending { convertDate(it) })
+            allTagLiveData.postValue(sortedMap)
         }
     }
 
