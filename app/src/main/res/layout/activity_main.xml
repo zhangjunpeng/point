@@ -77,13 +77,14 @@
 
             <LinearLayout
                 android:id="@+id/history_main_ac"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/border_edit"
+                android:layout_marginHorizontal="50dp"
                 android:elevation="3dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="20dp"
+                android:paddingLeft="15dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -94,25 +95,36 @@
                     android:src="@drawable/history" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="14dp"
                     android:text="历史轨迹"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
+                <TextView
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text=">"
+                    android:layout_marginRight="14dp"
+                    android:textSize="20dp"
+                     />
             </LinearLayout>
 
 
             <LinearLayout
                 android:id="@+id/history_tg_main_ac"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="50dp"
                 android:background="@drawable/border_edit"
                 android:gravity="center_vertical"
-                android:paddingLeft="20dp"
+                android:paddingLeft="15dp"
                 android:elevation="3dp"
                 android:orientation="horizontal">
 
@@ -124,13 +136,23 @@
                     android:src="@drawable/tag" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="14dp"
                     android:text="历史行程记录"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
+                <TextView
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text=">"
+                    android:layout_marginRight="14dp"
+                    android:textSize="20dp"
+                    />
             </LinearLayout>
 
 

@@ -122,6 +122,8 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
 
     fun clearSelect() {
         addingTag=null
+        startTime=null
+        endTime=null
         tarvelModelList.clear()
         tarvelModelList.add("步行")
     }

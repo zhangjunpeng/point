@@ -244,7 +244,8 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
         taggingViewModel.addingTag?.let {
 
             if (taggingViewModel.travelDis.contains(it.destination)) {
-                binding.disSp.setSelection(taggingViewModel.travelDis.indexOf(it.destination))
+                val index=taggingViewModel.travelDis.indexOf(it.destination)
+                binding.disSp.setSelection(index)
                 binding.desc.visibility = View.GONE
             } else {
                 binding.disSp.setSelection(taggingViewModel.travelDis.lastIndex)
