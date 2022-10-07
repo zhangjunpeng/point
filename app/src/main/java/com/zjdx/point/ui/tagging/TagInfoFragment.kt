@@ -200,6 +200,12 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                 } else {
                     binding.disSp.selectedItem.toString()
                 }
+                val list = taggingViewModel.notUpTagRecord.value!!
+                val sort=if (list.size>0){
+                    list.last().sort+1
+                }else{
+                    0
+                }
                 val tagRecord = TagRecord(
                     startTime = DateUtil.dateFormat.format(startTime),
                     endTime = DateUtil.dateFormat.format(endTime),
@@ -207,8 +213,9 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                     endType = endType,
                     travelmodel = taggingViewModel.tarvelModelList.joinToString(separator = ","),
                     destination = destination,
+                    sort = sort,
                 )
-                val list = taggingViewModel.notUpTagRecord.value!!
+
                 list.add(tagRecord)
                 taggingViewModel.notUpTagRecord.value = list
             }

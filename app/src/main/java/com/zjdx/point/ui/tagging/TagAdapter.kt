@@ -52,9 +52,15 @@ class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
             holder.binding.up.setOnClickListener {
                 if (position > 0) {
                     val tempList = viewModel.notUpTagRecord.value!!
-                    val record = tempList.removeAt(position)
-                    tempList.add(position - 1, record)
-                    viewModel.notUpTagRecord.value = tempList
+                    val record = tempList[position]
+                    val recordNext = tempList[position - 1]
+                    val tempSort = record.sort
+                    record.sort = recordNext.sort
+                    recordNext.sort = tempSort
+                    viewModel.notUpTagRecord.value =    tempList.sortedBy {
+                        return@sortedBy it.sort
+                    }.toMutableList()
+
                     viewModel.hasChange = true
                 }
             }
@@ -62,9 +68,14 @@ class TagAdapter(val context: Context, val viewModel: TaggingViewModel) :
             holder.binding.down.setOnClickListener {
                 if (position < viewModel.notUpTagRecord.value!!.size - 1) {
                     val tempList = viewModel.notUpTagRecord.value!!
-                    val record = tempList.removeAt(position)
-                    tempList.add(position + 1, record)
-                    viewModel.notUpTagRecord.value = tempList
+                    val record = tempList[position]
+                    val recordNext = tempList[position + 1]
+                    val tempSort = record.sort
+                    record.sort = recordNext.sort
+                    recordNext.sort = tempSort
+                    viewModel.notUpTagRecord.value = tempList.sortedBy {
+                        return@sortedBy it.sort
+                    }.toMutableList()
                     viewModel.hasChange = true
                 }
             }

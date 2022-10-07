@@ -36,6 +36,11 @@ class HisTagAdapter(val context: Context, val viewModel: HisTagViewModel) :
 
 
     override fun getItemCount(): Int {
-        return viewModel.allTagLiveData.value!!.keys.size
+        return if (viewModel.allTagLiveData.value == null) {
+            0
+        } else {
+            viewModel.allTagLiveData.value!!.keys.size
+        }
+
     }
 }

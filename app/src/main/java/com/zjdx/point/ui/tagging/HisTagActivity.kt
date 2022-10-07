@@ -41,6 +41,7 @@ class HisTagActivity : BaseActivity() {
         binding.titleBarHistag.rightIvTitleBar.setOnClickListener {
             initSyncDialog()
         }
+        binding.recyler.adapter = HisTagAdapter(this@HisTagActivity, hisTagViewModel)
     }
 
     override fun initViewMoedl() {
@@ -49,16 +50,17 @@ class HisTagActivity : BaseActivity() {
             if (it.isEmpty()) {
                 ToastUtils.showShort("无标注数据")
             }
-            binding.recyler.adapter = HisTagAdapter(this@HisTagActivity, hisTagViewModel)
+            binding.recyler.adapter!!.notifyDataSetChanged()
+
         }
+
         hisTagViewModel.delRest.observe(this) {
             dismissProgressDialog()
             if (it) {
                 ToastUtils.showShort("删除成功")
-                binding.recyler.adapter!!.notifyDataSetChanged()
-//                hisTagViewModel.getTagRecordIsUploadByTime(
-//                    hisTagViewModel.mStartTime, hisTagViewModel.mEndTime
-//                )
+                hisTagViewModel.getTagRecordIsUploadByTime(
+                    hisTagViewModel.mStartTime, hisTagViewModel.mEndTime
+                )
             }
         }
     }
@@ -130,6 +132,19 @@ class HisTagActivity : BaseActivity() {
     @Subscribe
     fun getDeleteEvent(event: DeleteEvent) {
         showProgressDialog()
+//        var tempkey=""
+//        hisTagViewModel.allTagLiveData.value!!.keys.forEach { key ->
+//            if (hisTagViewModel.allTagLiveData.value!![key]!!.size==0){
+//                tempkey=key
+//            }
+//        }
+//        if (tempkey!=""){
+//            val map= hisTagViewModel.allTagLiveData.value!!.toMutableMap()
+//            map.remove(tempkey)
+//            hisTagViewModel.allTagLiveData.postValue(map)
+//        }
+
+
         hisTagViewModel.deleteTag(event.tagid)
     }
 

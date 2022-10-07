@@ -27,4 +27,7 @@ data class TagRecord(
 
     @ColumnInfo(name = "upload_date", defaultValue = "0") var uploadDate: String = "",
 
+    @ColumnInfo(name = "sort", defaultValue = "0") var sort: Int = 0,
+
+
     )
