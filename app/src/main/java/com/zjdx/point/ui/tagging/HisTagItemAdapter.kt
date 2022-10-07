@@ -12,7 +12,7 @@ import com.zjdx.point.event.HisTagEvent
 import com.zjdx.point.utils.PopWindowUtil
 import org.greenrobot.eventbus.EventBus
 
-class HisTagItemAdapter(val context: Context, val dataList: List<TagRecord>) :
+class HisTagItemAdapter(val context: Context, val dataList: ArrayList<TagRecord>) :
     RecyclerView.Adapter<HisTagItemAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemHisTagRecylerItemBinding) :
@@ -58,6 +58,8 @@ class HisTagItemAdapter(val context: Context, val dataList: List<TagRecord>) :
         holder.binding.delete.setOnClickListener {
             PopWindowUtil.instance.showDelDialog(context){
                 EventBus.getDefault().post(DeleteEvent(tagRecord.id))
+                dataList.removeAt(position)
+                notifyDataSetChanged()
             }
         }
 

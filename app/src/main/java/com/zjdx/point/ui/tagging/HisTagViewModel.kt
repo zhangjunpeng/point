@@ -11,10 +11,11 @@ import com.zjdx.point.db.model.TagRecord
 import com.zjdx.point.utils.DateUtil
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.ArrayList
 
 class HisTagViewModel(private val repository: DataBaseRepository) : ViewModel() {
 
-    val allTagLiveData = MutableLiveData<Map<String, List<TagRecord>>>()
+    val allTagLiveData = MutableLiveData<Map<String, ArrayList<TagRecord>>>()
 
     val delRest = MutableLiveData<Boolean>()
 

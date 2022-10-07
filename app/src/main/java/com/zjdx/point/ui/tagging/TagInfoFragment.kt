@@ -3,11 +3,13 @@ package com.zjdx.point.ui.tagging
 import android.R
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -68,6 +70,7 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
         binding.disSp.onItemSelectedListener = this
         binding.startTypeSp.onItemSelectedListener = this
         binding.endTypeSp.onItemSelectedListener = this
+
 
         binding.startTime.setOnClickListener {
             val cel = Calendar.getInstance()
@@ -241,45 +244,61 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
             }
         }
 
-        taggingViewModel.addingTag?.let {
+        if (taggingViewModel.addingTag == null) {
+            setSpSelection(binding.disSp,0)
+            setSpSelection(binding.startTypeSp,0)
+            setSpSelection(binding.endTypeSp,0)
+        } else {
 
-            if (taggingViewModel.travelDis.contains(it.destination)) {
-                val index=taggingViewModel.travelDis.indexOf(it.destination)
-                binding.disSp.setSelection(index)
-                binding.desc.visibility = View.GONE
-            } else {
-                binding.disSp.setSelection(taggingViewModel.travelDis.lastIndex)
-                binding.desc.visibility = View.VISIBLE
-                binding.desc.setText(it.destination)
+            taggingViewModel.addingTag?.let {
+
+                if (taggingViewModel.travelDis.contains(it.destination)) {
+                    val index = taggingViewModel.travelDis.indexOf(it.destination)
+                    setSpSelection(binding.disSp,index)
+                    binding.desc.visibility = View.GONE
+                } else {
+                    setSpSelection(binding.disSp,taggingViewModel.travelDis.lastIndex)
+
+                    binding.desc.visibility = View.VISIBLE
+                    binding.desc.setText(it.destination)
+                }
+
+                if (taggingViewModel.types.contains(it.startType)) {
+
+                    setSpSelection(binding.startTypeSp,taggingViewModel.types.indexOf(it.startType))
+                    binding.startType.visibility = View.GONE
+                } else {
+                    setSpSelection(binding.startTypeSp,taggingViewModel.types.lastIndex)
+                    binding.startType.visibility = View.VISIBLE
+                    binding.startType.setText(it.startType)
+                }
+
+                if (taggingViewModel.types.contains(it.endType)) {
+                    setSpSelection(binding.endTypeSp,taggingViewModel.types.indexOf(it.endType))
+
+                    binding.endType.visibility = View.GONE
+                } else {
+                    setSpSelection(binding.endTypeSp,taggingViewModel.types.lastIndex)
+                    binding.endType.visibility = View.VISIBLE
+                    binding.endType.setText(it.endType)
+                }
+
+                binding.startTime.text = it.startTime
+                binding.endTime.text = it.endTime
+                startTime = DateUtil.dateFormat.parse(it.startTime)
+                endTime = DateUtil.dateFormat.parse(it.endTime)
+                binding.desc.setText(it.desc)
+                taggingViewModel.tarvelModelList.clear()
+                taggingViewModel.tarvelModelList.addAll(it.travelmodel.split(","))
+                (binding.recyler.adapter as InfoAdapter).notifyDataSetChanged()
             }
-
-            if (taggingViewModel.types.contains(it.startType)) {
-                binding.startTypeSp.setSelection(taggingViewModel.types.indexOf(it.startType))
-                binding.startType.visibility = View.GONE
-            } else {
-                binding.startTypeSp.setSelection(taggingViewModel.types.lastIndex)
-                binding.startType.visibility = View.VISIBLE
-                binding.startType.setText(it.startType)
-            }
-
-            if (taggingViewModel.types.contains(it.endType)) {
-                binding.endTypeSp.setSelection(taggingViewModel.types.indexOf(it.endType))
-                binding.endType.visibility = View.GONE
-            } else {
-                binding.endTypeSp.setSelection(taggingViewModel.types.lastIndex)
-                binding.endType.visibility = View.VISIBLE
-                binding.endType.setText(it.endType)
-            }
-
-            binding.startTime.text = it.startTime
-            binding.endTime.text = it.endTime
-            startTime = DateUtil.dateFormat.parse(it.startTime)
-            endTime = DateUtil.dateFormat.parse(it.endTime)
-            binding.desc.setText(it.desc)
-            taggingViewModel.tarvelModelList.clear()
-            taggingViewModel.tarvelModelList.addAll(it.travelmodel.split(","))
-            (binding.recyler.adapter as InfoAdapter).notifyDataSetChanged()
         }
+    }
+
+    fun setSpSelection(spinner: Spinner, index: Int) {
+        Handler(requireContext().mainLooper).postDelayed({
+            spinner.setSelection(index, true)
+        }, 100)
     }
 
 
@@ -317,7 +336,6 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
-        TODO("Not yet implemented")
     }
 
 

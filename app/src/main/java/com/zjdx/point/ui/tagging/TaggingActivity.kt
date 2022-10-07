@@ -50,7 +50,6 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
     private val entries = ArrayList<Entry>()
 
 
-    val fragment = TagInfoFragment.newInstance()
 
 
     private val taggingViewModel: TaggingViewModel by viewModels<TaggingViewModel> {
@@ -245,7 +244,7 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
 
     @Subscribe
     fun onEditTag(event: EditTagEvent){
-        supportFragmentManager.beginTransaction().add(R.id.container_recyler, fragment)
+        supportFragmentManager.beginTransaction().add(R.id.container_recyler, TagInfoFragment.newInstance())
             .commit()
     }
 
@@ -276,10 +275,10 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         taggingViewModel.addTag.observe(this) {
             if (it) {
                 taggingViewModel.addingTag=null
-                supportFragmentManager.beginTransaction().add(R.id.container_recyler, fragment)
+                supportFragmentManager.beginTransaction().add(R.id.container_recyler, TagInfoFragment.newInstance())
                     .commit()
             } else {
-                supportFragmentManager.beginTransaction().hide(fragment)
+                supportFragmentManager.beginTransaction().hide(TagInfoFragment.newInstance())
             }
         }
         taggingViewModel.backResult.observe(this){

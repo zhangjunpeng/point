@@ -124,9 +124,9 @@ class EditUserInfoActivity : BaseActivity() {
                 age,
                 address,
                 salary,
-                binding.haveBicRegisterAc.selectedItemPosition == 0,
-                binding.haveCarRegisterAc.selectedItemPosition == 0,
-                binding.haveVeRegisterAc.selectedItemPosition == 0,
+                binding.haveBicRegisterAc.selectedItemPosition == 1,
+                binding.haveCarRegisterAc.selectedItemPosition == 1,
+                binding.haveVeRegisterAc.selectedItemPosition == 1,
             )
         }
     }

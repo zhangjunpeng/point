@@ -18,6 +18,7 @@ import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.PopWindowUtil
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import java.util.*
 
 class HisTagActivity : BaseActivity() {
 
@@ -54,9 +55,10 @@ class HisTagActivity : BaseActivity() {
             dismissProgressDialog()
             if (it) {
                 ToastUtils.showShort("删除成功")
-                hisTagViewModel.getTagRecordIsUploadByTime(
-                    hisTagViewModel.mStartTime, hisTagViewModel.mEndTime
-                )
+                binding.recyler.adapter!!.notifyDataSetChanged()
+//                hisTagViewModel.getTagRecordIsUploadByTime(
+//                    hisTagViewModel.mStartTime, hisTagViewModel.mEndTime
+//                )
             }
         }
     }
@@ -94,16 +96,27 @@ class HisTagActivity : BaseActivity() {
             hisTagViewModel.getTagRecordIsUpload()
         }
         syncDialogBinding!!.startTime.setOnClickListener {
+
+            val cel = Calendar.getInstance()
+            if (syncDialogBinding!!.startTime.text.isNotEmpty()) {
+                cel.time = DateUtil.dateFormat.parse(syncDialogBinding!!.startTime.text.toString())!!
+            }
             PopWindowUtil.instance.showTimePicker(
                 this,
+                selectedDate = cel,
                 onTimeSelectListener = { date, view ->
                     (it as TextView).text = DateUtil.dateFormat.format(date)
                 },
             )
         }
         syncDialogBinding!!.endTime.setOnClickListener {
+            val cel = Calendar.getInstance()
+            if (syncDialogBinding!!.endTime.text.isNotEmpty()) {
+                cel.time = DateUtil.dateFormat.parse(syncDialogBinding!!.endTime.text.toString())!!
+            }
             PopWindowUtil.instance.showTimePicker(
                 this,
+                selectedDate = cel,
                 onTimeSelectListener = { date, view ->
                     (it as TextView).text = DateUtil.dateFormat.format(date)
                 },

@@ -15,7 +15,7 @@ import com.zjdx.point.db.model.TravelRecord
 
 @Database(
     entities = [Location::class, TravelRecord::class, TagRecord::class],
-    version = 6,
+    version = 7,
     exportSchema = true
 )
 abstract class MyDataBase : RoomDatabase() {
@@ -36,7 +36,8 @@ abstract class MyDataBase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext, MyDataBase::class.java, "Point"
                 ).allowMainThreadQueries().addMigrations(
-                    MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6
+                    MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,
+                    MIGRATION_6_7
                 )
                     .build()
                 INSTANCE = instance
@@ -90,6 +91,13 @@ abstract class MyDataBase : RoomDatabase() {
         val MIGRATION_5_6 = object : Migration(5, 6) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE TagRecord ADD COLUMN upload_date TEXT NOT NULL DEFAULT '0'")
+            }
+        }
+
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+
+                database.execSQL("ALTER TABLE TagRecord ADD COLUMN create_time TEXT NOT NULL DEFAULT '0'")
             }
         }
 

@@ -122,7 +122,7 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/border_edit"
                         android:gravity="center_vertical"
-                        android:paddingLeft="14dp"
+                        android:paddingLeft="6dp"
                          />
 
                     <EditText
@@ -250,7 +250,7 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/border_edit"
                         android:gravity="center_vertical"
-                        android:paddingLeft="14dp" />
+                        android:paddingLeft="6dp" />
 
                     <EditText
                         android:id="@+id/start_type"
@@ -298,7 +298,7 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/border_edit"
                         android:gravity="center_vertical"
-                        android:paddingLeft="14dp" />
+                        android:paddingStart="6dp" />
 
                     <EditText
                         android:id="@+id/end_type"

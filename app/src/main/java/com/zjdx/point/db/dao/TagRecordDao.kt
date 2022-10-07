@@ -6,7 +6,7 @@ import com.zjdx.point.db.model.TagRecord
 @Dao
 interface TagRecordDao {
 
-    @Query("Select * from TagRecord where  isupload=0")
+    @Query("Select * from TagRecord where  isupload=0 order by ")
     fun queryAllTagtHasNotUploadByTid(): Array<TagRecord>
 
     @Query("Select * from TagRecord where  isupload=1")
