@@ -83,7 +83,7 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
                         ta.put("end_type", tag.endType)
                         ta.put("start_time", tag.startTime)
                         ta.put("start_type", tag.startType)
-                        ta.put("travmel_types", tag.travelmodel)
+                        ta.put("travel_types", tag.travelmodel)
                         ta.put("travel_user", userCode)
                         paramArray.put(ta)
                     }
