@@ -102,7 +102,6 @@ class EditUserInfoActivity : BaseActivity() {
             val userName = binding.usernameRegisterAc.editableText.toString()
             val password = binding.passwordRegisterAc.editableText.toString()
             val telphone = binding.telphoneRegisterAc.editableText.toString()
-            val note = binding.remarkRegisterAc.editableText.toString()
             val sex = if (binding.manRegisterAc.isChecked) {
                 0
             } else {
@@ -119,7 +118,7 @@ class EditUserInfoActivity : BaseActivity() {
                 userCode,
                 userName,
                 telphone,
-                note,
+                "",
                 sex,
                 age,
                 address,

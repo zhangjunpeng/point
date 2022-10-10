@@ -103,6 +103,8 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
     fun changeTagRecordIsNotUpload() {
         viewModelScope.launch {
             withContext(Dispatchers.IO){
+                repository.delDBTag(deleList)
+                deleList.clear()
                 notUpTagRecord.value!!.forEach {
 
                     it.isupload=1

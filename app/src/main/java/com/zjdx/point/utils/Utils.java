@@ -51,7 +51,7 @@ public class Utils {
                 builder = new Notification.Builder(mContext);
             }
 
-            builder.setSmallIcon(R.mipmap.ic_launcher)
+            builder.setSmallIcon(R.mipmap.track)
                    .setContentTitle(getAppName(mContext))
                    .setContentText("正在后台运行")
                    .setWhen(System.currentTimeMillis());

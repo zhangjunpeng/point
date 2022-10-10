@@ -175,6 +175,8 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         binding.save.setOnClickListener {
             taggingViewModel.repository.insertTagList(taggingViewModel.notUpTagRecord.value!!)
             taggingViewModel.repository.delDBTag(taggingViewModel.deleList)
+            taggingViewModel.deleList.clear()
+
             taggingViewModel.hasChange = false
             ToastUtils.showLong("保存成功")
             taggingViewModel.getTagRecordIsNotUpload()

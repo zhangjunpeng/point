@@ -38,7 +38,7 @@ class ChooseAddressActivity : BaseActivity() {
         binding.title.leftIvTitleBar.setOnClickListener {
             finish()
         }
-        binding.title.middleTvTitleBar.text = "请在地图上选择您的住址"
+        binding.title.middleTvTitleBar.text = "请在地图上点击您的住址"
         binding.title.rightIvTitleBar.visibility = View.GONE
         binding.confirm.setOnClickListener {
             if (marker == null) {
