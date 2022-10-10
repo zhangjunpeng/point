@@ -167,13 +167,15 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                     }
 
                     it.desc = binding.desc.text.toString()
-                }
-                taggingViewModel.repository.updateTags(arrayListOf(taggingViewModel.addingTag!!))
+                    if (it.id!=0){
+                        taggingViewModel.repository.updateTag(taggingViewModel.addingTag!!)
+                    }
 
+                }
                 val list = taggingViewModel.notUpTagRecord.value!!
                 var index = -1
                 list.forEach {
-                    if (it.id != null && it.id == taggingViewModel.addingTag!!.id) {
+                    if (it.sort == taggingViewModel.addingTag!!.sort) {
                         index = list.indexOf(it)
                     }
                 }

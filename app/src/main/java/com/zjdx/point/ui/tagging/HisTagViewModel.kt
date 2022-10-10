@@ -87,9 +87,8 @@ class HisTagViewModel(private val repository: DataBaseRepository) : ViewModel() 
         }
     }
 
-    fun convertDate(d: String): String {
-        val array = d.split("-")
-        return array[2] + array[1] + array[0]
+    fun convertDate(d: String): Long {
+        return DateUtil.dayFormat.parse(d).time
     }
 
 
