@@ -61,8 +61,7 @@ android {
         //自动生成指定名称的release发布版的 apk文件
         android.applicationVariants.all { variant ->
             variant.outputs.all {
-                def date = new Date().format("MMdd-HHmm", TimeZone.getTimeZone("GMT+08"))
-                outputFileName = "Point_${versionName}_${date}.apk"
+                outputFileName = "CheckTrack-${versionName}.apk"
             }
         }
     }
