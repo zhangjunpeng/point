@@ -1,5 +1,6 @@
 package com.zjdx.point.ui.main
 
+import android.Manifest
 import android.content.Intent
 import android.os.Build
 import android.text.Html
@@ -27,9 +28,12 @@ import com.zjdx.point.work.PointWorkManager
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.RuntimePermissions
 import java.util.*
 
 
+@RuntimePermissions
 class MainActivity : BaseActivity() {
 
     val TAG = "LocationService"
@@ -48,6 +52,7 @@ class MainActivity : BaseActivity() {
 //        initLocationService()
         upload = intent!!.getBooleanExtra("upload", true)
 
+        requestPermissionWithPermissionCheck()
     }
 
     override fun initViewMoedl() {
@@ -84,6 +89,19 @@ class MainActivity : BaseActivity() {
                 startActivity(intent)
             }
         }
+    }
+
+    @NeedsPermission(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_NETWORK_STATE,
+        Manifest.permission.ACCESS_WIFI_STATE,
+        Manifest.permission.CHANGE_WIFI_STATE,
+    )
+    fun requestPermission() {
+        //这里以ACCESS_COARSE_LOCATION为例
+        Toast.makeText(this, "权限申请成功", Toast.LENGTH_LONG)
+
     }
 
     private fun updateMainInfo() {
