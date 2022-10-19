@@ -121,6 +121,9 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
             if (taggingViewModel.startTime != null) {
                 cel.time = taggingViewModel.startTime!!
             }
+            if (binding.startTime.text.isNotEmpty()){
+                cel.time = DateUtil.dateFormat.parse(binding.startTime.text.toString())
+            }
             PopWindowUtil.instance.showTimePicker(
                 this, type = booleanArrayOf(true, true, true, true, true, false),
                 selectedDate = cel,
@@ -135,6 +138,9 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
             val cel = Calendar.getInstance()
             if (taggingViewModel.endTime != null) {
                 cel.time = taggingViewModel.endTime!!
+            }
+            if (binding.endTime.text.isNotEmpty()){
+                cel.time = DateUtil.dateFormat.parse(binding.endTime.text.toString())
             }
             PopWindowUtil.instance.showTimePicker(
                 this, type = booleanArrayOf(true, true, true, true, true, false),

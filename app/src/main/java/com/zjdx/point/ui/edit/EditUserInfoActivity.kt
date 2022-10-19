@@ -47,7 +47,7 @@ class EditUserInfoActivity : BaseActivity() {
             finish()
         }
         binding.titleBarRegisterAc.rightIvTitleBar.visibility = View.GONE
-        binding.passwordLinearRegisterAc.visibility = View.GONE
+//        binding.passwordLinearRegisterAc.visibility = View.GONE
         binding.rePasswordLinearRegisterAc.visibility=View.GONE
         binding.reTelphoneLayRegisterAc.visibility=View.GONE
 
@@ -99,7 +99,7 @@ class EditUserInfoActivity : BaseActivity() {
                 return@setOnClickListener
             }
             val userCode = SPUtils.getInstance().getString(NameSpace.UID)
-            val userName = binding.usernameRegisterAc.editableText.toString()
+//            val userName = binding.usernameRegisterAc.editableText.toString()
             val password = binding.passwordRegisterAc.editableText.toString()
             val telphone = binding.telphoneRegisterAc.editableText.toString()
             val sex = if (binding.manRegisterAc.isChecked) {
@@ -116,7 +116,7 @@ class EditUserInfoActivity : BaseActivity() {
             editUserInfoViewModel.editUserInfo(
                 id.toString(),
                 userCode,
-                userName,
+                "",
                 telphone,
                 "",
                 sex,
@@ -151,6 +151,7 @@ class EditUserInfoActivity : BaseActivity() {
                 }
                 binding.minsalaryRegisterAc.setSelection(posi)
             }
+
             user.has_bicycle?.let {
                 if (it==0) {
                     binding.haveBicRegisterAc.setSelection(0)
@@ -179,9 +180,9 @@ class EditUserInfoActivity : BaseActivity() {
                 binding.telphoneRegisterAc.setText(it)
                 binding.reTelphoneRegisterAc.setText(it)
             }
-            user.username?.let {
-                binding.usernameRegisterAc.setText(it)
-            }
+//            user.username?.let {
+//                binding.usernameRegisterAc.setText(it)
+//            }
             user.usercode.let {
                 binding.usercodeRegisterAc.setText(it)
                 binding.usercodeRegisterAc.isEnabled = false

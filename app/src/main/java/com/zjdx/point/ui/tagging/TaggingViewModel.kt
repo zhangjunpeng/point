@@ -27,8 +27,8 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
     val travelDis =
         arrayListOf("上班", "上课", "业务", "回单位", "回学校", "回家", "就餐", "购物", "就医", "休闲娱乐", "接送人", "其他")
 
-    val types = arrayListOf("居住地", "工作单位/学校", "其它")
-
+    val types =
+        arrayListOf(" 公司/单位", "居住地", "商场/超市", "学校", "餐厅", "机场/车站", "医院", "银行", "休闲娱乐点", "其它")
     val deleList = ArrayList<TagRecord>()
 
     var startTime: Date? = null
@@ -38,7 +38,7 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
 
     val selectLoaction = MutableLiveData<Location>()
 
-    var hasChange=false
+    var hasChange = false
 
     val addTag = MutableLiveData<Boolean>().apply {
         this.value = false

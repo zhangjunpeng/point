@@ -69,10 +69,15 @@ class RegisterActivity : BaseActivity() {
         ).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
+        binding.yysAc.adapter = ArrayAdapter(
+            this, R.layout.simple_spinner_item, registerViewModel.yysList
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
 
         binding.registerBtRegisterAc.setOnClickListener {
             val userCode = binding.usercodeRegisterAc.editableText.toString()
-            val userName = binding.usernameRegisterAc.editableText.toString()
+//            val userName = binding.usernameRegisterAc.editableText.toString()
             val password = binding.passwordRegisterAc.editableText.toString()
             val telphone = binding.telphoneRegisterAc.editableText.toString()
             val sex = if (binding.manRegisterAc.isChecked) {
@@ -99,7 +104,7 @@ class RegisterActivity : BaseActivity() {
             showProgressDialog()
             registerViewModel.registerUser(
                 userCode,
-                userName,
+                "",
                 password,
                 telphone,
                 "",

@@ -24,6 +24,7 @@ class InfoAdapter(val context: Context, val viewModl: TaggingViewModel) :
         add("公交车")
         add("小汽车")
         add("地铁")
+        add("火车")
         add("其它")
     }
 

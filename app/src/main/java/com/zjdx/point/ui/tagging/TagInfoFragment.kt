@@ -124,41 +124,41 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                 return@setOnClickListener
             }
 
-            if(startTime!!.after(endTime!!)){
+            if (startTime!!.after(endTime!!)) {
                 ToastUtils.showLong("到达时刻应晚于出发时刻!")
                 return@setOnClickListener
             }
-            if (binding.startType.isVisible && binding.startType.text.isEmpty()) {
-                ToastUtils.showLong("请输入起点类型")
-                return@setOnClickListener
-
-            }
-            if (binding.endType.isVisible && binding.endType.text.isEmpty()) {
-                ToastUtils.showLong("请输入终点类型")
-                return@setOnClickListener
-
-            }
+//            if (binding.startType.isVisible && binding.startType.text.isEmpty()) {
+//                ToastUtils.showLong("请输入起点类型")
+//                return@setOnClickListener
+//
+//            }
+//            if (binding.endType.isVisible && binding.endType.text.isEmpty()) {
+//                ToastUtils.showLong("请输入终点类型")
+//                return@setOnClickListener
+//
+//            }
             if (taggingViewModel.tarvelModelList.size == 0) {
                 ToastUtils.showLong("请添加出行方式")
                 return@setOnClickListener
             }
 
 
-            if (taggingViewModel.addingTag!=null){
+            if (taggingViewModel.addingTag != null) {
                 taggingViewModel.addingTag?.let {
                     it.startTime = DateUtil.dateFormat.format(startTime)
                     it.endTime = DateUtil.dateFormat.format(endTime)
 
-                    if (binding.startType.isVisible) {
-                        it.startType = binding.startType.text.toString()
-                    } else {
-                        it.startType = binding.startTypeSp.selectedItem.toString()
-                    }
-                    if (binding.endType.isVisible) {
-                        it.endType = binding.endType.text.toString()
-                    } else {
-                        it.endType = binding.endTypeSp.selectedItem.toString()
-                    }
+//                    if (binding.startType.isVisible) {
+//                        it.startType = binding.startType.text.toString()
+//                    } else {
+//                        it.startType = binding.startTypeSp.selectedItem.toString()
+//                    }
+//                    if (binding.endType.isVisible) {
+//                        it.endType = binding.endType.text.toString()
+//                    } else {
+//                        it.endType = binding.endTypeSp.selectedItem.toString()
+//                    }
                     it.travelmodel = taggingViewModel.tarvelModelList.joinToString(separator = ",")
                     if (binding.desc.isVisible) {
                         it.destination = binding.desc.text.toString()
@@ -167,7 +167,7 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                     }
 
                     it.desc = binding.desc.text.toString()
-                    if (it.id!=0){
+                    if (it.id != 0) {
                         taggingViewModel.repository.updateTag(taggingViewModel.addingTag!!)
                     }
 
@@ -187,24 +187,20 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                 taggingViewModel.addingTag = null
 
             } else {
-                val startType = if (binding.startType.isVisible) {
-                    binding.startType.text.toString()
-                } else {
+                val startType =
                     binding.startTypeSp.selectedItem.toString()
-                }
-                val endType = if (binding.endType.isVisible) {
-                    binding.endType.text.toString()
-                } else {
+
+                val endType =
                     binding.endTypeSp.selectedItem.toString()
-                }
+
                 val destination = if (binding.desc.isVisible) {
                     binding.desc.text.toString()
                 } else {
                     binding.disSp.selectedItem.toString()
                 }
                 val list = taggingViewModel.notUpTagRecord.value!!
-                val sort=if (list.size>0){
-                    list.last().sort+1
+                val sort = if (list.size > 0) {
+                    list.last().sort + 1
                 }else{
                     0
                 }
@@ -275,21 +271,18 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                 if (taggingViewModel.types.contains(it.startType)) {
 
                     setSpSelection(binding.startTypeSp,taggingViewModel.types.indexOf(it.startType))
-                    binding.startType.visibility = View.GONE
                 } else {
                     setSpSelection(binding.startTypeSp,taggingViewModel.types.lastIndex)
-                    binding.startType.visibility = View.VISIBLE
-                    binding.startType.setText(it.startType)
+
                 }
 
                 if (taggingViewModel.types.contains(it.endType)) {
                     setSpSelection(binding.endTypeSp,taggingViewModel.types.indexOf(it.endType))
 
-                    binding.endType.visibility = View.GONE
+
                 } else {
                     setSpSelection(binding.endTypeSp,taggingViewModel.types.lastIndex)
-                    binding.endType.visibility = View.VISIBLE
-                    binding.endType.setText(it.endType)
+
                 }
 
                 binding.startTime.text = it.startTime
@@ -326,20 +319,20 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                     binding.desc.visibility = View.GONE
                 }
             }
-            binding.startTypeSp.id -> {
-                if (position == taggingViewModel.types.lastIndex) {
-                    binding.startType.visibility = View.VISIBLE
-                } else {
-                    binding.startType.visibility = View.GONE
-                }
-            }
-            binding.endTypeSp.id -> {
-                if (position == taggingViewModel.types.lastIndex) {
-                    binding.endType.visibility = View.VISIBLE
-                } else {
-                    binding.endType.visibility = View.GONE
-                }
-            }
+//            binding.startTypeSp.id -> {
+//                if (position == taggingViewModel.types.lastIndex) {
+//                    binding.startType.visibility = View.VISIBLE
+//                } else {
+//                    binding.startType.visibility = View.GONE
+//                }
+//            }
+//            binding.endTypeSp.id -> {
+//                if (position == taggingViewModel.types.lastIndex) {
+//                    binding.endType.visibility = View.VISIBLE
+//                } else {
+//                    binding.endType.visibility = View.GONE
+//                }
+//            }
         }
 
     }

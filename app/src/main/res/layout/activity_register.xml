@@ -44,32 +44,12 @@
                 android:layout_margin="5dp"
                 />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:orientation="horizontal"
-            >
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="right|center_vertical"
-                android:text="真实姓名："
-                />
-            <EditText
-                android:id="@+id/username_register_ac"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/border_edit"
-                android:layout_margin="5dp"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/password_linear_register_ac"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
+
             >
             <TextView
                 android:layout_width="0dp"
@@ -327,6 +307,28 @@
                 android:layout_margin="5dp"
                 />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:text="手机运营商："
+                />
+            <Spinner
+                android:id="@+id/yys_ac"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/border_edit"
+                android:layout_margin="5dp"
+                />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/register_bt_register_ac"
             android:layout_width="match_parent"

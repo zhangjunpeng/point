@@ -19,6 +19,7 @@ class RegisterViewModel(val repository: RegisterRepository) : ViewModel() {
     val hasCarList= arrayListOf("是","否")
     val hasVeList= arrayListOf("是","否")
     val hasBicList= arrayListOf("是","否")
+    val yysList= arrayListOf("移动","联通","电信","其他")
 
 
     @Synchronized
