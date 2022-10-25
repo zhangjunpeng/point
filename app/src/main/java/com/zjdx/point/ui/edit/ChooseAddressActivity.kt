@@ -25,9 +25,11 @@ class ChooseAddressActivity : BaseActivity() {
 
     lateinit var map: AMap
     private var marker: Marker? = null
+     var isSetAddress:Boolean=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        isSetAddress=intent.getBooleanExtra("isSetAddress",false)
         binding.map.onCreate(savedInstanceState)
     }
 
@@ -38,7 +40,7 @@ class ChooseAddressActivity : BaseActivity() {
         binding.title.leftIvTitleBar.setOnClickListener {
             finish()
         }
-        binding.title.middleTvTitleBar.text = "请在地图上点击您的住址"
+        binding.title.middleTvTitleBar.text = if (isSetAddress) {"请在地图上点击您的住址"}else{"请在地图上点击您的工作地址"}
         binding.title.rightIvTitleBar.visibility = View.GONE
         binding.confirm.setOnClickListener {
             if (marker == null) {

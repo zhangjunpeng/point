@@ -105,6 +105,8 @@ class DataSource {
         hasBicycle: Boolean ,
         hasCar: Boolean ,
         hasVehicle: Boolean,
+        yys:String,
+        gzdz:String,
     ): Back<SubmitBackModel> {
         try {
 //            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
@@ -148,6 +150,8 @@ class DataSource {
             } else {
                 formBodyBulider.add("has_vehicle", "0")
             }
+            formBodyBulider.add("mobile_operator", yys)
+            formBodyBulider.add("work_address", gzdz)
             val request: Request = Request.Builder()
                 .url(REST.register)
                 .post(formBodyBulider.build())
@@ -184,6 +188,8 @@ class DataSource {
         hasBicycle: Boolean ,
         hasCar: Boolean ,
         hasVehicle: Boolean,
+        yys:String,
+        gzdz:String,
     ): Back<SubmitBackModel> {
         try {
 //            val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
@@ -227,6 +233,9 @@ class DataSource {
             } else {
                 formBodyBulider.add("has_vehicle", "0")
             }
+            formBodyBulider.add("mobile_operator", yys)
+            formBodyBulider.add("work_address", gzdz)
+
             val request: Request =
                 Request.Builder().url(REST.editUserInfo).post(formBodyBulider.build()).build()
             val call: Call = client.newCall(request)

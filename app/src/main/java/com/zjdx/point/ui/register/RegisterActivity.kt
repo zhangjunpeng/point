@@ -19,6 +19,8 @@ import org.greenrobot.eventbus.Subscribe
 
 class RegisterActivity : BaseActivity() {
     lateinit var binding: ActivityRegisterBinding
+    var isSetAddress = true
+
 
     private val registerViewModel: RegisterViewModel by viewModels<RegisterViewModel> {
         RegisterViewModelFactory((application as PointApplication).registerRepository)
@@ -39,6 +41,11 @@ class RegisterActivity : BaseActivity() {
         binding.titleBarRegisterAc.middleTvTitleBar.text = "注册"
 
         binding.addressRegisterAc.setOnClickListener {
+            isSetAddress=true
+            startActivity(Intent(this@RegisterActivity, ChooseAddressActivity::class.java))
+        }
+        binding.workAddressRegisterAc.setOnClickListener {
+            isSetAddress=false
             startActivity(Intent(this@RegisterActivity, ChooseAddressActivity::class.java))
         }
 
@@ -89,18 +96,22 @@ class RegisterActivity : BaseActivity() {
             val address = binding.addressRegisterAc.text.toString()
             val salary =
                 registerViewModel.salaryList[binding.minsalaryRegisterAc.selectedItemPosition]
+            val workaddress = binding.workAddressRegisterAc.text.toString()
+            val yys =
+                registerViewModel.yysList[binding.yysAc.selectedItemPosition]
             if (userCode.isNullOrEmpty() || password.isNullOrEmpty()) {
                 Toast.makeText(this, "请输入用户名或密码", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-            if (binding.telphoneRegisterAc.editableText.toString()!=binding.reTelphoneRegisterAc.editableText.toString()){
+            if (binding.telphoneRegisterAc.editableText.toString() != binding.reTelphoneRegisterAc.editableText.toString()) {
                 Toast.makeText(this, "两次输入的电话不一致，请检查", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-            if (binding.passwordRegisterAc.editableText.toString()!=binding.rePasswordRegisterAc.editableText.toString()){
+            if (binding.passwordRegisterAc.editableText.toString() != binding.rePasswordRegisterAc.editableText.toString()) {
                 Toast.makeText(this, "两次输入的密码不一致，请检查", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
+
             showProgressDialog()
             registerViewModel.registerUser(
                 userCode,
@@ -114,15 +125,19 @@ class RegisterActivity : BaseActivity() {
                 salary,
                 binding.haveBicRegisterAc.selectedItemPosition == 1,
                 binding.haveCarRegisterAc.selectedItemPosition == 1,
-                binding.haveVeRegisterAc.selectedItemPosition == 1,
+                binding.haveVeRegisterAc.selectedItemPosition == 1, yys, workaddress,
 
-            )
+                )
         }
     }
 
     @Subscribe
-    fun onReceiveEvent(event: ChooseEvent){
-        binding.addressRegisterAc.text=event.address
+    fun onReceiveEvent(event: ChooseEvent) {
+        if (isSetAddress) {
+            binding.addressRegisterAc.text = event.address
+        } else {
+            binding.workAddressRegisterAc.text = event.address
+        }
     }
 
     override fun onDestroy() {

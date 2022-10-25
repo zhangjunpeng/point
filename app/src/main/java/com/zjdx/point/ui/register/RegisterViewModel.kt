@@ -34,6 +34,8 @@ class RegisterViewModel(val repository: RegisterRepository) : ViewModel() {
         hasBicycle: Boolean,
         hasCar: Boolean,
         hasVehicle: Boolean,
+        yys: String,
+        gzdz: String,
     ) {
         viewModelScope.launch {
             val result = repository.register(
@@ -45,7 +47,7 @@ class RegisterViewModel(val repository: RegisterRepository) : ViewModel() {
                 sex,
                 age,
                 address,
-                salary, hasBicycle, hasCar, hasVehicle
+                salary, hasBicycle, hasCar, hasVehicle, yys, gzdz,
             )
             if (result is Back.Success) {
                 registerModel.postValue(result.data)

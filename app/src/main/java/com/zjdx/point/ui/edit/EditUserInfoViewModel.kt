@@ -23,6 +23,7 @@ class EditUserInfoViewModel(val repository: DataBaseRepository) : ViewModel() {
     val hasCarList= arrayListOf("是","否")
     val hasVeList= arrayListOf("是","否")
     val hasBicList= arrayListOf("是","否")
+    val yysList= arrayListOf("移动","联通","电信","其他")
 
 
     fun getUserInfo() {
@@ -50,6 +51,8 @@ class EditUserInfoViewModel(val repository: DataBaseRepository) : ViewModel() {
         hasBicycle: Boolean ,
         hasCar: Boolean ,
         hasVehicle: Boolean,
+        yys:String,
+        gzdz:String,
     ) {
         viewModelScope.launch {
             val result = repository.editUserInfo(
@@ -62,7 +65,7 @@ class EditUserInfoViewModel(val repository: DataBaseRepository) : ViewModel() {
                 age,
                 address,
                 salary,
-                hasBicycle, hasCar, hasVehicle
+                hasBicycle, hasCar, hasVehicle,yys, gzdz
 
             )
             if (result is Back.Success) {

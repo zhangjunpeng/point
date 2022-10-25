@@ -29,6 +29,7 @@ class EditUserInfoActivity : BaseActivity() {
         ViewModelFactory((application as PointApplication).travelRepository)
     }
 
+    var isSetAddress = true
     override fun initRootView() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -48,14 +49,23 @@ class EditUserInfoActivity : BaseActivity() {
         }
         binding.titleBarRegisterAc.rightIvTitleBar.visibility = View.GONE
 //        binding.passwordLinearRegisterAc.visibility = View.GONE
-        binding.rePasswordLinearRegisterAc.visibility=View.GONE
-        binding.reTelphoneLayRegisterAc.visibility=View.GONE
+        binding.rePasswordLinearRegisterAc.visibility = View.GONE
+        binding.reTelphoneLayRegisterAc.visibility = View.GONE
 
         binding.titleBarRegisterAc.middleTvTitleBar.text = "修改信息"
         binding.registerBtRegisterAc.text = "修改信息"
 
         binding.addressRegisterAc.setOnClickListener {
-            startActivity(Intent(this@EditUserInfoActivity, ChooseAddressActivity::class.java))
+            isSetAddress = true
+            val intent=Intent(this@EditUserInfoActivity, ChooseAddressActivity::class.java)
+            intent.putExtra("isSetAddress",isSetAddress)
+            startActivity(intent)
+        }
+        binding.workAddressRegisterAc.setOnClickListener {
+            isSetAddress = false
+            val intent=Intent(this@EditUserInfoActivity, ChooseAddressActivity::class.java)
+            intent.putExtra("isSetAddress",isSetAddress)
+            startActivity(intent)
         }
 
         binding.ageRegisterAc.adapter =
@@ -85,7 +95,11 @@ class EditUserInfoActivity : BaseActivity() {
         ).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
-
+        binding.yysAc.adapter = ArrayAdapter(
+            this, R.layout.simple_spinner_item, editUserInfoViewModel.yysList
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
 
 
         binding.registerBtRegisterAc.setOnClickListener {
@@ -111,7 +125,9 @@ class EditUserInfoActivity : BaseActivity() {
             val address = binding.addressRegisterAc.text.toString()
             val salary =
                 editUserInfoViewModel.salaryList[binding.minsalaryRegisterAc.selectedItemPosition]
-
+            val workaddress = binding.workAddressRegisterAc.text.toString()
+            val yys =
+                editUserInfoViewModel.yysList[binding.yysAc.selectedItemPosition]
             showProgressDialog()
             editUserInfoViewModel.editUserInfo(
                 id.toString(),
@@ -125,7 +141,7 @@ class EditUserInfoActivity : BaseActivity() {
                 salary,
                 binding.haveBicRegisterAc.selectedItemPosition == 1,
                 binding.haveCarRegisterAc.selectedItemPosition == 1,
-                binding.haveVeRegisterAc.selectedItemPosition == 1,
+                binding.haveVeRegisterAc.selectedItemPosition == 1, yys, workaddress,
             )
         }
     }
@@ -194,6 +210,16 @@ class EditUserInfoActivity : BaseActivity() {
                     binding.womanregisterAc.isChecked = true
                 }
             }
+            user.mobile_operator?.let {
+                var posi = editUserInfoViewModel.yysList.indexOf(it)
+                if (posi == -1) {
+                    posi = 0
+                }
+                binding.yysAc.setSelection(posi)
+            }
+            user.work_address?.let {
+                binding.workAddressRegisterAc.text = it
+            }
 
         }
         editUserInfoViewModel.errorBack.observe(this) {
@@ -212,8 +238,13 @@ class EditUserInfoActivity : BaseActivity() {
     }
 
     @Subscribe
-    fun onReceiveEvent(event:ChooseEvent){
-        binding.addressRegisterAc.text=event.address
+    fun onReceiveEvent(event: ChooseEvent) {
+        if (isSetAddress) {
+            binding.addressRegisterAc.text = event.address
+
+        } else {
+            binding.workAddressRegisterAc.text = event.address
+        }
     }
 
     override fun initData() {

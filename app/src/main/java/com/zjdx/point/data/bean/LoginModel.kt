@@ -27,6 +27,10 @@ data class SysUser(
     var has_vehicle: Int?,
     var has_bicycle: Int?,
 
+    var mobile_operator:String?,
+    var work_address:String?,
+
+
 
     )
 

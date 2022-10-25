@@ -59,7 +59,6 @@ class MainViewModel(val repository: DataBaseRepository) : ViewModel() {
             val userCode = SPUtils.getInstance().getString(NameSpace.UID)
             val back = repository.getUserInfo(userCode)
             if (back is Back.Success) {
-                SPUtils.getInstance().put(NameSpace.ID, back.data.list.id)
                 sysUserLiveData.postValue(back.data.list)
             } else if (back is Back.Error) {
                 errorBack.postValue(back.error)
