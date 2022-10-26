@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
+import java.lang.Exception
 import java.util.*
 
 @RuntimePermissions
@@ -122,7 +123,12 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
                 cel.time = taggingViewModel.startTime!!
             }
             if (binding.startTime.text.isNotEmpty()){
-                cel.time = DateUtil.dateFormat.parse(binding.startTime.text.toString())
+                try {
+                    cel.time = DateUtil.dateFormat.parse(binding.startTime.text.toString())
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
+
             }
             PopWindowUtil.instance.showTimePicker(
                 this, type = booleanArrayOf(true, true, true, true, true, false),
@@ -137,7 +143,11 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
         binding.endTime.setOnClickListener {
             val cel = Calendar.getInstance()
             if (taggingViewModel.endTime != null) {
-                cel.time = taggingViewModel.endTime!!
+                try {
+                    cel.time = DateUtil.dateFormat.parse(binding.startTime.text.toString())
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
             }
             if (binding.endTime.text.isNotEmpty()){
                 cel.time = DateUtil.dateFormat.parse(binding.endTime.text.toString())
