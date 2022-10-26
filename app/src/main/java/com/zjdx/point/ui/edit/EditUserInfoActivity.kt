@@ -48,7 +48,7 @@ class EditUserInfoActivity : BaseActivity() {
             finish()
         }
         binding.titleBarRegisterAc.rightIvTitleBar.visibility = View.GONE
-//        binding.passwordLinearRegisterAc.visibility = View.GONE
+        binding.passwordRegisterLinearAc.visibility = View.GONE
         binding.rePasswordLinearRegisterAc.visibility = View.GONE
         binding.reTelphoneLayRegisterAc.visibility = View.GONE
 

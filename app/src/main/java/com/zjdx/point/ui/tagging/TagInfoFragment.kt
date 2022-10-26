@@ -20,7 +20,8 @@ import com.zjdx.point.databinding.FragmentTagInfoBinding
 import com.zjdx.point.db.model.TagRecord
 import com.zjdx.point.utils.DateUtil
 import com.zjdx.point.utils.PopWindowUtil
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedListener {
 
@@ -149,16 +150,12 @@ class TagInfoFragment : BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                     it.startTime = DateUtil.dateFormat.format(startTime)
                     it.endTime = DateUtil.dateFormat.format(endTime)
 
-//                    if (binding.startType.isVisible) {
-//                        it.startType = binding.startType.text.toString()
-//                    } else {
-//                        it.startType = binding.startTypeSp.selectedItem.toString()
-//                    }
-//                    if (binding.endType.isVisible) {
-//                        it.endType = binding.endType.text.toString()
-//                    } else {
-//                        it.endType = binding.endTypeSp.selectedItem.toString()
-//                    }
+                    it.startType =
+                        binding.startTypeSp.selectedItem.toString()
+
+                    it.endType =
+                        binding.endTypeSp.selectedItem.toString()
+
                     it.travelmodel = taggingViewModel.tarvelModelList.joinToString(separator = ",")
                     if (binding.desc.isVisible) {
                         it.destination = binding.desc.text.toString()

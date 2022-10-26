@@ -28,7 +28,7 @@ class TaggingViewModel(val repository: DataBaseRepository) : ViewModel() {
         arrayListOf("上班", "上课", "业务", "回单位", "回学校", "回家", "就餐", "购物", "就医", "休闲娱乐", "接送人", "其他")
 
     val types =
-        arrayListOf(" 公司/单位", "居住地", "商场/超市", "学校", "餐厅", "机场/车站", "医院", "银行", "休闲娱乐点", "其它")
+        arrayListOf("公司/单位", "居住地", "商场/超市", "学校", "餐厅", "机场/车站", "医院", "银行", "休闲娱乐点", "其它")
     val deleList = ArrayList<TagRecord>()
 
     var startTime: Date? = null

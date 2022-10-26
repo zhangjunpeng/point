@@ -42,11 +42,15 @@ class RegisterActivity : BaseActivity() {
 
         binding.addressRegisterAc.setOnClickListener {
             isSetAddress=true
-            startActivity(Intent(this@RegisterActivity, ChooseAddressActivity::class.java))
+            val intent=Intent(this, ChooseAddressActivity::class.java)
+            intent.putExtra("isSetAddress",isSetAddress)
+            startActivity(intent)
         }
         binding.workAddressRegisterAc.setOnClickListener {
             isSetAddress=false
-            startActivity(Intent(this@RegisterActivity, ChooseAddressActivity::class.java))
+            val intent=Intent(this, ChooseAddressActivity::class.java)
+            intent.putExtra("isSetAddress",isSetAddress)
+            startActivity(intent)
         }
 
         binding.ageRegisterAc.adapter =

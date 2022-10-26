@@ -29,11 +29,12 @@ class ChooseAddressActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isSetAddress=intent.getBooleanExtra("isSetAddress",false)
         binding.map.onCreate(savedInstanceState)
     }
 
     override fun initView() {
+        isSetAddress=intent.getBooleanExtra("isSetAddress",false)
+
         binding = ActivityChooseAddressBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

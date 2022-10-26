@@ -46,6 +46,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/password_register_linear_ac"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:orientation="horizontal"
@@ -233,7 +234,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="right|center_vertical"
-                android:text="工作地址："
+                android:text="工作地址（选填）："
                 />
             <TextView
                 android:id="@+id/work_address_register_ac"
