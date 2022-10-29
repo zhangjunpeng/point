@@ -149,9 +149,7 @@ class TaggingActivity : BaseActivity(), OnChartValueSelectedListener {
                     e.printStackTrace()
                 }
             }
-            if (binding.endTime.text.isNotEmpty()){
-                cel.time = DateUtil.dateFormat.parse(binding.endTime.text.toString())
-            }
+
             PopWindowUtil.instance.showTimePicker(
                 this, type = booleanArrayOf(true, true, true, true, true, false),
                 selectedDate = cel,
