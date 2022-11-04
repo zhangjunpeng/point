@@ -23,7 +23,7 @@ class ChooseAddressActivity : BaseActivity() {
 
     lateinit var binding: ActivityChooseAddressBinding
 
-    lateinit var map: AMap
+     var map: AMap?=null
     private var marker: Marker? = null
      var isSetAddress:Boolean=false
 
@@ -40,6 +40,7 @@ class ChooseAddressActivity : BaseActivity() {
 
         binding.title.leftIvTitleBar.setOnClickListener {
             finish()
+
         }
         binding.title.middleTvTitleBar.text = if (isSetAddress) {"请在地图上点击您的住址"}else{"请在地图上点击您的工作地址"}
         binding.title.rightIvTitleBar.visibility = View.GONE
@@ -57,11 +58,11 @@ class ChooseAddressActivity : BaseActivity() {
         }
         initMapWithPermissionCheck()
 
-        map.setOnMapClickListener {
+        map?.setOnMapClickListener {
             if (marker != null) {
                 marker?.remove()
             }
-            marker = map.addMarker(
+            marker = map?.addMarker(
                 MarkerOptions().position(LatLng(it.latitude, it.longitude)).title("我的住址")
                     .snippet("DefaultMarker")
             )
@@ -84,11 +85,11 @@ class ChooseAddressActivity : BaseActivity() {
         myLocationStyle.interval(5000) //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
 
         //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
-        map.isMyLocationEnabled = true
-        map.uiSettings.isMyLocationButtonEnabled = true
-        map.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW))
-        map.setOnMapLoadedListener {
-            map.moveCamera(CameraUpdateFactory.zoomTo(18f))
+        map?.isMyLocationEnabled = true
+        map?.uiSettings?.isMyLocationButtonEnabled = true
+        map?.setMyLocationStyle(myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW))
+        map?.setOnMapLoadedListener {
+            map?.moveCamera(CameraUpdateFactory.zoomTo(18f))
         }
 
     }
